@@ -91,19 +91,24 @@ The records below agree across Wikipedia, the WBC, Most Valuable Promotions and 
 - **How Yoshida could pull the upset:** Nicolson's injury showing, plus Yoshida's pressure winning enough close rounds.
 - **Betting market:** Champinon priced Nicolson at about 88%. A second "model" listing that favoured Yoshida (59%) disagrees with every other piece of evidence, so I gave it no weight.
 
-## Result (reported)
+## Result: fight over, Nicolson won
 
-- **Nicolson def. Yoshida by unanimous decision: 98-92, 100-90, 99-91** (Fightmag results page).
-- **Supporting coverage:** The Yahoo/Uncrowned live blog had Nicolson ahead 88-83 after round 9 on its own unofficial scoring. It also cited CompuBox as showing Nicolson landing about twice as many punches as Yoshida.
-- **No source reported knockdowns or point deductions.**
-- **Confidence: medium-high.** The official scorecards come from **one source (Fightmag)**. When I checked, the MVP results page still read "Coming up" and Wikipedia had not been updated. Nothing contradicts the result. **Once Tapology or BoxRec update, check there** for the official result and Nicolson's new record (17-1, 3 KO) and Yoshida's (19-6, 1 KO).
+- **Nicolson def. Yoshida by unanimous decision: 98-92, 100-90, 99-91** (Fightmag results page). Nicolson keeps the WBC super-bantamweight title.
+- **Confirmed by a second source:** Bleacher Report's live blog has a "Fight End" post (9:10 PM) and a "Fight Result" post (9:14 PM). It says: *"Nicholson was a runaway winner on the official cards, taking 27 of a possible 30 rounds from the judges."* That fits Fightmag's cards exactly: 8 + 10 + 9 = 27 rounds.
+- **Bleacher Report's own scoring:** 98-92 Nicolson, 8 rounds to 2. Running tally: 30-27 after round 3, 59-55 after round 6, 88-83 after round 9. Round 10: Nicolson *"used her athleticism to keep the cruder Yoshida at arm's length."*
+- **Punch stats (Bleacher Report):** Nicolson landed 80 power punches to Yoshida's 50, with 40% accuracy to Yoshida's 28%. The Yahoo/Uncrowned blog, citing CompuBox, said Nicolson had landed about twice as many punches overall by the middle rounds.
+- **Analyst comment:** Corey Erdman: *"This wasn't just Nicholson eluding Yoshida… This was Nicholson hitting Yoshida more than anyone's ever hit her."*
+- **No knockdowns, cuts or point deductions** were reported anywhere.
+- **New records (worked out from the result):** Nicolson **17-1 (3 KO)**, Yoshida **19-6 (1 KO)**.
+- **Not yet available:** judges' names and an official result sheet. The MVP results page still read "Coming up" when last checked, and Tapology and BoxRec could not be read.
+- **Injury:** One search summary says the August postponement was caused by a **wrist injury**. I could not confirm this from a page I read.
 
 The reported result matches the analysis above: a wide unanimous decision, with Nicolson's range and size beating Yoshida's pressure, which carried no power.
 
 ## Main uncertainties
 
 1. Tapology and BoxRec could not be read directly, so the records rest on Wikipedia, the WBC and the promoter.
-2. The official scorecards have only one source so far.
+2. The official scorecards come from Fightmag, and Bleacher Report's "27 of 30 rounds" matches them. The judges' names and the official result sheet are not yet published.
 3. No source I could read named Nicolson's August injury.
 
 ## Sources
@@ -115,6 +120,7 @@ The reported result matches the analysis above: a wide unanimous decision, with 
 - WomenBoxing.com — preview: https://www.womenboxing.com/NEWS2026/news110326yoshida-to-fight-skye-november-8-2026.htm
 - Most Valuable Promotions — MVPW-07 results: https://www.mostvaluablepromotions.com/mvpw-07-turhan-vs-baumgardner-live-results/
 - Yahoo/Uncrowned — live blog: https://sports.yahoo.com/boxing/live/alycia-baumgardner-vs-elif-nur-turhan-live-results-round-by-round-updates-ring-walks-for-todays-mvpw-07-card-190000154.html
+- Bleacher Report — live blog: https://bleacherreport.com/liveblogs/25529919-alycia-baumgardner-vs-elif-nur-turhan-live-updates-highlights-and-results
 - Fightmag — live results: https://www.fightmag.com/boxing-elif-nur-turhan-vs-alycia-baumgardner-live-results/
 - ESPN — injury withdrawal: https://africa.espn.com/boxing/story/_/id/49534947/injured-champ-skye-nicolson-mvpw-06-card-birmingham
 - Sky Sports — Nicolson vs Tiara Brown: https://www.skysports.com/boxing/news/12183/13333775/skye-nicolson-shocked-by-tiara-brown-on-home-soil-and-loses-wbc-featherweight-title-in-sydney
