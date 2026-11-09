@@ -96,6 +96,13 @@
 - Kreps' 13 months out and the close Basualdo fight make her current level hard to judge.
 - Ali's size edge is the factor most likely to make this pick wrong.
 
+## Result: Ali by split decision (pick wrong)
+
+- **Ramla Ali def. Mikiah Kreps by split decision: 97-92 and 96-93 for Ali, 98-91 for Kreps.** Ali wins the vacant IBF and WBO super-bantamweight titles and is now 12-2 (3 KO); Kreps is 11-1 (Fightmag, Bleacher Report, Yahoo).
+- **Knockdown:** Ali dropped Kreps in round 3.
+- **After that, Kreps' plan worked as expected:** she was the busier fighter in the second half. Yahoo's unofficial scoring had Kreps ahead from round 6. Bleacher Report scored it 97-92 *Kreps* (8 rounds to 2) and called two of the judges' cards "dubious." Kreps out-landed Ali 91–70 in power punches. Analyst Mikaela Mayer: "Kreps put on enough pressure in the second half of the fight… It deserves a rematch."
+- **Review of my breakdown:** I got the shape of the fight right: Kreps outworked Ali in the second half, as Mercado did. I underrated Ali's power and size (the round-3 knockdown) and the judges rewarding Ali's cleaner, harder shots. Most outside scorers had Kreps winning, so the Kreps pick looks right on the action but wrong on the official result. A rematch looks likely to be discussed.
+
 ## Live notes (in progress, not official)
 
 From the Yahoo/Uncrowned live blog, using its own scoring:
