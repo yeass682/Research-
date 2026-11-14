@@ -19,7 +19,7 @@ It has four tabs:
 **Current size:** 50 groups, 319 engines and platforms, 225 engines with power data, 1,595 ratings, 1,494 marked checked, 469 with "sources differ" notes, and 455 vehicles. The file is about 394 KB and 4,400 lines.
 
 **Where the file lives:**
-- **GitHub (canonical):** repository `yeass682/research-`, branch `claude/festive-dirac-ynuya3`, folder `automaker-family-tree/`. The folder holds `automaker-family-tree.html` (the copy to edit) and this note, `HANDOFF.md`. Commit updates there.
+- **GitHub (canonical):** repository `yeass682/Research-`, `main` branch, folder `automaker-family-tree/`. The folder holds `automaker-family-tree.html` (the copy to edit) and this note, `HANDOFF.md`. Bring updated versions back into `main`.
 - **Google Drive:** an older copy of this note is in the "Automaker Family Tree" folder. It is not kept up to date.
 - **claude.ai:** a private artifact at https://claude.ai/artifact/FBEbuoQXZwNf68dFjW4EkH. Only the owner can open that link.
 - **If copies disagree:** use the one with the most ratings. The `#pwcount` line on the Power tab shows the count.
