@@ -1,6 +1,6 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-14. The current build is the 76th published version.
+Last updated: 2026-11-15. The current build is the 80th published version.
 
 ## 1. What this project is
 
@@ -16,7 +16,7 @@ It has four tabs:
 - **Shared:** cross-group engine and platform deals.
 - **Power:** ratings by engine, by model year, and a compare view of up to four vehicles.
 
-**Current size:** 50 groups, 319 engines and platforms, 225 engines with power data, 1,595 ratings, 1,494 marked checked, 469 with "sources differ" notes, and 455 vehicles. The file is about 394 KB and 4,400 lines.
+**Current size:** 50 groups, about 330 engines and platforms, 1,640 ratings, 1,534 marked checked, 490 with "sources differ" notes, and 461 vehicles. The file is about 394 KB and 4,400 lines.
 
 **Where the file lives:**
 - **GitHub (canonical):** repository `yeass682/Research-`, `main` branch, folder `automaker-family-tree/`. The folder holds `automaker-family-tree.html` (the copy to edit) and this note, `HANDOFF.md`. Bring updated versions back into `main`.
@@ -123,7 +123,8 @@ def rep(a,b):
 # 5) DIFFER: insert before '"toyota:uz|Sequoia|2005|282":'
 open(p,'w',encoding='utf8').write(s); print("ok")
 ```
-- **The current last CHECKED key is `stellantis:ecodiesel|Gladiator|2021|260`.** Anchor the next batch on ``stellantis:ecodiesel|Gladiator|2021|260`.split``.
+- **The current last CHECKED key is `stellantis:stla|Charger|2024|630`.** Anchor the next batch on ``stellantis:stla|Charger|2024|630`.split``.
+- **Before adding an engine, search for its id within that group.** A duplicate engine id (two `["godz", ...]` entries in Ford) once broke the Ford family tree: one node got a NaN position, so the tree drew at zero height until the duplicate was removed. After each patch, check that no group has a repeated engine id and that `buildModel(g.id).height` is a finite number for every group.
 
 3. Test in headless Chromium with Playwright. Load `file://...#power-<grp>-<eng>` at 1280 px and 390 px width. Then check:
    - There are no page errors.
@@ -183,6 +184,10 @@ open(p,'w',encoding='utf8').write(s); print("ok")
 
   Data: Ram 1500 3.7 V6, Silverado 4.3 V6 (Vortec/EcoTec3).
 - **74:** trucks: Frontier 2.4/3.3/supercharged, Dakota R/T and 2008 4.7, Ram Magnum V10, Super Duty 7.3 Godzilla, Chevy SSR, Avalanche 8.1, Ridgeline, Gladiator EcoDiesel.
+- **75:** Dodge/Ram rarities (1978 Li'l Red Express, Rumble Bee, 2014+ Power Wagon). Mercedes 450 SEL 6.9 (new M100 engine), AMG Black Series (C 63, SL 65, SLS, AMG GT), G 63 AMG 6x6.
+- **76:** classic Corvettes (Blue Flame six; new Gen I small-block engine; L88/L71 427s), Pontiac (Catalina 421 SD, 1967 Firebird 400, 1969 Grand Prix SJ), vans (Transit, Express), police (Caprice 9C1 and PPV, Charger Pursuit, Police Interceptor Utility).
+- **77:** MINI (new Tritec supercharged and Prince turbo engines, JCW F56 and GP), Mercedes S 550 / S 580 / G 550 years (new M273 and M278 engines), Tahoe PPV, Police Interceptor Sedan, Charger 2006–10 V6s (new Chrysler LH V6 engine), Charger Daytona EV.
+- **Fix (80th version):** removed the duplicate Ford "godz" engine that stopped the Ford tree loading.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
@@ -194,6 +199,7 @@ open(p,'w',encoding='utf8').write(s); print("ok")
 - 2005–07 Dakota 4.7 High Output, 2006–08 Ridgeline, 2011 Silverado HD 6.0L, 2011–19 Explorer EcoBoost figures.
 - Shelby 1000, Shelby Baja Raptor, 2011 Shelby GT350, Shelby Raptor, MX-30 EV, Genesis G90/G80 5.0 V8.
 - 280Z: sources say 149 or 170 hp.
+- 2005–13 Power Wagon 5.7, 300 SEL 6.3, CLK 63 Black Series, G 500 4x4², Maybach 57 S, 1957 fuel-injected 283, 1967 L71, 1980 Trans Am Turbo 4.9, Chevy Astro, F-150 Police Responder, modern Mustang SSP, 2010 E 350.
 
 ## 8. Ideas queued for next rounds
 
