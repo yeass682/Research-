@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Every surviving pickup of a model line, shrunk to a bead and dumped in a bag. Reach in, pull one, see what's under the hood. 16 U.S.-market trucks, sourced engine histories, openly modeled odds.">
+<title>Bead Bag Garage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+/* ──────────────────────────────────────────────────────────────
+   Bead Bag Garage — stylesheet
+   Night shift by default. Flip the shop lights for daytime.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  --bg: #141311;
+  --panel: #1c1a17;
+  --panel-2: #23211d;
+  --line: #34302a;
+  --line-2: #4a4339;
+  --text: #f2ece2;
+  --sub: #aba190;
+  --muted: #7f766a;
+  --accent: #ff8c32;          /* shop-rag orange */
+  --accent-ink: #1d1006;
+  --hazard: #f5c542;
+  --track: #2b2823;
+  --tape: #e6d6a4;            /* masking tape */
+  --tape-ink: #3a2f1d;
+  --manila: #ecd9a6;          /* parts tags stay manila in any light */
+  --manila-ink: #2b2216;
+  --bag-fill: rgba(255,255,255,.045);
+  --bag-line: rgba(235,228,214,.55);
+  --bag-gloss: rgba(255,255,255,.13);
+  --bag-crinkle: rgba(255,255,255,.10);
+  --floor-shadow: rgba(0,0,0,.45);
+  --peg: rgba(255,255,255,.05);
+  --shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 18px 40px -24px rgba(0,0,0,.8);
+  --radius: 14px;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --marker: "Permanent Marker", "Comic Sans MS", cursive;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #ebe5d9; --panel: #faf7f1; --panel-2: #f2ede3; --line: #d9d0c0; --line-2: #c3b7a3;
+    --text: #1f1b16; --sub: #5d544a; --muted: #8b8072; --accent: #cf5d0c; --accent-ink: #fff;
+    --hazard: #d9a41a; --track: #e6dfd2;
+    --bag-fill: rgba(255,255,255,.4); --bag-line: rgba(45,36,26,.55); --bag-gloss: rgba(255,255,255,.7);
+    --bag-crinkle: rgba(45,36,26,.10); --floor-shadow: rgba(60,40,20,.18); --peg: rgba(0,0,0,.06);
+    --shadow: 0 18px 40px -26px rgba(60,40,20,.35);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #ebe5d9; --panel: #faf7f1; --panel-2: #f2ede3; --line: #d9d0c0; --line-2: #c3b7a3;
+  --text: #1f1b16; --sub: #5d544a; --muted: #8b8072; --accent: #cf5d0c; --accent-ink: #fff;
+  --hazard: #d9a41a; --track: #e6dfd2;
+  --bag-fill: rgba(255,255,255,.4); --bag-line: rgba(45,36,26,.55); --bag-gloss: rgba(255,255,255,.7);
+  --bag-crinkle: rgba(45,36,26,.10); --floor-shadow: rgba(60,40,20,.18); --peg: rgba(0,0,0,.06);
+  --shadow: 0 18px 40px -26px rgba(60,40,20,.35);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  /* a little poured-concrete grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color: var(--text);
+  font: 16px/1.55 var(--body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.hazard { height: 7px; background: repeating-linear-gradient(-45deg, var(--hazard) 0 12px, #18160f 12px 24px); }
+.shell { max-width: 1440px; margin: 0 auto; padding: 0 24px 64px; }
+
+/* ── Header ─────────────────────────────── */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .06em; text-transform: uppercase; }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.brand small { color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+.nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.nav a { font-family: var(--display); font-weight: 700; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); padding: 6px 10px; border-radius: 8px; }
+.nav a:hover { color: var(--text); background: var(--panel-2); text-decoration: none; }
+.lights { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); background: var(--panel); border-radius: 999px; padding: 6px 12px; font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.lights svg { width: 16px; height: 16px; }
+
+/* ── Hero ───────────────────────────────── */
+.hero { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: 32px; align-items: end; padding: 44px 0 28px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.hero h1 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(48px, 7.4vw, 104px); line-height: .9; letter-spacing: -.01em; margin: 14px 0 18px; }
+.hero h1 .scrawl { font-family: var(--marker); text-transform: none; color: var(--accent); font-weight: 400; font-size: .62em; display: inline-block; transform: rotate(-4deg) translateY(-6px); letter-spacing: 0; }
+.intro { font-size: 18px; color: var(--sub); max-width: 640px; margin: 0; }
+.intro strong { color: var(--text); font-weight: 600; }
+.gauges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.gauge { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 14px 12px; box-shadow: var(--shadow); }
+.gauge b { display: block; font-family: var(--display); font-weight: 800; font-size: 40px; line-height: 1; }
+.gauge span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Shop rule (honesty notice) ─────────── */
+.rule { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin: 0 0 22px; box-shadow: var(--shadow); }
+.rule p { margin: 0; color: var(--sub); font-size: 14.5px; }
+.rule p strong { color: var(--text); }
+.tape { display: inline-block; background: var(--tape); color: var(--tape-ink); font-family: var(--marker); font-size: 17px; line-height: 1.1; padding: 6px 12px 5px; transform: rotate(-2deg); box-shadow: 0 2px 6px rgba(0,0,0,.25); white-space: nowrap;
+  -webkit-mask: linear-gradient(90deg, transparent 0 2px, #000 2px calc(100% - 2px), transparent 0), none;
+  clip-path: polygon(0 4%, 3% 0, 97% 3%, 100% 0, 99% 50%, 100% 100%, 96% 97%, 4% 100%, 0 96%, 1% 50%); }
+
+/* ── Layout ─────────────────────────────── */
+.layout { display: grid; grid-template-columns: 290px minmax(0,1fr); gap: 20px; align-items: start; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; min-width: 0; box-shadow: var(--shadow); }
+.section-title { font-family: var(--display); font-weight: 800; text-transform: uppercase; letter-spacing: .02em; font-size: 28px; line-height: 1; margin: 0; }
+.section-sub { color: var(--muted); font-size: 14px; margin: 6px 0 0; }
+.headrow { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--line-2); color: var(--sub); border-radius: 999px; padding: 3px 8px; white-space: nowrap; }
+.chip-unicorn { color: var(--accent); border-color: var(--accent); }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.75), var(--c) 45%, color-mix(in srgb, var(--c) 70%, #000) 100%); }
+
+/* ── Sidebar: the bag shelf ─────────────── */
+.shelf { position: sticky; top: 14px; max-height: calc(100vh - 28px); display: flex; flex-direction: column; padding: 18px; }
+.shelf .tape { align-self: flex-start; margin: -30px 0 12px -4px; }
+.search { width: 100%; background: var(--bg); border: 1px solid var(--line-2); border-radius: 10px; padding: 10px 12px; outline: none; }
+.search::placeholder { color: var(--muted); }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; margin: 10px 0; }
+.tab { background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); }
+.tab[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.model-list { overflow: auto; min-height: 120px; margin: 0 -6px; padding: 0 6px; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+.model-btn { width: 100%; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 9px 10px; margin: 2px 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
+.model-btn:hover { background: var(--panel-2); }
+.model-btn[aria-current="true"] { background: var(--panel-2); border-color: var(--accent); }
+.model-btn .nm { font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: .02em; line-height: 1.1; }
+.model-btn .br { grid-column: 1; font-size: 12px; color: var(--muted); }
+.model-btn .beads { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end; max-width: 52px; }
+.model-btn .beads .dot { width: 8px; height: 8px; }
+.shelf-foot { border-top: 1px solid var(--line); margin: 12px 0 0; padding-top: 12px; font-size: 12.5px; color: var(--muted); }
+
+/* ── Model header + controls ────────────── */
+.main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.model-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+.model-title { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(38px, 4.6vw, 60px); line-height: .95; margin: 6px 0 8px; }
+.model-desc { color: var(--sub); margin: 0; max-width: 680px; }
+.years-plate { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .1em; border: 2px solid var(--text); border-radius: 6px; padding: 6px 10px; white-space: nowrap; }
+.refs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.refs a { font-size: 12px; border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 10px; color: var(--sub); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.refs a:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+.controls { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,.8fr); gap: 14px; margin-top: 20px; }
+.control { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.select, .range { background: var(--bg); border: 1px solid var(--line-2); border-radius: 10px; padding: 10px 12px; width: 100%; min-height: 44px; }
+.range { display: flex; align-items: center; gap: 10px; padding: 6px 12px; }
+.range input { width: 100%; accent-color: var(--accent); }
+.range span { font-size: 11px; color: var(--muted); white-space: nowrap; font-family: var(--mono); }
+.range.off { opacity: .4; }
+.mode-note { margin: 14px 0 0; padding: 11px 14px; border-left: 3px solid var(--accent); background: var(--panel-2); border-radius: 0 10px 10px 0; font-size: 14px; color: var(--sub); }
+.mode-note strong { color: var(--text); }
+
+/* ── The bag + parts tag ────────────────── */
+.bench { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); gap: 20px; }
+.bag-bay { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; overflow: hidden;
+  background: radial-gradient(ellipse 70% 55% at 50% 0%, color-mix(in srgb, var(--hazard) 13%, transparent), transparent 70%), var(--panel); }
+.bag-bay .label { align-self: flex-start; }
+.bag-canvas { width: 100%; max-width: 380px; aspect-ratio: 720 / 600; display: block; }
+.tag-wrap { width: 100%; display: flex; justify-content: center; padding-top: 4px; }
+.tag { position: relative; width: min(100%, 440px); background: var(--manila); color: var(--manila-ink); border-radius: 6px 22px 22px 6px; padding: 16px 20px 16px 46px; transform: rotate(-1deg);
+  box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 12px 26px -12px rgba(0,0,0,.55);
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 1px, transparent 1px 26px); }
+.tag::before { content: ""; position: absolute; left: 16px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%; background: var(--panel); box-shadow: inset 0 0 0 3px #c7b07a; }
+.tag::after { content: ""; position: absolute; left: -38px; top: 50%; width: 62px; height: 2px; background: #b9a06a; transform: rotate(-14deg); transform-origin: right center; }
+.tag.fresh { animation: tagIn .5s cubic-bezier(.2,1.4,.4,1); }
+@keyframes tagIn { from { transform: rotate(-6deg) translateY(10px) scale(.96); opacity: 0; } }
+.tag-top { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+.tag-engine { font-family: var(--marker); font-size: 27px; line-height: 1.12; margin: 6px 0 8px; text-wrap: balance; }
+.tag-specs { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag-specs span { font-family: var(--mono); font-size: 11px; border: 1px solid rgba(43,34,22,.35); border-radius: 4px; padding: 2px 6px; }
+.tag-rarity { margin-top: 10px; display: inline-block; font-family: var(--display); font-weight: 800; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border: 2px solid currentColor; border-radius: 4px; transform: rotate(-2deg); }
+.tier-1 { color: #4b5a3a; } .tier-2 { color: #3e5566; } .tier-3 { color: #7a5413; } .tier-4 { color: #a3420e; } .tier-5 { color: #b0182b; }
+.tag-talk { margin: 10px 0 0; font-size: 14.5px; line-height: 1.45; }
+.tag.blank .tag-engine { opacity: .55; }
+.actions { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; width: 100%; }
+.btn { border: 1px solid var(--line-2); background: var(--panel-2); border-radius: 11px; padding: 12px 10px; font-family: var(--display); font-weight: 800; font-size: 16px; letter-spacing: .07em; text-transform: uppercase; transition: transform .12s ease, filter .12s ease; white-space: nowrap; }
+.btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn.go { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn small { display: block; font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .04em; text-transform: none; opacity: .75; }
+.talk-line { min-height: 44px; width: 100%; text-align: center; font-size: 14.5px; color: var(--sub); margin: 0; }
+.talk-line em { color: var(--text); font-style: normal; font-weight: 600; }
+.bay-foot { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 13px; color: var(--muted); }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; font-size: 13px; }
+kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; }
+
+/* ── Odds sheet ─────────────────────────── */
+.odds-list { margin-top: 16px; }
+.odds-row { margin-bottom: 12px; }
+.odds-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.odds-name { display: flex; gap: 7px; align-items: center; font-weight: 600; font-size: 14.5px; line-height: 1.3; flex-wrap: wrap; }
+.odds-pct { font-family: var(--mono); font-weight: 700; font-size: 13px; white-space: nowrap; }
+.track { height: 8px; background: var(--track); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.fill { height: 100%; border-radius: 99px; background: var(--c); transition: width .45s cubic-bezier(.2,.8,.2,1); }
+.odds-foot { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.tally { margin-top: 16px; }
+.tally table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tally th { text-align: right; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 6px 4px; border-bottom: 1px solid var(--line); }
+.tally th:first-child, .tally td:first-child { text-align: left; }
+.tally td { padding: 7px 4px; border-bottom: 1px dashed var(--line); text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.tally td:first-child { font-family: var(--body); font-size: 13.5px; }
+.tally .delta-up { color: #6fbf73; } .tally .delta-dn { color: #e0795f; }
+
+/* ── Garage wall (pegboard) ─────────────── */
+.wall { background-image: radial-gradient(circle, var(--peg) 2.2px, transparent 2.6px); background-size: 22px 22px; background-position: 11px 11px; }
+.wall-grid { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.peg { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: 10px; border: 1px dashed var(--line-2); background: color-mix(in srgb, var(--panel) 85%, transparent); color: var(--muted); font-size: 13.5px; line-height: 1.25; min-height: 52px; }
+.peg .dot { width: 18px; height: 18px; }
+.peg.ghost .dot { background: transparent; border: 2px dashed var(--line-2); }
+.peg.have { border-style: solid; border-color: var(--line-2); color: var(--text); background: var(--panel-2); }
+.peg.have b { font-weight: 600; }
+.peg.just { animation: pop .6s cubic-bezier(.2,1.5,.4,1); border-color: var(--accent); }
+@keyframes pop { from { transform: scale(.85); } }
+.progress { height: 6px; background: var(--track); border-radius: 99px; overflow: hidden; margin-top: 12px; }
+.progress div { height: 100%; background: repeating-linear-gradient(-45deg, var(--hazard) 0 8px, var(--accent) 8px 16px); transition: width .5s ease; }
+
+/* ── Gauges row ─────────────────────────── */
+.dials { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.dial { padding: 16px 18px; }
+.dial b { display: block; font-family: var(--display); font-weight: 800; font-size: 40px; line-height: 1; }
+.dial .label { display: block; margin-top: 6px; }
+.dial p { margin: 6px 0 0; font-size: 13px; color: var(--muted); line-height: 1.35; }
+
+/* ── Compare ────────────────────────────── */
+.vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; margin: 16px 0 4px; }
+.vs-card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.vs-card h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 24px; margin: 4px 0; line-height: 1; }
+.vs-card .big { font-family: var(--display); font-weight: 800; font-size: 38px; line-height: 1; margin-top: 8px; }
+.vs-card p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.vs-card .eng { color: var(--text); font-weight: 600; }
+.vs-mid { align-self: center; font-family: var(--marker); font-size: 26px; color: var(--accent); transform: rotate(-8deg); }
+.cmp-group { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.cmp-row { display: grid; grid-template-columns: 130px 1fr 54px; gap: 10px; align-items: center; margin-top: 7px; font-size: 13px; }
+.cmp-row .nm { color: var(--sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cmp-row .v { font-family: var(--mono); font-weight: 700; text-align: right; font-size: 12.5px; }
+
+/* ── Build history table ────────────────── */
+.toggle { width: 100%; background: none; border: 0; padding: 0; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.toggle svg { width: 22px; flex: none; transition: transform .2s ease; color: var(--muted); }
+.toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.history { width: 100%; border-collapse: collapse; margin-top: 14px; }
+.history th { text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px; border-bottom: 1px solid var(--line-2); }
+.history td { padding: 11px 8px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 13.5px; }
+.history td:first-child { font-family: var(--mono); font-weight: 700; white-space: nowrap; }
+.history td small { color: var(--muted); font-size: 12.5px; }
+.stripe { display: flex; gap: 2px; height: 12px; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+.stripe span { min-width: 2px; height: 100%; background: var(--c); }
+
+/* ── Shop notes / methodology ───────────── */
+.formula { font-family: var(--mono); font-size: 13px; line-height: 1.8; background: var(--bg); border: 1px dashed var(--line-2); border-radius: 10px; padding: 14px 16px; margin: 14px 0; overflow-x: auto; }
+.prose { color: var(--sub); font-size: 14.5px; max-width: 900px; }
+.prose strong { color: var(--text); }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 18px 0; }
+.trio div { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; font-size: 14px; color: var(--sub); }
+.trio .tape { font-size: 15px; margin-bottom: 10px; }
+.sources { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin: 12px 0 18px; }
+.source { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); color: var(--text); font-size: 13.5px; word-break: break-word; }
+.source:hover { border-color: var(--accent); text-decoration: none; }
+.source span { color: var(--accent); }
+.row-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.row-actions .btn { font-size: 14px; padding: 10px 14px; }
+
+.footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.footer .tape { font-size: 14px; white-space: normal; max-width: 100%; }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 250px minmax(0,1fr); }
+  .bench { grid-template-columns: 1fr; }
+  .dials { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .controls { grid-template-columns: 1fr 1fr; }
+  .controls .control:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .shell { padding: 0 16px 48px; }
+  .nav a { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 28px 0 22px; gap: 20px; }
+  .intro { font-size: 16px; }
+  .rule { grid-template-columns: 1fr; gap: 10px; }
+  .layout { display: flex; flex-direction: column; }
+  .shelf { position: static; max-height: none; width: 100%; }
+  .shelf .tape { margin-top: -28px; }
+  .model-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px; max-height: 236px; }
+  .model-btn { border-color: var(--line); margin: 0; }
+  .model-btn .beads { display: none; }
+  .panel { padding: 16px; }
+  .controls { grid-template-columns: 1fr; }
+  .actions .btn { font-size: 14px; padding: 10px 6px; }
+  .vs { grid-template-columns: 1fr; }
+  .vs-mid { justify-self: center; }
+  .cmp-row { grid-template-columns: 90px 1fr 48px; }
+  .trio, .sources { grid-template-columns: 1fr; }
+  .tag { padding-left: 40px; }
+  .tag-engine { font-size: 23px; }
+}
+@media (max-width: 420px) {
+  .gauge b, .dial b { font-size: 32px; }
+  .dials { gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<div class="hazard" aria-hidden="true"></div>
+<div class="shell">
+
+<header class="header">
+  <div class="brand">
+    <svg viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M9 12h22l2 22a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3z" fill="none" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <path d="M8 12h24" stroke="#d24a3c" stroke-width="2.5"/>
+      <circle cx="15" cy="30" r="4" fill="#ff8c32"/><circle cx="24" cy="31" r="4" fill="#4fb3c8"/><circle cx="20" cy="23.5" r="4" fill="#b48cf0"/>
+    </svg>
+    <span>Bead Bag Garage <small>/ est. in a driveway</small></span>
+  </div>
+  <nav class="nav" aria-label="Sections">
+    <a href="#bench">The bag</a><a href="#wall">The wall</a><a href="#compare">Tale of the tape</a><a href="#notes">Shop notes</a>
+    <button class="lights" id="lights" type="button" aria-label="Toggle shop lights">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span id="lightsLabel">Lights</span>
+    </button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="kicker">The American pickup engine lottery · research snapshot Nov 16, 2026</div>
+    <h1>Reach in.<br>Pull an engine. <span class="scrawl">no peeking</span></h1>
+    <p class="intro">Take every surviving pickup from one model line, shrink each truck down to a single bead, and dump them all in a parts bag. <strong>Shake it, reach in, and see what's under the hood.</strong> Somewhere in here is a 300 straight-six that has outlived three owners, and a 720-horsepower supercharged V8 that nobody's wife knows about.</p>
+  </div>
+  <div class="gauges" aria-label="Collection size">
+    <div class="gauge"><b id="modelCount">16</b><span>trucks</span></div>
+    <div class="gauge"><b id="engineCount">98</b><span>engines</span></div>
+    <div class="gauge"><b id="brandCount">9</b><span>brands</span></div>
+  </div>
+</section>
+
+<aside class="rule">
+  <span class="tape">Shop rule #1</span>
+  <p><strong>Trust the torque spec, not the guy at the gas station.</strong> The engine lineups and published outputs here are checked against manufacturer and historical sources. But nobody publishes a complete, engine-by-engine count of the U.S. pickups still on the road: not us, not the DMV, not that one forum guy. <strong>The percentages in the bag are modeled assumptions, not registration data.</strong> We show the math at the bottom. Move the sliders and argue with it, because that's what it's there for.</p>
+</aside>
+
+<div class="layout">
+
+  <aside class="panel shelf" aria-label="Choose a truck">
+    <span class="tape">Pick a bag</span>
+    <input class="search" id="search" type="search" placeholder="Search a truck or brand…" aria-label="Search trucks">
+    <div class="tabs" id="tabs" role="group" aria-label="Filter by segment">
+      <button class="tab" data-seg="All" aria-pressed="true">All</button>
+      <button class="tab" data-seg="Full-size" aria-pressed="false">Full-size</button>
+      <button class="tab" data-seg="Mid-size" aria-pressed="false">Mid-size</button>
+      <button class="tab" data-seg="Compact" aria-pressed="false">Compact</button>
+      <button class="tab" data-seg="Heavy-duty adjacent" aria-pressed="false">HD-ish</button>
+    </div>
+    <nav class="model-list" id="modelList"></nav>
+    <p class="shelf-foot">Factory engines, U.S. market only. Swaps, crate motors and "my uncle's truck" are not in the bag. A few very rare variants are grouped together.</p>
+  </aside>
+
+  <main class="main">
+
+    <section class="panel" aria-labelledby="modelTitle">
+      <div class="model-head">
+        <div>
+          <div class="kicker" id="modelKicker"></div>
+          <h2 class="model-title" id="modelTitle"></h2>
+          <p class="model-desc" id="modelDesc"></p>
+        </div>
+        <div class="years-plate" id="modelYears" title="Model years covered"></div>
+      </div>
+      <div class="refs" id="modelRefs"></div>
+      <div class="controls">
+        <div class="control">
+          <label class="label" for="mode">What's in the bag?</label>
+          <select class="select" id="mode">
+            <option value="fleet">Driveway census: modeled survivors</option>
+            <option value="latest">Fresh off the line: latest model-year mix</option>
+            <option value="equal">Roll call: one bead per engine</option>
+          </select>
+        </div>
+        <div class="control">
+          <label class="label" for="halfLife">Rust factor · <span id="halfLifeLabel" class="mono">22</span>-yr half-life</label>
+          <div class="range" id="rangeBox">
+            <span>Salt belt</span>
+            <input type="range" id="halfLife" min="10" max="45" step="1" value="22" aria-describedby="rustHint">
+            <span>Desert dry</span>
+          </div>
+        </div>
+        <div class="control">
+          <label class="label" for="fuel">What's it drink?</label>
+          <select class="select" id="fuel">
+            <option value="All">Anything</option>
+            <option value="Gas">Gasoline</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Electric">Electrons</option>
+          </select>
+        </div>
+      </div>
+      <p class="mode-note" id="modeNote"></p>
+      <span id="rustHint" hidden>Lower values thin out older trucks faster, like road salt would. Higher values let more old trucks survive.</span>
+    </section>
+
+    <div class="bench" id="bench">
+      <section class="panel bag-bay" aria-label="The bead bag">
+        <span class="label">The bag · every draw goes back in</span>
+        <canvas class="bag-canvas" id="bag" width="720" height="600" role="img" aria-label="A clear parts bag full of colored beads"></canvas>
+        <div class="tag-wrap"><div class="tag blank" id="tag" aria-live="polite"></div></div>
+        <p class="talk-line" id="talk" aria-live="polite"></p>
+        <div class="actions">
+          <button class="btn go" id="pull1">Pull one <small>or hit <kbd>space</kbd></small></button>
+          <button class="btn" id="pull10">×10 <small>a handful</small></button>
+          <button class="btn" id="pull100">×100 <small>dump the bag</small></button>
+        </div>
+        <div class="bay-foot"><span id="pullCount" class="mono">0 pulls</span><button class="linkbtn" id="resetPulls">Clear the counter</button></div>
+      </section>
+
+      <section class="panel" aria-labelledby="oddsTitle">
+        <div class="headrow">
+          <div>
+            <h3 class="section-title" id="oddsTitle">The odds sheet</h3>
+            <p class="section-sub" id="oddsSub">What a single pull looks like in this scenario</p>
+          </div>
+          <span class="chip" id="engineBadge"></span>
+        </div>
+        <div class="odds-list" id="odds"></div>
+        <div class="odds-foot"><span id="rareNote"></span><span>Adds up to 100%, give or take rounding</span></div>
+        <div class="tally" id="tally"></div>
+      </section>
+    </div>
+
+    <section class="panel wall" id="wall" aria-labelledby="wallTitle">
+      <div class="headrow">
+        <div>
+          <h3 class="section-title" id="wallTitle">The garage wall</h3>
+          <p class="section-sub">Every engine you pull gets pinned up. The ones you haven't pulled stay mystery parts. This browser remembers your wall.</p>
+        </div>
+        <div style="text-align:right">
+          <div class="mono" id="wallCount" style="font-weight:700"></div>
+          <button class="linkbtn" id="clearWall">Take it all down</button>
+        </div>
+      </div>
+      <div class="progress" aria-hidden="true"><div id="wallBar"></div></div>
+      <ul class="wall-grid" id="wallGrid"></ul>
+    </section>
+
+    <section class="dials" id="dials" aria-label="Quick reads on this bag"></section>
+
+    <section class="panel" id="compare" aria-labelledby="cmpTitle">
+      <div class="headrow">
+        <div>
+          <h3 class="section-title" id="cmpTitle">Tale of the tape</h3>
+          <p class="section-sub">Same scenario and rust factor, different bag. Settle the parking-lot argument.</p>
+        </div>
+        <div class="control" style="min-width:230px">
+          <label class="label" for="cmpModel">In the other corner</label>
+          <select class="select" id="cmpModel"></select>
+        </div>
+      </div>
+      <div class="vs" id="vsCards"></div>
+      <div id="cmpBars"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="histTitle">
+      <button class="toggle" id="histToggle" aria-expanded="true" aria-controls="histBody">
+        <div>
+          <h3 class="section-title" id="histTitle">Build history</h3>
+          <p class="section-sub">The model-year eras that fill this bag, and the take rates we assumed for each</p>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div id="histBody">
+        <p class="prose" style="margin:14px 0 0">The colored stripes show the <strong>engine mix we assume</strong> for new trucks in each era. That mix isn't verified unless a note says it is, and the same goes for the volume multiplier. In driveway-census mode the rust factor then thins out the older years on top of all that.</p>
+        <div style="overflow-x:auto"><table class="history"><thead><tr><th>Years</th><th>Assumed engine mix</th><th>Volume</th></tr></thead><tbody id="histRows"></tbody></table></div>
+        <p class="prose" id="modelNotes" style="font-size:13.5px"></p>
+      </div>
+    </section>
+
+    <section class="panel" id="notes" aria-labelledby="notesTitle">
+      <h3 class="section-title" id="notesTitle">Shop notes: how the bag gets filled</h3>
+      <p class="prose">This is a thought experiment that shows its work. It doesn't come from a proprietary fleet database. The idea is that a model you can poke at is more honest than a confident-looking percentage with nothing behind it.</p>
+      <div class="formula">weight(engine) = Σ<sub>model years</sub> [ assumed sales index × assumed take rate × 2<sup>−age ÷ half-life</sup> ]<br>chance(engine) = weight(engine) ÷ weight(every engine in the bag)</div>
+      <p class="prose">The rust factor is a <strong>heuristic you control</strong>. It's not a measured survival curve, and the 22-year default is a modeling choice, not a real truck survival estimate. A 2024 research paper put the median U.S. pickup lifetime at roughly 25 years, and the DOE cited a 13.1-year average pickup age in 2023. Neither one sets a universal half-life. Annual volumes and option mixes also change from year to year, and manufacturers rarely publish them broken out by engine.</p>
+      <div class="trio">
+        <div><span class="tape">Verified</span><br>Factory engine families, rough availability eras, and current manufacturer-rated outputs where they're stated.</div>
+        <div><span class="tape">Assumed</span><br>Historical take rates, annual-volume indices, and which old trucks are still out there.</div>
+        <div><span class="tape">Not in the bag</span><br>Engine swaps; heavy-duty variants (except the labeled Titan XD); foreign-market oddities; separate EV-only pickups.</div>
+      </div>
+      <h4 class="label" style="margin:0">Sources &amp; receipts</h4>
+      <p class="prose" style="font-size:13.5px">Manufacturer specs come first for 2026 models, and historical overviews fill in the older generations. The F-150 Lightning gets a bead even though it has motors instead of an engine. Everything here works offline, but the source links need the internet.</p>
+      <div class="sources" id="sources"></div>
+      <div class="row-actions">
+        <button class="btn" id="download">↓ Research data (JSON)</button>
+        <button class="btn" id="copy">Copy this bag's odds</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <span>Bead Bag Garage · research snapshot Nov 16, 2026 · factory configurations, U.S. market · not a registration census</span>
+  <span class="tape">Yes, we know about your LS-swapped Ranger. It's beautiful. It's not in the bag.</span>
+</footer>
+</div>
+
+<script>const DATABASE={"models":[{"id":"f150","brand":"Ford","name":"F-150","segment":"Full-size","years":"1975–2026","summary":"America’s long-running half-ton pickup; includes vintage gasoline, EcoBoost, hybrid, Raptor, and Lightning EV.","engines":[{"id":"i6","name":"4.9L / 300 inline-six","layout":"I6","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1975–1996","description":"Durable, low-revving straight-six; vintage F-150 staple."},{"id":"302","name":"5.0L / 302 Windsor V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1970s–1996","description":"Older pushrod 302 engine; NOT the modern Coyote."},{"id":"351","name":"5.8L / 351 Windsor V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1970s–1996","description":"Larger old-school Ford small-block."},{"id":"otherold","name":"Other vintage gas engines","layout":"Various","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1975–1989","description":"Less-common 1970s–1980s displacements grouped instead of inventing tiny shares."},{"id":"42","name":"4.2L Essex V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1997–2008","description":""},{"id":"46","name":"4.6L Modular V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1997–2010","description":""},{"id":"54","name":"5.4L Triton V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1997–2010","description":"Mainstream naturally aspirated Triton 5.4L."},{"id":"54sc","name":"5.4L supercharged SVT Lightning V8","layout":"V8","fuel":"Gas","asp":"Supercharged","hp":"360–380","years":"1999–2004","description":"Rare factory supercharged performance truck, not the electric Lightning."},{"id":"37","name":"3.7L Cyclone V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"302","years":"2011–2014","description":""},{"id":"35na","name":"3.5L naturally aspirated V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"282","years":"2015–2017","description":""},{"id":"33","name":"3.3L naturally aspirated V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"290","years":"2018–2023","description":""},{"id":"62","name":"6.2L Boss V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"411","years":"2010–2014","description":""},{"id":"50","name":"5.0L Coyote V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"400 (2026)","years":"2011–2026","description":""},{"id":"35eb","name":"3.5L EcoBoost twin-turbo V6","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"400 (2026)","years":"2011–2026","description":""},{"id":"27eb","name":"2.7L EcoBoost twin-turbo V6","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"325 (2026)","years":"2015–2026","description":""},{"id":"30d","name":"3.0L Power Stroke diesel V6","layout":"V6","fuel":"Diesel","asp":"Turbo","hp":"250","years":"2018–2021","description":""},{"id":"pb","name":"3.5L PowerBoost hybrid V6","layout":"V6","fuel":"Hybrid","asp":"Twin turbo + motor","hp":"430 (combined)","years":"2021–2026","description":""},{"id":"raptor","name":"3.5L high-output EcoBoost V6","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"450 (2026)","years":"2017–2026","description":"Raptor-only high output calibration."},{"id":"rr","name":"5.2L supercharged V8 (Raptor R)","layout":"V8","fuel":"Gas","asp":"Supercharged","hp":"720 (2026)","years":"2023–2026","description":""},{"id":"ev","name":"F-150 Lightning electric motors","layout":"EV","fuel":"Electric","asp":"Electric motors","hp":"varies","years":"2022–2025","description":"Included as a powertrain bead; no combustion engine."}],"eras":[{"start":1975,"end":1989,"volume":0.42,"mix":{"i6":31,"302":28,"351":19,"otherold":22}},{"start":1990,"end":1996,"volume":0.6,"mix":{"i6":26,"302":42,"351":32}},{"start":1997,"end":1998,"volume":0.84,"mix":{"42":24,"46":35,"54":41}},{"start":1999,"end":2003,"volume":0.84,"mix":{"42":24,"46":35,"54":40.3,"54sc":0.7}},{"start":2004,"end":2004,"volume":1.0,"mix":{"42":7,"46":31,"54":61.2,"54sc":0.8}},{"start":2005,"end":2009,"volume":1.0,"mix":{"42":7,"46":31,"54":62}},{"start":2010,"end":2010,"volume":1.0,"mix":{"42":7,"46":31,"54":61,"62":1}},{"start":2011,"end":2014,"volume":1.04,"mix":{"37":15,"35eb":40,"50":38,"62":7}},{"start":2015,"end":2016,"volume":1.09,"mix":{"35na":7,"27eb":26,"35eb":38,"50":29}},{"start":2017,"end":2017,"volume":1.09,"mix":{"35na":7,"27eb":26,"35eb":37,"50":29,"raptor":1}},{"start":2018,"end":2020,"volume":1.13,"mix":{"33":7,"27eb":31,"35eb":32,"50":27,"30d":2,"raptor":1}},{"start":2021,"end":2023,"volume":1.13,"mix":{"33":4,"27eb":24,"35eb":30,"50":25,"pb":12,"raptor":2,"rr":0.5,"ev":2.5}},{"start":2024,"end":2025,"volume":1.11,"mix":{"27eb":29,"35eb":28,"50":23,"pb":15,"raptor":2,"rr":0.5,"ev":2.5}},{"start":2026,"end":2026,"volume":1.11,"mix":{"27eb":29,"35eb":30.5,"50":23,"pb":15,"raptor":2,"rr":0.5}}],"sources":["ford2026","ford2025","lightningv8","lightningev","sp","survival"],"notes":"F-Series sales include Super Duty; never use aggregate F-Series sales as an F-150 engine mix. Older engines are grouped where necessary."},{"id":"silverado","brand":"Chevrolet","name":"Silverado 1500","segment":"Full-size","years":"1999–2026","summary":"GM’s Chevrolet half-ton; older Vortec engines and newer TurboMax, EcoTec3 and Duramax.","engines":[{"id":"43","name":"4.3L Vortec / EcoTec3 V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1999–2021","description":""},{"id":"48","name":"4.8L Vortec V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"1999–2013","description":""},{"id":"53","name":"5.3L Vortec / EcoTec3 V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"355 (2026)","years":"1999–2026","description":""},{"id":"60","name":"6.0L Vortec / Hybrid V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"2003–2013","description":"Specialty trims such as SS, hybrid, and certain 1500 variants."},{"id":"62","name":"6.2L V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"420 (2026)","years":"2009–2026","description":""},{"id":"27","name":"2.7L TurboMax I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"310 (2026)","years":"2019–2026","description":""},{"id":"30","name":"3.0L Duramax turbo-diesel I6","layout":"I6","fuel":"Diesel","asp":"Turbo","hp":"305 (2026)","years":"2020–2026","description":""}],"eras":[{"start":1999,"end":2006,"volume":0.92,"mix":{"43":17,"48":27,"53":53,"60":3}},{"start":2007,"end":2013,"volume":1.03,"mix":{"43":12,"48":20,"53":54,"60":4,"62":10}},{"start":2014,"end":2018,"volume":1.12,"mix":{"43":18,"53":65,"62":17}},{"start":2019,"end":2022,"volume":1.15,"mix":{"43":5,"53":53,"62":10,"27":26,"30":6}},{"start":2023,"end":2026,"volume":1.12,"mix":{"53":44,"62":9,"27":35,"30":12}}],"sources":["silverado","coloradohist","sierrahist","sp"],"notes":"Silverado 1500 only: excludes HD, Silverado EV, and older C/K trucks. 6.0L V8 was limited/specialty; avoid assuming it was a broad base option."},{"id":"ram1500","brand":"Ram","name":"Ram 1500","segment":"Full-size","years":"1994–2026","summary":"Includes Dodge-badged Ram 1500 and later Ram-branded trucks, Classic and performance trims.","engines":[{"id":"39","name":"3.9L Magnum V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"175","years":"1994–2001","description":""},{"id":"52","name":"5.2L Magnum V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"220–230","years":"1994–2001","description":""},{"id":"59","name":"5.9L Magnum V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"230–245","years":"1994–2003","description":""},{"id":"37","name":"3.7L PowerTech V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"215","years":"2002–2012","description":""},{"id":"47","name":"4.7L PowerTech V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"235–310","years":"2002–2013","description":""},{"id":"57","name":"5.7L HEMI V8 (with/without eTorque)","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"395 (2026)","years":"2003–2024; 2026","description":"2025 model-year gap; returned for 2026."},{"id":"36","name":"3.6L Pentastar V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"305 (2026)","years":"2013–2026","description":""},{"id":"30d","name":"3.0L EcoDiesel turbo V6","layout":"V6","fuel":"Diesel","asp":"Turbo","hp":"240–260","years":"2014–2023","description":"2019 fitment varies between Classic and redesigned trucks."},{"id":"30so","name":"3.0L Hurricane SO twin-turbo I6","layout":"I6","fuel":"Gas","asp":"Twin turbo","hp":"420","years":"2025–2026","description":""},{"id":"30ho","name":"3.0L Hurricane HO twin-turbo I6","layout":"I6","fuel":"Gas","asp":"Twin turbo","hp":"540","years":"2025–2026","description":""},{"id":"trx","name":"6.2L supercharged HEMI V8 (TRX)","layout":"V8","fuel":"Gas","asp":"Supercharged","hp":"702","years":"2021–2024","description":""},{"id":"srt","name":"8.3L Viper V10 (SRT-10)","layout":"V10","fuel":"Gas","asp":"Naturally aspirated","hp":"500","years":"2004–2006","description":""}],"eras":[{"start":1994,"end":2001,"volume":0.71,"mix":{"39":12,"52":48,"59":40}},{"start":2002,"end":2003,"volume":0.92,"mix":{"37":13,"47":36,"59":5,"57":46}},{"start":2004,"end":2006,"volume":0.92,"mix":{"37":12,"47":32,"57":54,"srt":2}},{"start":2007,"end":2008,"volume":0.92,"mix":{"37":12,"47":33,"57":55}},{"start":2009,"end":2012,"volume":0.94,"mix":{"37":10,"47":20,"57":70}},{"start":2013,"end":2018,"volume":1.05,"mix":{"36":28,"57":65,"30d":7}},{"start":2019,"end":2023,"volume":1.12,"mix":{"36":20,"57":73,"30d":5,"trx":2}},{"start":2024,"end":2024,"volume":1.06,"mix":{"36":22,"57":71,"trx":7}},{"start":2025,"end":2025,"volume":1.07,"mix":{"36":22,"30so":60,"30ho":18}},{"start":2026,"end":2026,"volume":1.07,"mix":{"36":18,"57":37,"30so":36,"30ho":9}}],"sources":["ram","ramhist","sp"],"notes":"Factory Ram 1500 SRT-10 counted; 2500/3500 Cummins diesels and future 2027 TRX excluded."},{"id":"sierra","brand":"GMC","name":"Sierra 1500","segment":"Full-size","years":"1999–2026","summary":"Silverado’s GMC counterpart; similar engine families, but different trim availability.","engines":[{"id":"43","name":"4.3L Vortec / EcoTec3 V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1999–2021","description":""},{"id":"48","name":"4.8L Vortec V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1999–2013","description":""},{"id":"53","name":"5.3L Vortec / EcoTec3 V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"355 (2026)","years":"1999–2026","description":""},{"id":"60","name":"6.0L Vortec V8 (Denali/other)","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2001–2013","description":""},{"id":"62","name":"6.2L V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"420 (2026)","years":"2007–2026","description":""},{"id":"27","name":"2.7L TurboMax I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"310 (2026)","years":"2019–2026","description":""},{"id":"30","name":"3.0L Duramax turbo-diesel I6","layout":"I6","fuel":"Diesel","asp":"Turbo","hp":"305 (2026)","years":"2020–2026","description":""}],"eras":[{"start":1999,"end":2006,"volume":0.73,"mix":{"43":15,"48":23,"53":52,"60":10}},{"start":2007,"end":2013,"volume":0.85,"mix":{"43":9,"48":13,"53":55,"60":7,"62":16}},{"start":2014,"end":2018,"volume":0.99,"mix":{"43":12,"53":55,"62":33}},{"start":2019,"end":2022,"volume":1.09,"mix":{"43":4,"53":45,"62":23,"27":21,"30":7}},{"start":2023,"end":2026,"volume":1.08,"mix":{"53":40,"62":21,"27":25,"30":14}}],"sources":["sierra","sierrahist","sp"],"notes":"Sierra 1500 excludes Sierra HD and the separate Sierra EV."},{"id":"tundra","brand":"Toyota","name":"Tundra","segment":"Full-size","years":"2000–2026","summary":"Toyota’s full-size pickup; the 5.7L V8 era gave way to twin-turbo V6s in 2022.","engines":[{"id":"34old","name":"3.4L naturally aspirated V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"190","years":"2000–2004","description":""},{"id":"47","name":"4.7L V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"2000–2009","description":""},{"id":"40","name":"4.0L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"2005–2014","description":""},{"id":"57","name":"5.7L i-FORCE V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"381","years":"2007–2021","description":""},{"id":"46","name":"4.6L V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"310","years":"2010–2019","description":""},{"id":"34tt","name":"3.4L i-FORCE twin-turbo V6","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"358–389","years":"2022–2026","description":"SR trim has a lower output than the common 389-hp version."},{"id":"34hy","name":"3.4L i-FORCE MAX hybrid V6","layout":"V6","fuel":"Hybrid","asp":"Twin turbo + motor","hp":"437 (combined)","years":"2022–2026","description":""}],"eras":[{"start":2000,"end":2004,"volume":0.6,"mix":{"34old":31,"47":69}},{"start":2005,"end":2006,"volume":0.69,"mix":{"40":27,"47":73}},{"start":2007,"end":2009,"volume":0.85,"mix":{"40":14,"47":21,"57":65}},{"start":2010,"end":2014,"volume":0.92,"mix":{"40":13,"46":15,"57":72}},{"start":2015,"end":2019,"volume":1.02,"mix":{"46":9,"57":91}},{"start":2020,"end":2021,"volume":1.03,"mix":{"57":100}},{"start":2022,"end":2026,"volume":1.07,"mix":{"34tt":70,"34hy":30}}],"sources":["tundra","tundrahist","sp"],"notes":""},{"id":"tacoma","brand":"Toyota","name":"Tacoma","segment":"Mid-size","years":"1995–2026","summary":"Toyota’s popular midsize pickup; V6-heavy for decades before moving to turbo fours.","engines":[{"id":"24","name":"2.4L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1995–2004","description":""},{"id":"27","name":"2.7L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1995–2023","description":""},{"id":"34","name":"3.4L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1995–2004","description":""},{"id":"40","name":"4.0L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2005–2015","description":""},{"id":"35","name":"3.5L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2016–2023","description":""},{"id":"24t","name":"2.4L i-FORCE turbo I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"228–278","years":"2024–2026","description":""},{"id":"24hy","name":"2.4L i-FORCE MAX hybrid I4","layout":"I4","fuel":"Hybrid","asp":"Turbo + motor","hp":"326 (combined)","years":"2024–2026","description":""}],"eras":[{"start":1995,"end":2004,"volume":0.64,"mix":{"24":15,"27":28,"34":57}},{"start":2005,"end":2015,"volume":0.85,"mix":{"27":25,"40":75}},{"start":2016,"end":2023,"volume":1.07,"mix":{"27":20,"35":80}},{"start":2024,"end":2026,"volume":1.14,"mix":{"24t":82,"24hy":18}}],"sources":["tacoma","sp"],"notes":""},{"id":"frontier","brand":"Nissan","name":"Frontier","segment":"Mid-size","years":"1998–2026","summary":"Compact-to-midsize evolution, with a long-running 4.0L V6 and current 3.8L V6.","engines":[{"id":"24","name":"2.4L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1998–2004","description":""},{"id":"33","name":"3.3L V6 (incl. supercharged trim)","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1999–2004","description":"Includes rare factory supercharged 3.3L versions."},{"id":"25","name":"2.5L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2005–2019","description":""},{"id":"40","name":"4.0L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2005–2019","description":""},{"id":"38","name":"3.8L V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"310 (2026)","years":"2020–2026","description":""}],"eras":[{"start":1998,"end":1998,"volume":0.6,"mix":{"24":100}},{"start":1999,"end":2004,"volume":0.6,"mix":{"24":40,"33":60}},{"start":2005,"end":2012,"volume":0.82,"mix":{"25":26,"40":74}},{"start":2013,"end":2019,"volume":0.86,"mix":{"25":20,"40":80}},{"start":2020,"end":2026,"volume":1.05,"mix":{"38":100}}],"sources":["frontier","frontierhist"],"notes":""},{"id":"titan","brand":"Nissan","name":"Titan (non-XD)","segment":"Full-size","years":"2004–2024","summary":"A remarkably simple engine lottery: every U.S. standard Titan used a 5.6L gasoline V8.","engines":[{"id":"56","name":"5.6L Endurance V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":"varies","years":"2004–2024","description":"Revised significantly for the second generation, but remained 5.6L V8."}],"eras":[{"start":2004,"end":2015,"volume":0.83,"mix":{"56":100}},{"start":2016,"end":2024,"volume":0.93,"mix":{"56":100}}],"sources":["titan"],"notes":"Titan XD is a separate model in this simulator; it offered a 5.0L Cummins diesel."},{"id":"titanxd","brand":"Nissan","name":"Titan XD","segment":"Heavy-duty adjacent","years":"2016–2024","summary":"Heavier-duty Titan with the unusual 5.0L Cummins diesel V8, discontinued after 2019.","engines":[{"id":"56","name":"5.6L Endurance gasoline V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2016–2024","description":""},{"id":"50d","name":"5.0L Cummins turbo-diesel V8","layout":"V8","fuel":"Diesel","asp":"Turbo","hp":"310","years":"2016–2019","description":""}],"eras":[{"start":2016,"end":2019,"volume":0.91,"mix":{"56":38,"50d":62}},{"start":2020,"end":2024,"volume":0.81,"mix":{"56":100}}],"sources":["titan","titanxd"],"notes":""},{"id":"ranger","brand":"Ford","name":"Ranger (U.S.)","segment":"Mid-size","years":"1983–2011; 2019–2026","summary":"Historic compact pickups mixed with new EcoBoost Rangers; no U.S. Ranger sales 2012–2018.","engines":[{"id":"20","name":"2.0L gasoline I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1983–1988","description":""},{"id":"23old","name":"2.3L / 2.5L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1983–2011","description":""},{"id":"28","name":"2.8L / 2.9L Cologne V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1983–1992","description":""},{"id":"30","name":"3.0L Vulcan V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1991–2008","description":""},{"id":"40","name":"4.0L Cologne V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"1990–2011","description":""},{"id":"dieselold","name":"Rare early diesel I4","layout":"I4","fuel":"Diesel","asp":"Varies","hp":null,"years":"1980s","description":""},{"id":"23t","name":"2.3L EcoBoost turbo I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"270","years":"2019–2026","description":""},{"id":"27t","name":"2.7L EcoBoost twin-turbo V6","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"315","years":"2024–2026","description":""},{"id":"30t","name":"3.0L EcoBoost twin-turbo V6 (Raptor)","layout":"V6","fuel":"Gas","asp":"Twin turbo","hp":"405","years":"2024–2026","description":""}],"eras":[{"start":1983,"end":1989,"volume":0.43,"mix":{"20":9,"23old":44,"28":43,"dieselold":4}},{"start":1990,"end":1997,"volume":0.6,"mix":{"23old":34,"28":8,"30":26,"40":32}},{"start":1998,"end":2004,"volume":0.78,"mix":{"23old":32,"30":24,"40":44}},{"start":2005,"end":2011,"volume":0.72,"mix":{"23old":32,"30":15,"40":53}},{"start":2019,"end":2023,"volume":0.95,"mix":{"23t":100}},{"start":2024,"end":2026,"volume":1.08,"mix":{"23t":73,"27t":18,"30t":9}}],"sources":["fordranger","rangerhist","sp"],"notes":""},{"id":"maverick","brand":"Ford","name":"Maverick","segment":"Compact","years":"2022–2026","summary":"The compact Ford pickup with hybrid and turbocharged four-cylinder options.","engines":[{"id":"25h","name":"2.5L Atkinson hybrid I4","layout":"I4","fuel":"Hybrid","asp":"Naturally aspirated + motor","hp":"191 (combined)","years":"2022–2026","description":""},{"id":"20t","name":"2.0L EcoBoost turbo I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"250","years":"2022–2026","description":""}],"eras":[{"start":2022,"end":2024,"volume":1.0,"mix":{"25h":53,"20t":47}},{"start":2025,"end":2026,"volume":1.13,"mix":{"25h":52.3,"20t":47.7}}],"sources":["ford2025","sp"],"notes":"The 2025 52.3% hybrid share is grounded in Ford’s reported 81,034 Maverick hybrids / 155,051 Mavericks. Other years are illustrative."},{"id":"colorado","brand":"Chevrolet","name":"Colorado","segment":"Mid-size","years":"2004–2012; 2015–2026","summary":"Early Colorado offered unusual inline-five engines; later V6/diesel, now 2.7L turbo.","engines":[{"id":"28","name":"2.8L / 2.9L gasoline I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2004–2012","description":""},{"id":"35","name":"3.5L / 3.7L gasoline inline-five","layout":"I5","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2004–2012","description":""},{"id":"53","name":"5.3L gasoline V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2009–2012","description":""},{"id":"25","name":"2.5L gasoline I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2015–2022","description":""},{"id":"36","name":"3.6L gasoline V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2015–2022","description":""},{"id":"28d","name":"2.8L Duramax turbo-diesel I4","layout":"I4","fuel":"Diesel","asp":"Turbo","hp":"181","years":"2016–2022","description":""},{"id":"27t","name":"2.7L TurboMax turbo I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"310 (2026)","years":"2023–2026","description":""}],"eras":[{"start":2004,"end":2008,"volume":0.64,"mix":{"28":42,"35":58}},{"start":2009,"end":2012,"volume":0.64,"mix":{"28":35,"35":47,"53":18}},{"start":2015,"end":2018,"volume":0.85,"mix":{"25":25,"36":60,"28d":15}},{"start":2019,"end":2022,"volume":0.97,"mix":{"25":19,"36":67,"28d":14}},{"start":2023,"end":2026,"volume":1.13,"mix":{"27t":100}}],"sources":["colorado","coloradohist"],"notes":""},{"id":"canyon","brand":"GMC","name":"Canyon","segment":"Mid-size","years":"2004–2012; 2015–2026","summary":"The GMC counterpart to Colorado; includes rare I5 and V8 trucks.","engines":[{"id":"28","name":"2.8L / 2.9L gasoline I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2004–2012","description":""},{"id":"35","name":"3.5L / 3.7L gasoline I5","layout":"I5","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2004–2012","description":""},{"id":"53","name":"5.3L gasoline V8","layout":"V8","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2009–2012","description":""},{"id":"25","name":"2.5L gasoline I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2015–2022","description":""},{"id":"36","name":"3.6L gasoline V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":null,"years":"2015–2022","description":""},{"id":"28d","name":"2.8L Duramax turbo-diesel I4","layout":"I4","fuel":"Diesel","asp":"Turbo","hp":"181","years":"2016–2022","description":""},{"id":"27t","name":"2.7L TurboMax turbo I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"310 (2026)","years":"2023–2026","description":""}],"eras":[{"start":2004,"end":2008,"volume":0.6,"mix":{"28":41,"35":59}},{"start":2009,"end":2012,"volume":0.64,"mix":{"28":34,"35":47,"53":19}},{"start":2015,"end":2018,"volume":0.81,"mix":{"25":22,"36":62,"28d":16}},{"start":2019,"end":2022,"volume":0.94,"mix":{"25":18,"36":65,"28d":17}},{"start":2023,"end":2026,"volume":1.08,"mix":{"27t":100}}],"sources":["canyon","coloradohist"],"notes":""},{"id":"ridgeline","brand":"Honda","name":"Ridgeline","segment":"Mid-size","years":"2006–2014; 2017–2026","summary":"Every production Ridgeline uses a naturally aspirated 3.5L Honda V6, but generations differ.","engines":[{"id":"j35old","name":"3.5L V6 (first generation)","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"247–250","years":"2006–2014","description":""},{"id":"j35new","name":"3.5L direct-injection V6 (second generation)","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"280 (2026)","years":"2017–2026","description":""}],"eras":[{"start":2006,"end":2014,"volume":0.76,"mix":{"j35old":100}},{"start":2017,"end":2026,"volume":1.0,"mix":{"j35new":100}}],"sources":["ridgeline"],"notes":""},{"id":"gladiator","brand":"Jeep","name":"Gladiator","segment":"Mid-size","years":"2020–2026","summary":"Jeep’s Wrangler-based pickup: Pentastar gas V6 or, briefly, 3.0L EcoDiesel.","engines":[{"id":"36","name":"3.6L Pentastar V6","layout":"V6","fuel":"Gas","asp":"Naturally aspirated","hp":"285 (2026)","years":"2020–2026","description":""},{"id":"30","name":"3.0L EcoDiesel turbo V6","layout":"V6","fuel":"Diesel","asp":"Turbo","hp":"260","years":"2021–2023","description":""}],"eras":[{"start":2020,"end":2020,"volume":0.96,"mix":{"36":100}},{"start":2021,"end":2023,"volume":1.04,"mix":{"36":84,"30":16}},{"start":2024,"end":2026,"volume":1.02,"mix":{"36":100}}],"sources":["gladiator"],"notes":""},{"id":"santacruz","brand":"Hyundai","name":"Santa Cruz","segment":"Compact","years":"2022–2026","summary":"Unibody pickup-style vehicle with naturally aspirated and turbocharged 2.5L fours.","engines":[{"id":"25","name":"2.5L naturally aspirated I4","layout":"I4","fuel":"Gas","asp":"Naturally aspirated","hp":"191 (2026)","years":"2022–2026","description":""},{"id":"25t","name":"2.5L turbocharged I4","layout":"I4","fuel":"Gas","asp":"Turbo","hp":"281 (2026)","years":"2022–2026","description":""}],"eras":[{"start":2022,"end":2024,"volume":0.92,"mix":{"25":55,"25t":45}},{"start":2025,"end":2026,"volume":1.08,"mix":{"25":58,"25t":42}}],"sources":["santacruz"],"notes":""}],"sources":{"ford2026":["Ford 2026 F-150 engines","https://www.ford.com/trucks/f150/models/"],"ford2025":["Ford 2025 U.S. sales: F-150 hybrid / Maverick hybrid","https://www.fromtheroad.ford.com/us/en/articles/2026/ford-2025-full-year-us-sales-results"],"lightningv8":["SVT F-150 Lightning 1999–2004 supercharged V8","https://www.caranddriver.com/features/a41982408/what-to-buy-1999-2004-ford-svt-f-150-lightning/"],"lightningev":["Ford F-150 Lightning EV production ended","https://www.ford.com/trucks/f150-lightning/specs/"],"fordranger":["Ford 2026 Ranger specifications","https://www.ford.com/trucks/ranger/specs/dimensions/"],"silverado":["Chevrolet 2026 Silverado 1500 engines","https://www.chevrolet.com/trucks/previous-year/silverado/2026-silverado-ld"],"colorado":["Chevrolet 2026 Colorado and powertrains","https://www.chevrolet.com/trucks/previous-year/colorado"],"sierra":["GMC 2026 Sierra 1500 engines","https://www.gmc.com/trucks/previous-year/sierra/1500"],"canyon":["GMC 2026 Canyon","https://www.gmc.com/trucks/previous-year/canyon"],"ram":["Ram 2026 1500 engines","https://www.ramtrucks.com/ram-1500/faq.html"],"ramhist":["Dodge Ram engine history","https://www.lmctruck.com/dodge-ram-vehicle-history-1994-2015"],"tundra":["Toyota 2026 Tundra powertrains","https://pressroom.toyota.com/2026-toyota-tundra-a-bold-new-chapter-in-full-size-pickup-excellence/"],"tundrahist":["Toyota Tundra 2007–2021 engine history","https://www.cars.com/research/toyota-tundra/"],"tacoma":["Toyota 2026 Tacoma specifications","https://www.toyota.com/tacoma/features/grades/"],"frontier":["Nissan 2026 Frontier 3.8L V6","https://www.nissanusa.com/vehicles/trucks/frontier.html"],"frontierhist":["Nissan Frontier historical generations","https://www.iseecars.com/car/nissan-frontier/generations"],"titan":["Nissan Titan 2024 final production","https://www.nissanusa.com/vehicles/discontinued/titan.html"],"titanxd":["Nissan Titan XD 5.0 Cummins diesel","https://www.nissanusa.com/vehicles/discontinued/titan-cummins-diesel-truck.html"],"ridgeline":["Honda 2026 Ridgeline specifications","https://hondanews.com/en-US/honda-automobiles/releases/2026-honda-ridgeline-specifications-features"],"gladiator":["Jeep 2026 Gladiator engine","https://www.jeep.com/gladiator/faq.html"],"santacruz":["Hyundai 2026 Santa Cruz engines","https://www.hyundaiusa.com/us/en/vehicles/2026-santa-cruz"],"coloradohist":["Chevrolet Colorado historical engines","https://www.cars.com/research/chevrolet-colorado/"],"sierrahist":["GMC Sierra 1999–2006 engines","https://consumerguide.com/used/1999-06-gmc-sierra/"],"rangerhist":["Ford Ranger historical engines","https://www.jdpower.com/cars/history/ford/ranger"],"sp":["S&P Global Mobility 2025 vehicle age","https://www.spglobal.com/automotive-insights/en/blogs/2025/05/average-age-of-vehicle-in-us"],"doe":["U.S. DOE: pickup average age 13.1 years in 2023","https://www.energy.gov/cmei/vehicles/articles/fotw-1362-sept-30-2024-pickup-trucks-had-highest-average-age-all-vehicle"],"survival":["Greene & Leard 2024: pickup median lifetime ~25 years","https://www.sciencedirect.com/science/article/pii/S0965856424000302"]},"date":"2026-11-16","method":"Illustrative era-weighted assumption model; not measured in-operation proportions"};</script>
+
+<script>
+/* ───────────────────────────────────────────────────────────────────────────
+   Bead Bag Garage
+   The research data above (DATABASE) is untouched. Everything below is the
+   garage: the bag, the odds, the shop talk, and a wall to pin your pulls on.
+   ─────────────────────────────────────────────────────────────────────────── */
+(() => {
+'use strict';
+
+const $ = id => document.getElementById(id);
+const { models, sources } = DATABASE;
+const SNAPSHOT_YEAR = 2026;
+
+/* Bead colors by engine layout. Same color = same cylinder arrangement,
+   so a glance at the bag tells you if it's V8 country or six-cylinder land. */
+const LAYOUT_COLOR = {
+  V8: '#f0883a', V6: '#45b2c6', I6: '#b48cf0', I4: '#6f9cf0',
+  I5: '#e5c443', V10: '#e2546a', EV: '#73dba0', Various: '#a8a196'
+};
+const colorOf = e => LAYOUT_COLOR[e.layout] || LAYOUT_COLOR.Various;
+
+/* How a pull feels, by modeled odds. */
+const TIERS = [
+  { min: 30, label: 'Parking-lot regular',  cls: 'tier-1' },
+  { min: 12, label: 'Common sight',         cls: 'tier-2' },
+  { min: 4,  label: 'Worth a second look',  cls: 'tier-3' },
+  { min: 1,  label: 'Pull over and stare',  cls: 'tier-4' },
+  { min: 0,  label: 'Unicorn',              cls: 'tier-5' }
+];
+const tierOf = pct => TIERS.find(t => pct >= t.min);
+
+/* ── Shop talk ──────────────────────────────────────────────────────────────
+   One line per engine, the kind you'd hear leaning on a fender. Badge-engineered
+   twins (Sierra/Silverado, Canyon/Colorado, Titan/XD) borrow from each other. */
+const SHOP_TALK = {
+  f150: {
+    'i6': 'The 300 straight-six. Low revs, a mountain of torque, and a habit of outliving the sheet metal around it.',
+    '302': 'Pushrod 302 Windsor. Not a Coyote. Don’t let the 5.0 badge start an argument at the cookout.',
+    '351': 'The 351W: same family as the 302, more cubes, more tow. A small-block that did big-block chores.',
+    'otherold': 'A grab bag inside the grab bag. The odd 1970s–80s displacements, grouped instead of guessed at.',
+    '42': 'The Essex V6 base engine. Somebody’s work truck, somebody’s first truck, and nobody’s dream truck.',
+    '46': 'Two-valve 4.6 Modular. Smooth, unexciting, and absolutely everywhere.',
+    '54': 'The 5.4 Triton. Torquey and beloved. Every Ford tech has a story about the three-valve’s spark plugs.',
+    '54sc': 'SVT Lightning: a factory-supercharged street truck from the Y2K era. If you find one stock, you buy it.',
+    '37': '3.7 Cyclone V6, quietly making 302 hp. Nobody brags about it, and nobody regrets it either.',
+    '35na': 'The naturally aspirated 3.5 base V6. Mostly in fleet-spec trucks with vinyl floors.',
+    '33': 'The 3.3 base V6. If it’s white with a ladder rack, look here first.',
+    '62': 'Boss 6.2: a big SOHC V8 mostly found in Raptors and high trims. It sounds expensive because it is.',
+    '50': 'The Coyote. Four cams, 32 valves, and the reason half the comment sections exist.',
+    '35eb': 'The 3.5 EcoBoost made twin-turbo V6 trucks normal. On early ones, listen at cold start for timing-chain chatter.',
+    '27eb': 'The 2.7 “Nano” EcoBoost. Smaller engine, compacted-graphite block, surprisingly rude pull.',
+    '30d': 'The 3.0 Power Stroke. Short run and a low take rate, so this is a genuinely rare bead.',
+    'pb': 'PowerBoost: twin turbos plus a motor, and a generator in the bed that runs a job site or a tailgate.',
+    'raptor': 'High-output 3.5 for the Raptor. Built for jumps the warranty department pretends not to see.',
+    'rr': 'Raptor R: a supercharged 5.2 in a desert truck. Pulling this is like finding a hundred in last winter’s coat.',
+    'ev': 'Lightning EV. No engine to pull, just a pair of motors and a frunk. It still counts.'
+  },
+  silverado: {
+    '43': 'The 4.3 V6 is a small-block Chevy with two cylinders shown the door. Work-truck royalty.',
+    '48': 'The 4.8: the rev-happy little LS that the junkyard-turbo crowd learned to love.',
+    '53': 'The 5.3. If GM trucks had a default setting, this would be it, and it’s LS-swap currency besides.',
+    '60': 'A 6.0 in a half-ton is rare. Spot one and somebody’s eyes light up.',
+    '62': 'The 6.2 is the top-shelf small-block. Some 2021–24 trucks were recalled for engine problems, so run the VIN.',
+    '27': 'The 2.7 TurboMax makes 430 lb-ft from a four-cylinder. Purists hate it until they drive it.',
+    '30': 'The “baby” Duramax straight-six: highway mileage in the 30s in a full-size truck, with a clatter you’ll grow to love.'
+  },
+  sierra: {
+    '60': 'The 6.0 for Denali duty, the luxury-truck V8 of its day.'
+  },
+  ram1500: {
+    '39': '3.9 Magnum: a 318 minus two cylinders. Honest, slow, and close to immortal.',
+    '52': '5.2 Magnum, the old 318 grown up with better heads.',
+    '59': '5.9 Magnum, a.k.a. the 360. Thirsty, torquey, and the soundtrack of the ’90s Ram.',
+    '37': 'The 3.7 PowerTech, the base V6 nobody special-ordered.',
+    '47': '4.7 PowerTech V8. Overhead cam and smooth. Keep an eye on the coolant.',
+    '57': 'The 5.7 HEMI. Yep, it’s got one. Listen for lifter tick before you shake hands.',
+    '36': 'The Pentastar powers everything from minivans to Wranglers, and probably your neighbor’s car too.',
+    '30d': 'EcoDiesel: torque and mileage, plus the odd emissions-system adventure.',
+    '30so': 'Hurricane standard output, the twin-turbo straight-six that briefly put the HEMI out of work.',
+    '30ho': 'Hurricane HO: 540 hp from six cylinders. The inline-six is back, and it has been lifting.',
+    'trx': 'TRX: a supercharged HEMI in a prerunner. The fuel gauge moves while you watch it.',
+    'srt': 'SRT-10: a Viper V10 in a Ram, offered with a six-speed manual. You won the bag.'
+  },
+  tundra: {
+    '34old': 'The 3.4 V6 shared with the ’90s Tacoma and 4Runner, and nearly impossible to kill.',
+    '47': 'The 4.7 i-Force V8: belt-driven cams, silky, and plenty still rolling past 300k.',
+    '40': 'The 4.0 V6, the same engine that powers half the overlanders at any trailhead.',
+    '57': 'The 5.7 i-FORCE. Drinks like a ski boat and runs like gravity.',
+    '46': 'The 4.6 V8, the sensible, quieter sibling of the 5.7.',
+    '34tt': 'The twin-turbo V6 that replaced a legend, so it will be judged forever. Some 2022–23 engines were recalled for machining debris.',
+    '34hy': 'i-FORCE MAX: twin turbos with a motor tucked against the transmission, good for 583 lb-ft.'
+  },
+  tacoma: {
+    '24': 'The 2.4 four. Base spec and borderline indestructible.',
+    '27': 'The 2.7 four-banger: slow, steady, and on its third bed.',
+    '34': 'The 3.4 V6. Ask any off-roader and they’ll tell you it’s the good one.',
+    '40': 'The 4.0 V6, the engine of a whole generation of trailhead Tacos.',
+    '35': 'The 3.5 Atkinson-cycle V6. Efficient but a little sleepy down low. Owners have opinions about the transmission.',
+    '24t': 'The turbo four. The V6 is gone, and the torque curve says it’ll be fine.',
+    '24hy': 'i-FORCE MAX hybrid four: 326 hp and the most torque a Tacoma has ever had.'
+  },
+  frontier: {
+    '24': 'The 2.4 four. Timing chain, simple, survives.',
+    '33': 'The 3.3 V6, including the rare supercharged one that whined like a shop vac with ambition.',
+    '25': 'The 2.5 four, the work-spec Frontier’s quiet companion for fifteen years.',
+    '40': 'The 4.0 V6. Nissan ran it for fifteen model years, and people loved them for it.',
+    '38': 'The 3.8 direct-injection V6 with 310 hp, plus a nine-speed. Finally, a new engine.'
+  },
+  titan: {
+    '56': 'The 5.6 Endurance V8. One engine, one bead, zero suspense. Every pull is a winner.'
+  },
+  titanxd: {
+    '50d': 'A Cummins 5.0 V8 diesel, a unicorn of a powertrain that lasted four model years.'
+  },
+  ranger: {
+    '20': 'The 2.0 four, bottom of the spec sheet and proud of it.',
+    '23old': 'The fours that kept a million Rangers running errands. They ran forever and accelerated eventually.',
+    '28': 'The Cologne 2.8/2.9 V6: German-designed, built in the ’80s, with quirks from the carb-to-injection days included.',
+    '30': 'The 3.0 Vulcan pushrod V6. Not fast, not fancy, and it pretty much refuses to die.',
+    '40': 'The 4.0 Cologne. Owners of the overhead-cam ones know the timing-chain rattle.',
+    'dieselold': 'An early diesel Ranger, rarer than an honest odometer. If you pull this, frame it.',
+    '23t': 'The 2.3 EcoBoost, a Mustang-adjacent four. Small displacement, big shove.',
+    '27t': 'The 2.7 twin-turbo, basically the F-150’s “Nano” in a smaller suit.',
+    '30t': 'The Ranger Raptor’s twin-turbo 3.0: 405 hp in a midsize. Somebody at Ford had a good day.'
+  },
+  maverick: {
+    '25h': 'The hybrid that turned a compact pickup into the commuter car everybody actually wanted.',
+    '20t': 'The 2.0 EcoBoost, the quicker Maverick and the only engine in the Tremor.'
+  },
+  colorado: {
+    '28': 'The Atlas four, little brother to the five-cylinder.',
+    '35': 'The Atlas inline-five, with an odd sound and a cult following. Nobody asked for it, and everyone kind of loves it.',
+    '53': 'A 5.3 V8 in a midsize, 2009–2012 only. Rare, and the reason sleeper builds exist.',
+    '25': 'The 2.5 four, the base model’s honest workhorse.',
+    '36': 'The 3.6 V6, the default pick for second-gen trucks.',
+    '28d': 'The “baby” Duramax four makes 369 lb-ft, with a tow rating that embarrassed some V6s.',
+    '27t': 'The 2.7 TurboMax is the only engine now, offered in different states of tune.'
+  },
+  ridgeline: {
+    'j35old': 'First-gen J35. Unibody, a trunk in the bed, and the timing belt is the only homework.',
+    'j35new': 'Direct-injected J35 with a nine-speed. Hondas don’t brag. They just keep going.'
+  },
+  gladiator: {
+    '36': 'The 3.6 Pentastar, the engine in nearly every Gladiator unless someone went hunting.',
+    '30': 'The EcoDiesel Gladiator: a three-year option and a rock crawler’s torque dream.'
+  },
+  santacruz: {
+    '25': 'The naturally aspirated 2.5. Is it a truck? We are not having this argument again.',
+    '25t': 'The 2.5 turbo with a dual-clutch, quick enough to quiet the “not a truck” crowd.'
+  }
+};
+const TALK_BORROW = { sierra: 'silverado', canyon: 'colorado', titanxd: 'titan' };
+const shopTalk = (m, e) =>
+  SHOP_TALK[m.id]?.[e.id] ||
+  SHOP_TALK[TALK_BORROW[m.id]]?.[e.id] ||
+  e.description ||
+  'A factory engine for the model years shown below.';
+
+const QUIPS = [
+  'Back in the bag it goes. The bag has no memory, so every pull is a fresh shot.',
+  'Shaking harder doesn’t help. We checked. Go ahead and shake harder anyway.',
+  'Somewhere, a forum thread is arguing about this exact engine right now.',
+  'Tag it, pin it, pull again.',
+  'Not what you were hoping for? Welcome to the used-truck market.',
+  'The bag doesn’t care which one you wanted.',
+  'Pop the hood and pretend you knew it all along.'
+];
+
+/* ── Small utilities ────────────────────────────────────────────────────── */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pctText = p => (p > 0 && p < 0.1 ? '<0.1' : p.toFixed(1)) + '%';
+const sum = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const seeded = seed => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+const hash = str => [...str].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const latestEra = m => m.eras.reduce((a, b) => (b.end > a.end ? b : a), m.eras[0]);
+const span = er => (er.start === er.end ? `${er.start}` : `${er.start}–${er.end}`);
+
+/* localStorage can vanish (private windows, blocked storage), so the page never depends on it. */
+const store = {
+  get(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
+  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* the wall just won't stick */ } }
+};
+
+/* ── The math (unchanged from the research model) ───────────────────────── */
+function computeOdds(m, { mode, halfLife, fuel }) {
+  const weights = Object.fromEntries(m.engines.map(e => [e.id, 0]));
+  if (mode === 'equal') {
+    m.engines.forEach(e => { weights[e.id] = 1; });
+  } else if (mode === 'latest') {
+    for (const [id, share] of Object.entries(latestEra(m).mix)) weights[id] += share;
+  } else {
+    for (const era of m.eras) {
+      for (let y = era.start; y <= era.end; y++) {
+        const survival = Math.pow(2, -Math.max(0, SNAPSHOT_YEAR - y) / halfLife);
+        for (const [id, share] of Object.entries(era.mix)) weights[id] += era.volume * survival * share / 100;
+      }
+    }
+  }
+  const eligible = m.engines.filter(e => fuel === 'All' || e.fuel === fuel);
+  const total = sum(eligible, e => weights[e.id] || 0);
+  return eligible
+    .map(e => ({ ...e, weight: weights[e.id] || 0, pct: total > 0 ? 100 * (weights[e.id] || 0) / total : 0 }))
+    .filter(e => e.weight > 0)
+    .sort((a, b) => b.pct - a.pct);
+}
+
+function drawFrom(odds) {
+  let r = Math.random() * sum(odds, e => e.weight);
+  for (const e of odds) { r -= e.weight; if (r < 0) return e; }
+  return odds[odds.length - 1];
+}
+
+/* ── State ──────────────────────────────────────────────────────────────── */
+const state = {
+  model: models[0],
+  mode: 'fleet',
+  halfLife: 22,
+  fuel: 'All',
+  segment: 'All',
+  query: '',
+  odds: [],
+  pulls: [],            // engine ids, this scenario only
+  last: null,
+  streak: { id: null, n: 0 },
+  justPinned: new Set()
+};
+const wall = store.get('bbg.wall.v1', {});   // { modelId: [engineIds] }
+const scenario = () => ({ mode: state.mode, halfLife: state.halfLife, fuel: state.fuel });
+
+/* ── The bag (canvas) ───────────────────────────────────────────────────── */
+const Bag = (() => {
+  const canvas = $('bag');
+  const ctx = canvas.getContext('2d');
+  const W = 720, H = 600, CX = 360, TAU = Math.PI * 2;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // A clear zip-top parts bag, a little puffed out at the sides.
+  const shape = new Path2D();
+  shape.moveTo(180, 128);
+  shape.lineTo(540, 128);
+  shape.bezierCurveTo(556, 260, 566, 430, 548, 528);
+  shape.quadraticCurveTo(541, 566, 500, 568);
+  shape.lineTo(220, 568);
+  shape.quadraticCurveTo(179, 566, 172, 528);
+  shape.bezierCurveTo(154, 430, 164, 260, 180, 128);
+  shape.closePath();
+
+  // Bead slots: loose hex packing settled in the bottom of the bag with a lumpy top.
+  const slots = (() => {
+    const rnd = seeded(1975), out = [];
+    for (let row = 0; row < 14; row++) {
+      const y = 549 - row * 19;
+      for (let x = 194 + (row % 2 ? 11 : 0); x <= 528; x += 22) {
+        const surface = 318 + 18 * Math.sin(x / 47) + 10 * Math.cos(x / 23);
+        if (y < surface) continue;
+        out.push({ x: x + (rnd() - .5) * 4, y: y + (rnd() - .5) * 3, r: 10.2 + rnd() * 1.8, phase: rnd() * TAU });
+      }
+    }
+    return out;
+  })();
+
+  let beads = slots.map(s => ({ ...s, engine: null }));
+  let label = '';
+  let lifted = null;     // { bead, engine }
+  let anim = null;       // { start, shakeMs, liftMs, done }
+  let looping = false;
+  let theme = {};
+
+  const readTheme = () => {
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
+    theme = { fill: v('--bag-fill'), line: v('--bag-line'), gloss: v('--bag-gloss'), crinkle: v('--bag-crinkle'), floor: v('--floor-shadow'), empty: v('--line-2') };
+  };
+
+  const mix = (hex, toward, amt) => {
+    const a = parseInt(hex.slice(1), 16), b = parseInt(toward.slice(1), 16);
+    const ch = (n, s) => (n >> s) & 255;
+    const m = s => Math.round(ch(a, s) + (ch(b, s) - ch(a, s)) * amt);
+    return `rgb(${m(16)},${m(8)},${m(0)})`;
+  };
+
+  function bead(x, y, r, color) {
+    const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r);
+    g.addColorStop(0, mix(color, '#ffffff', .6));
+    g.addColorStop(.45, color);
+    g.addColorStop(1, mix(color, '#000000', .38));
+    ctx.beginPath(); ctx.arc(x, y, r, 0, TAU);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(x - r * .32, y - r * .36, r * .18, 0, TAU);
+    ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fill();
+  }
+
+  function bagFront() {
+    // Plastic sheen and a couple of crinkles
+    ctx.save(); ctx.clip(shape);
+    const g = ctx.createLinearGradient(170, 0, 320, 0);
+    g.addColorStop(0, theme.gloss); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(170, 140, 150, 430);
+    ctx.strokeStyle = theme.crinkle; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(470, 150); ctx.bezierCurveTo(500, 230, 488, 300, 520, 360); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(214, 300); ctx.bezierCurveTo(230, 360, 205, 430, 222, 520); ctx.stroke();
+    ctx.restore();
+
+    ctx.lineWidth = 3; ctx.strokeStyle = theme.line; ctx.stroke(shape);
+
+    // Zip seal
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 2; ctx.strokeStyle = theme.line;
+    ctx.beginPath(); ctx.moveTo(188, 136); ctx.lineTo(532, 136); ctx.stroke();
+    ctx.lineWidth = 3.5; ctx.strokeStyle = '#d24a3c';
+    ctx.beginPath(); ctx.moveTo(188, 144); ctx.lineTo(532, 144); ctx.stroke();
+
+    // Write-on label, filled in with a marker
+    ctx.save();
+    ctx.translate(318, 214); ctx.rotate(-0.045);
+    ctx.fillStyle = '#f6f2e8';
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-124, -44, 248, 92, 6) : ctx.rect(-124, -44, 248, 92); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.18)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#c8432f'; ctx.fillRect(-124, -44, 248, 16);
+    ctx.fillStyle = '#fff'; ctx.font = '600 10px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(`PART NO. BB-${state.model.id.toUpperCase()}`, -114, -36);
+    ctx.textAlign = 'center'; ctx.fillStyle = '#1c1c1c';
+    let size = 34; ctx.font = `${size}px "Permanent Marker", cursive`;
+    while (ctx.measureText(label).width > 224 && size > 16) ctx.font = `${--size}px "Permanent Marker", cursive`;
+    ctx.fillText(label, 0, 6);
+    ctx.font = '600 10.5px "JetBrains Mono", monospace'; ctx.fillStyle = '#6b6252';
+    ctx.fillText(`QTY ≈ every one still running`, 0, 34);
+    ctx.restore();
+  }
+
+  function paint(t = 0, shake = 0, lift = 0) {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.fillStyle = theme.floor;
+    ctx.beginPath(); ctx.ellipse(CX, 580, 210, 14, 0, 0, TAU); ctx.fill();
+
+    ctx.save();
+    const hop = shake * 7 * Math.abs(Math.sin(t * 0.03));
+    ctx.translate(CX, 568); ctx.rotate(shake * 0.045 * Math.sin(t * 0.045)); ctx.translate(-CX, -568 - hop);
+    ctx.fillStyle = theme.fill; ctx.fill(shape);
+
+    ctx.save(); ctx.clip(shape);
+    for (const b of beads) {
+      if (lifted && lift > 0 && b === lifted.bead) continue;
+      const jx = shake * 7 * Math.sin(t * 0.05 + b.phase);
+      const jy = -shake * 11 * Math.abs(Math.sin(t * 0.037 + b.phase * 1.7));
+      bead(b.x + jx, b.y + jy, b.r, b.engine ? colorOf(b.engine) : theme.empty.startsWith('#') ? theme.empty : '#4a4339');
+    }
+    ctx.restore();
+    bagFront();
+    ctx.restore();
+
+    if (lifted && lift > 0) {
+      const e = 1 - Math.pow(1 - lift, 3);
+      const from = lifted.bead, to = { x: CX, y: 66 };
+      const x = from.x + (to.x - from.x) * e;
+      const y = from.y + (to.y - from.y) * e - Math.sin(Math.PI * e) * 26;
+      const r = from.r + (26 - from.r) * e;
+      const color = colorOf(lifted.engine);
+      ctx.save();
+      ctx.shadowColor = color; ctx.shadowBlur = 30 * e;
+      bead(x, y, r, color);
+      ctx.restore();
+    }
+  }
+
+  function tick(now) {
+    if (!anim) { looping = false; return; }
+    const t = now - anim.start;
+    const shake = t < anim.shakeMs ? Math.pow(1 - t / anim.shakeMs, 1.5) : 0;
+    const lift = anim.liftMs ? Math.min(1, Math.max(0, (t - anim.shakeMs) / anim.liftMs)) : 1;
+    paint(t, shake, t >= anim.shakeMs ? lift : 0);
+    if (t < anim.shakeMs + anim.liftMs) { requestAnimationFrame(tick); return; }
+    const done = anim.done; anim = null; looping = false;
+    paint(0, 0, 1);
+    done && done();
+  }
+
+  return {
+    init() {
+      readTheme();
+      paint();
+      document.fonts?.ready.then(() => paint(0, 0, lifted ? 1 : 0));
+    },
+    retheme() { readTheme(); if (!anim) paint(0, 0, lifted ? 1 : 0); },
+    /* Fill the bag so each layout's share of beads matches its odds (largest-remainder rounding). */
+    fill(odds, m) {
+      label = m.name;
+      lifted = null; anim = null;
+      if (!odds.length) { beads = slots.map(s => ({ ...s, engine: null })); paint(); return; }
+      const n = slots.length;
+      const parts = odds.map(e => ({ e, exact: e.pct / 100 * n }));
+      parts.forEach(p => { p.count = Math.floor(p.exact); });
+      let left = n - sum(parts, p => p.count);
+      [...parts].sort((a, b) => (b.exact - b.count) - (a.exact - a.count)).forEach(p => { if (left > 0) { p.count++; left--; } });
+      const pool = parts.flatMap(p => Array(p.count).fill(p.e));
+      const rnd = seeded(hash(m.id + state.mode + state.fuel));
+      for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+      beads = slots.map((s, i) => ({ ...s, engine: pool[i] }));
+      canvas.setAttribute('aria-label', `A clear parts bag labeled ${m.name}, holding ${n} beads colored by engine layout`);
+      paint();
+    },
+    /* Shake, then lift a matching bead out of the top of the pile. */
+    pull(engine, handful, done) {
+      const matches = beads.filter(b => b.engine && b.engine.id === engine.id).sort((a, b) => a.y - b.y);
+      const chosen = matches.length ? matches[Math.floor(Math.random() * Math.min(4, matches.length))]
+                                    : { x: CX, y: 330, r: 11, phase: 0, engine };   // too rare to earn a visible bead
+      lifted = { bead: chosen, engine };
+      const still = reduceMotion.matches;
+      anim = { start: performance.now(), shakeMs: still ? 0 : handful >= 100 ? 1150 : handful >= 10 ? 820 : 520, liftMs: still ? 0 : 620, done };
+      if (!looping) { looping = true; requestAnimationFrame(tick); }
+    },
+    drop() { lifted = null; if (!anim) paint(); }
+  };
+})();
+
+/* ── Rendering ──────────────────────────────────────────────────────────── */
+function renderShelf() {
+  const q = state.query;
+  const list = models.filter(m => (state.segment === 'All' || m.segment === state.segment) &&
+                                  `${m.brand} ${m.name}`.toLowerCase().includes(q));
+  $('modelList').innerHTML = list.map(m => {
+    const layouts = [...new Set(m.engines.map(e => e.layout))];
+    return `<button class="model-btn" data-id="${esc(m.id)}" aria-current="${m.id === state.model.id}">
+      <span class="nm">${esc(m.name)}</span>
+      <span class="beads" aria-hidden="true">${layouts.map(l => `<i class="dot" style="--c:${LAYOUT_COLOR[l] || LAYOUT_COLOR.Various}"></i>`).join('')}</span>
+      <span class="br">${esc(m.brand)} · ${m.engines.length} engine${m.engines.length === 1 ? '' : 's'}</span>
+    </button>`;
+  }).join('') || '<p class="shelf-foot" style="border:0">Nothing on the shelf by that name. Try "Ram" or "Taco".</p>';
+}
+
+function renderHeader() {
+  const m = state.model, last = latestEra(m);
+  $('modelKicker').textContent = `${m.brand} · ${m.segment}`;
+  $('modelTitle').textContent = m.name;
+  $('modelDesc').textContent = m.summary;
+  $('modelYears').textContent = m.years;
+  $('modelRefs').innerHTML = m.sources.slice(0, 3).filter(id => sources[id])
+    .map(id => `<a href="${esc(sources[id][1])}" target="_blank" rel="noopener noreferrer">↗ ${esc(sources[id][0])}</a>`).join('');
+
+  const notes = {
+    fleet: `<strong>Driveway census.</strong> Each model year adds beads using an assumed sales index × an assumed engine take rate, and then the rust factor thins out the older years. It's modeled, not measured, and we'd rather say so up front.`,
+    latest: `<strong>Fresh off the line.</strong> This uses the ${span(last)} split from the build-history table. That split is our assumption for the newest trucks, not take rates confirmed by the manufacturer.`,
+    equal: `<strong>Roll call.</strong> Every distinct factory engine gets exactly one bead, no matter how many were built. Once you accept our engine list, this is the only mode with no assumptions baked in.`
+  };
+  $('modeNote').innerHTML = notes[state.mode];
+  const rustOn = state.mode === 'fleet';
+  $('halfLife').disabled = !rustOn;
+  $('rangeBox').classList.toggle('off', !rustOn);
+}
+
+function renderOdds() {
+  const odds = state.odds;
+  $('engineBadge').textContent = `${odds.length} engine${odds.length === 1 ? '' : 's'} in the bag`;
+  ['pull1', 'pull10', 'pull100'].forEach(id => { $(id).disabled = !odds.length; });
+
+  if (!odds.length) {
+    $('odds').innerHTML = `<p class="prose">This truck never came from the factory with that kind of powertrain, not in this scenario anyway. Set "What's it drink?" back to Anything.</p>`;
+    $('rareNote').textContent = 'Empty bag';
+    return;
+  }
+  $('odds').innerHTML = odds.map(e => `
+    <div class="odds-row">
+      <div class="odds-head">
+        <span class="odds-name"><i class="dot" style="--c:${colorOf(e)}"></i>${esc(e.name)}${e.pct < 1 ? '<span class="chip chip-unicorn">unicorn</span>' : ''}</span>
+        <span class="odds-pct">${pctText(e.pct)}</span>
+      </div>
+      <div class="track"><div class="fill" style="width:${e.pct}%;--c:${colorOf(e)}"></div></div>
+    </div>`).join('');
+  const unicorns = odds.filter(e => e.pct < 1).length;
+  $('rareNote').textContent = odds.length === 1 ? 'One engine. No suspense, no regrets.'
+    : unicorns ? `${unicorns} unicorn${unicorns === 1 ? '' : 's'} hiding in here (under 1%)` : 'Every engine here shows up at least 1% of the time';
+}
+
+function renderTally() {
+  const n = state.pulls.length;
+  $('pullCount').textContent = `${n.toLocaleString()} pull${n === 1 ? '' : 's'}`;
+  if (!n) {
+    $('tally').innerHTML = `<p class="prose" style="font-size:13.5px;margin:0">Pull a hundred and watch how your results stack up against the sheet. It's the law of large numbers, with beads.</p>`;
+    return;
+  }
+  const counts = {};
+  state.pulls.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
+  const rows = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id, c]) => {
+    const e = state.odds.find(x => x.id === id) || state.model.engines.find(x => x.id === id);
+    const seen = 100 * c / n, modeled = e?.pct ?? 0, d = seen - modeled;
+    return `<tr><td>${esc(e?.name || id)}</td><td>${c}</td><td>${seen.toFixed(1)}%</td><td>${modeled.toFixed(1)}%</td>
+      <td class="${d >= 0 ? 'delta-up' : 'delta-dn'}">${d >= 0 ? '+' : ''}${d.toFixed(1)}</td></tr>`;
+  }).join('');
+  $('tally').innerHTML = `<table><thead><tr><th>Your pulls</th><th>#</th><th>Seen</th><th>Sheet</th><th>Δ</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderTag() {
+  const tag = $('tag'), e = state.last, m = state.model;
+  if (!e) {
+    tag.className = 'tag blank';
+    tag.innerHTML = `<div class="tag-top"><span>Pulled from</span><span>No. ----</span></div>
+      <div class="tag-engine">Blank tag.</div>
+      <p class="tag-talk">Shake the bag and reach in. Whatever comes out gets written on here.</p>`;
+    return;
+  }
+  const pct = state.odds.find(x => x.id === e.id)?.pct ?? 0;
+  const tier = state.odds.length === 1 ? { label: 'Only one in the bag', cls: 'tier-1' } : tierOf(pct);
+  const specs = [e.layout, e.fuel, e.asp, e.hp && e.hp !== 'varies' ? `${e.hp} hp` : null, e.years].filter(Boolean);
+  const odds = pct < 1 && pct > 0 ? ` · ~1 in ${Math.round(100 / pct).toLocaleString()}` : '';
+  tag.className = 'tag';
+  tag.innerHTML = `<div class="tag-top"><span>Pulled from · ${esc(m.brand)} ${esc(m.name)}</span><span>No. ${String(state.pulls.length).padStart(4, '0')}</span></div>
+    <div class="tag-engine">${esc(e.name)}</div>
+    <div class="tag-specs">${specs.map(s => `<span>${esc(s)}</span>`).join('')}</div>
+    <div class="tag-rarity ${tier.cls}">${esc(tier.label)} · ${pctText(pct)}${odds}</div>
+    <p class="tag-talk">${esc(shopTalk(m, e))}</p>`;
+  void tag.offsetWidth; tag.classList.add('fresh');
+}
+
+function renderWall() {
+  const m = state.model, have = new Set(wall[m.id] || []);
+  const got = m.engines.filter(e => have.has(e.id)).length;
+  $('wallCount').textContent = `${got} / ${m.engines.length} pinned`;
+  $('wallBar').style.width = `${100 * got / m.engines.length}%`;
+  $('wallGrid').innerHTML = m.engines.map(e => have.has(e.id)
+    ? `<li class="peg have${state.justPinned.has(e.id) ? ' just' : ''}"><i class="dot" style="--c:${colorOf(e)}"></i><span><b>${esc(e.name)}</b><br><small>${esc(e.years)}</small></span></li>`
+    : `<li class="peg ghost"><i class="dot"></i><span>${esc(e.layout)} · ${esc(e.fuel)}<br><small>still in the bag somewhere</small></span></li>`
+  ).join('');
+  state.justPinned.clear();
+}
+
+function renderDials() {
+  const o = state.odds;
+  const share = f => sum(o.filter(f), e => e.pct);
+  const top = o[0];
+  const dials = [
+    ['V8 odds', share(e => e.layout === 'V8'), 'Every V8 in the bag, combined'],
+    ['Six-cylinder odds', share(e => e.layout === 'V6' || e.layout === 'I6'), 'V6 and straight-six, combined'],
+    ['Diesel + hybrid', share(e => e.fuel === 'Diesel' || e.fuel === 'Hybrid'), 'Anything that isn’t plain gas or a plug'],
+    ['Bag favorite', top ? top.pct : null, top ? top.name : 'Nothing eligible']
+  ];
+  $('dials').innerHTML = dials.map(([label, val, sub]) =>
+    `<div class="panel dial"><b>${val == null ? '—' : val.toFixed(1) + '%'}</b><span class="label">${esc(label)}</span><p>${esc(sub)}</p></div>`).join('');
+}
+
+function renderCompare() {
+  const sel = $('cmpModel');
+  let other = models.find(m => m.id === sel.value && m.id !== state.model.id) || models.find(m => m.id !== state.model.id);
+  sel.value = other.id;
+  const A = state.odds, B = computeOdds(other, scenario());
+  const pair = [[state.model, A], [other, B]];
+  const card = ([m, o]) => `<div class="vs-card"><span class="label">${esc(m.brand)} · ${esc(m.segment)}</span><h3>${esc(m.name)}</h3>
+    <div class="big">${o[0] ? o[0].pct.toFixed(1) + '%' : '—'}</div>
+    <p>Most likely pull: <span class="eng">${o[0] ? esc(o[0].name) : 'nothing eligible'}</span></p></div>`;
+  $('vsCards').innerHTML = card(pair[0]) + '<div class="vs-mid" aria-hidden="true">vs.</div>' + card(pair[1]);
+
+  const groups = [
+    ['V8', e => e.layout === 'V8'],
+    ['Six-cylinder', e => e.layout === 'V6' || e.layout === 'I6'],
+    ['Four or five cylinder', e => e.layout === 'I4' || e.layout === 'I5'],
+    ['Diesel', e => e.fuel === 'Diesel'],
+    ['Hybrid or electric', e => e.fuel === 'Hybrid' || e.fuel === 'Electric'],
+    ['Turbo or supercharged', e => /turbo|supercharg/i.test(e.asp)]
+  ];
+  const tint = ['var(--accent)', '#45b2c6'];
+  $('cmpBars').innerHTML = groups.map(([label, test]) =>
+    `<div class="cmp-group"><span class="label">${label}</span>${pair.map(([m, o], i) => {
+      const v = sum(o.filter(test), e => e.pct);
+      return `<div class="cmp-row"><span class="nm">${esc(m.name)}</span><div class="track" style="margin:0"><div class="fill" style="width:${v}%;--c:${tint[i]}"></div></div><span class="v">${v.toFixed(1)}%</span></div>`;
+    }).join('')}</div>`).join('');
+}
+
+function renderHistory() {
+  const m = state.model, byId = Object.fromEntries(m.engines.map(e => [e.id, e]));
+  $('histRows').innerHTML = m.eras.map(er => {
+    const mixList = Object.entries(er.mix).sort((a, b) => b[1] - a[1]);
+    return `<tr><td>${span(er)}</td><td>
+      <div class="stripe">${mixList.map(([id, s]) => `<span title="${esc(byId[id].name)}: ${s}%" style="width:${s}%;--c:${colorOf(byId[id])}"></span>`).join('')}</div>
+      <small>${mixList.map(([id, s]) => `${esc(byId[id].name)} ${s}%`).join(' · ')}</small></td>
+      <td class="mono">${er.volume.toFixed(2)}×</td></tr>`;
+  }).join('');
+  $('modelNotes').textContent = m.notes || 'Model-year ranges are grouped for clarity. Specific trims and regional fitment may vary.';
+}
+
+function renderSources() {
+  const ids = new Set(['sp', 'doe', 'survival', 'ford2025', ...state.model.sources]);
+  $('sources').innerHTML = [...ids].filter(k => sources[k]).map(k =>
+    `<a class="source" href="${esc(sources[k][1])}" target="_blank" rel="noopener noreferrer">${esc(sources[k][0])}<span>↗</span></a>`).join('');
+}
+
+/* Odds changed (truck, scenario, or fuel), so refill the bag and reset the counter. */
+function refreshOdds() {
+  state.odds = computeOdds(state.model, scenario());
+  state.pulls = []; state.last = null; state.streak = { id: null, n: 0 };
+  Bag.fill(state.odds, state.model);
+  renderHeader(); renderOdds(); renderTally(); renderTag(); renderDials(); renderCompare();
+  $('talk').textContent = state.odds.length ? `${state.odds.length === 1 ? 'One' : state.odds.length} engine${state.odds.length === 1 ? '' : 's'} in the ${state.model.name} bag. Go on, reach in.` : '';
+}
+
+function selectModel(id) {
+  const m = models.find(x => x.id === id);
+  if (!m) return;
+  state.model = m;
+  state.fuel = 'All'; $('fuel').value = 'All';
+  renderShelf(); renderWall(); renderHistory(); renderSources();
+  refreshOdds();
+  try { history.replaceState(null, '', '#' + m.id); } catch { /* sandboxed frames can refuse this */ }
+}
+
+/* ── Pulling ────────────────────────────────────────────────────────────── */
+function pull(n) {
+  if (!state.odds.length) return;
+  const picks = Array.from({ length: n }, () => drawFrom(state.odds));
+  const last = picks[picks.length - 1];
+  state.pulls.push(...picks.map(e => e.id));
+
+  // Streaks only make sense one at a time
+  if (n === 1) state.streak = state.streak.id === last.id ? { id: last.id, n: state.streak.n + 1 } : { id: last.id, n: 1 };
+  else state.streak = { id: null, n: 0 };
+
+  // Pin new finds to the wall
+  const m = state.model, pinned = new Set(wall[m.id] || []);
+  const fresh = [...new Set(picks.map(e => e.id))].filter(id => !pinned.has(id));
+  fresh.forEach(id => { pinned.add(id); state.justPinned.add(id); });
+  wall[m.id] = [...pinned];
+  store.set('bbg.wall.v1', wall);
+  const complete = fresh.length && pinned.size === m.engines.length;
+
+  const line = talkFor(picks, last, fresh.length, complete);
+  ['pull1', 'pull10', 'pull100'].forEach(id => { $(id).setAttribute('aria-busy', 'true'); });
+  $('talk').textContent = n === 1 ? 'Shaking…' : `Grabbing ${n}…`;
+
+  Bag.pull(last, n, () => {
+    state.last = last;
+    renderTag(); renderTally(); renderWall();
+    $('talk').innerHTML = line;
+    ['pull1', 'pull10', 'pull100'].forEach(id => $(id).removeAttribute('aria-busy'));
+  });
+}
+
+function talkFor(picks, last, freshCount, complete) {
+  const pctOf = e => state.odds.find(x => x.id === e.id)?.pct ?? 0;
+  const parts = [];
+  if (picks.length === 1) {
+    const p = pctOf(last);
+    if (state.odds.length === 1) parts.push(`It's the ${esc(last.name)}. It was always going to be the ${esc(last.name)}.`);
+    else if (p < 1) parts.push(`<em>Unicorn.</em> That's about 1 in ${Math.round(100 / p).toLocaleString()}. Screenshot it before anyone calls you a liar.`);
+    else if (state.streak.n >= 3) parts.push(`<em>${state.streak.n} in a row.</em> Either the bag is rigged or it really likes the ${esc(last.name)}. (It isn't rigged.)`);
+    else if (freshCount) parts.push(`<em>New one for the wall.</em> ${pick(QUIPS)}`);
+    else parts.push(pick(QUIPS));
+  } else {
+    const counts = {};
+    picks.forEach(e => { counts[e.id] = (counts[e.id] || 0) + 1; });
+    const [topId, topN] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    const topE = state.odds.find(e => e.id === topId);
+    const rare = picks.filter(e => pctOf(e) < 1).length;
+    parts.push(`${picks.length} pulls, and the <em>${esc(topE.name)}</em> showed up ${topN} times.`);
+    if (rare) parts.push(`${rare} unicorn${rare === 1 ? '' : 's'} in the pile.`);
+    if (freshCount) parts.push(`${freshCount} new for the wall.`);
+  }
+  if (complete) parts.push(`<em>Full set!</em> Every ${esc(state.model.name)} engine is pinned up.`);
+  return parts.join(' ');
+}
+
+/* ── Wiring ─────────────────────────────────────────────────────────────── */
+$('modelCount').textContent = models.length;
+$('engineCount').textContent = sum(models, m => m.engines.length);
+$('brandCount').textContent = new Set(models.map(m => m.brand)).size;
+
+$('modelList').addEventListener('click', ev => {
+  const btn = ev.target.closest('.model-btn');
+  if (btn) selectModel(btn.dataset.id);
+});
+$('search').addEventListener('input', ev => { state.query = ev.target.value.trim().toLowerCase(); renderShelf(); });
+$('tabs').addEventListener('click', ev => {
+  const t = ev.target.closest('.tab'); if (!t) return;
+  state.segment = t.dataset.seg;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+  renderShelf();
+});
+$('mode').addEventListener('change', ev => { state.mode = ev.target.value; refreshOdds(); });
+$('halfLife').addEventListener('input', ev => { state.halfLife = +ev.target.value; $('halfLifeLabel').textContent = state.halfLife; refreshOdds(); });
+$('fuel').addEventListener('change', ev => { state.fuel = ev.target.value; refreshOdds(); });
+$('pull1').addEventListener('click', () => pull(1));
+$('pull10').addEventListener('click', () => pull(10));
+$('pull100').addEventListener('click', () => pull(100));
+$('resetPulls').addEventListener('click', () => {
+  state.pulls = []; state.last = null; state.streak = { id: null, n: 0 };
+  Bag.drop(); renderTag(); renderTally();
+  $('talk').textContent = 'Counter cleared. The bag never remembered anyway.';
+});
+$('clearWall').addEventListener('click', () => {
+  if (!(wall[state.model.id] || []).length) return;
+  if (!confirm(`Take down every ${state.model.name} engine from the wall?`)) return;
+  delete wall[state.model.id]; store.set('bbg.wall.v1', wall); renderWall();
+});
+$('cmpModel').innerHTML = models.map(m => `<option value="${esc(m.id)}">${esc(m.brand + ' ' + m.name)}</option>`).join('');
+$('cmpModel').value = 'silverado';
+$('cmpModel').addEventListener('change', renderCompare);
+$('histToggle').addEventListener('click', () => {
+  const open = $('histToggle').getAttribute('aria-expanded') === 'true';
+  $('histToggle').setAttribute('aria-expanded', String(!open));
+  $('histBody').hidden = open;
+});
+
+// Space bar pulls, unless you're typing or working a control.
+document.addEventListener('keydown', ev => {
+  if (ev.code !== 'Space' || ev.repeat || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  if (ev.target.closest('input, select, textarea, button, a, [contenteditable]')) return;
+  ev.preventDefault(); pull(1);
+});
+
+$('download').addEventListener('click', () => {
+  const data = { ...DATABASE, disclaimer: 'All engine-mix probabilities and annual sales indices in eras are explicit modeling assumptions, not audited observations.' };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: 'bead-bag-garage-research-data.json' });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 800);
+});
+$('copy').addEventListener('click', () => {
+  const modeName = { fleet: 'driveway census', latest: 'fresh off the line', equal: 'roll call' }[state.mode];
+  const text = `${state.model.brand} ${state.model.name}: ${modeName}${state.mode === 'fleet' ? `, ${state.halfLife}-yr half-life` : ''}, fuel: ${state.fuel}\n` +
+    `Modeled odds, NOT measured shares\n` +
+    state.odds.map(e => `  ${e.pct.toFixed(2).padStart(6)}%  ${e.name}`).join('\n') +
+    `\n— Bead Bag Garage, snapshot ${DATABASE.date}`;
+  const ok = () => { $('copy').textContent = '✓ Copied'; setTimeout(() => { $('copy').textContent = 'Copy this bag’s odds'; }, 1600); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(ok).catch(() => prompt('Copy this:', text));
+  else prompt('Copy this:', text);
+});
+
+// Shop lights: follow the system until you flip the switch yourself.
+const applyLights = mode => {
+  if (mode) document.documentElement.dataset.theme = mode; else delete document.documentElement.dataset.theme;
+  const dark = mode ? mode === 'dark' : !matchMedia('(prefers-color-scheme: light)').matches;
+  $('lightsLabel').textContent = dark ? 'Lights on' : 'Lights off';
+  Bag.retheme();
+};
+$('lights').addEventListener('click', () => {
+  const dark = getComputedStyle(document.documentElement).colorScheme.includes('dark');
+  const next = dark ? 'light' : 'dark';
+  store.set('bbg.lights', next); applyLights(next);
+});
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', () => applyLights(store.get('bbg.lights', null)));
+
+/* ── Fire it up ─────────────────────────────────────────────────────────── */
+Bag.init();
+applyLights(store.get('bbg.lights', null));
+const fromHash = location.hash.slice(1);
+selectModel(models.some(m => m.id === fromHash) ? fromHash : models[0].id);
+})();
+</script>
+</body>
+</html>
