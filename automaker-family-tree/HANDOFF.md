@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 82nd version (v81 added the reference layer; v82 consolidated duplicates and added Toyota truck history).
+Last updated: 2026-11-18. The current build is the 83rd version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks and more verification).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 49 groups, 116 brands, **601 engines and platforms**, **2,332 ratings** (2,199 checked: 1,516 with a source link, the rest from the earlier CHECKED pass), 793 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 117 brands, **605 engines and platforms**, **2,347 ratings** (2,235 checked), 799 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -214,7 +214,14 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - New Toyota engines: 22R-E, 22R-TE, 3VZ-E, 2F, 3F-E, 1FZ-FE.
   - New Toyota truck ratings: Pickup, T100, 1995–2004 Tacoma, 2000–04 Tundra V6, 2001–09 Sequoia, 2004–09 4Runner, FJ Cruiser 2007–13, Land Cruiser FJ60 / FJ62 / FJ80, Lexus GX 470 and LX 450 / 470. TRD supercharger kits are listed with their kit ratings (Tundra / Sequoia 504 hp, Tacoma 304 hp).
   - Source links added for Cobra / Terminator / GT500, Viper generations, AMG 55s and Miata NB / Mazdaspeed.
-- **Still unverified (133 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
+- **83:**
+  - GM midsize: new 2.5L LCV engine. 2015–22 Colorado / Canyon with the LCV, LFX / LGZ and LWN diesel. The GMC Canyon had no ratings before. 2027 Colorado / Canyon L4B at 350 hp / 455 lb-ft. 2024 Sierra EV Denali Edition 1.
+  - Ford: Maverick hybrid torque fixed (155 lb-ft). New Maverick Lobo. 2021–23 F-150 3.3 V6 cited. New global Ranger PHEV engine. The F-150 Lightning BEV ended in December 2025 with an EREV successor (added to the field notes).
+  - Stellantis: Gladiator EcoDiesel 2021–23. New range-extended Ram 1500 REV (Ramcharger) engine, listed with its announced 663 hp / 615 lb-ft.
+  - New group: Slate Auto (US EV truck start-up, 181 hp, 205 miles). Landscape bubbles now read "pre-production" instead of "supplier" when a non-supplier has no sales.
+  - Source links added for the S2000 2006, Civic Si 2012–22, BRZ, F80 M3 / CS, 6.1L SRT8, i-FORCE MAX hybrids and the 2015–20 Escalade.
+  - Flagged: the 2002 Escalade LQ9 (one listing says 5.3L only for 2002) and the S2000 2004–05 240 hp (Honda's later sheets say 237).
+- **Still unverified (112 rows; was 133 in v82)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
