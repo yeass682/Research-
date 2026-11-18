@@ -1,6 +1,6 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 83rd version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks and more verification).
+Last updated: 2026-11-18. The current build is the 84th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' identification notes).
 
 > **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 117 brands, **605 engines and platforms**, **2,347 ratings** (2,235 checked), 799 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
@@ -110,6 +110,7 @@ All data is inline JavaScript in the HTML.
 A "FILE MAP" comment at the top of the main `<script>` lists every data constant. The reference layer sits just before the final init line (`renderLandscape();renderSide();buildDeals();renderShared();route();`):
 
 - **`ENGINE_NOTES`**: enthusiast field notes keyed by engine id: `{k: known for, w: watch for, id: how to tell it apart, sw: swap scene}`. Only add widely documented faults (recalls, TSBs, long-running owner reports). About 85 engines have notes so far. Note ids must exist in `EI`.
+- **`ENGINE_SPOT`** ("Spot it", v84) sits right after `ENGINE_NOTES`. Keyed by engine id, it holds the trims, packages, badges, VIN characters and telltale hardware that identify an engine on a vehicle. It is merged into `ENGINE_NOTES[id].pk` at load. Vehicle panels gather the `pk` text of every engine into a "Which engine is it?" block (open when there are 4 or fewer engines), with a VIN-position-8 tip for Ford, GM and Stellantis and the glovebox SPID / RPO tip for GM. The engine index text search also covers `pk`, so filtering for "Tremor" or "TRX" finds the right engines. VIN characters are listed only where widely documented (Duramax: LB7 1, LLY 2, LBZ D, LMM 6, LML 8, L5P Y; Power Stroke: 7.3 F, 6.0 P, 6.4 R, 6.7 T; 426 Hemi J / R). About 135 engines have Spot it text: all major US truck engines, Toyota trucks and about 55 performance-car engines.
 - **`SPEC`**: derived per engine: displacement (all "x.xL" in the name, so ranges like 6.8–7.3L work), cubic inches (only when the name states it), layout (from `tag`), induction (parsed from name and code words such as TSI, EcoBoost or Duramax; diesels default to turbo), and from `PW` the rated years, hp range, max torque and vehicle count. If an induction label is wrong, fix the engine's name, or adjust `inductionOf()`.
 - **Engines tab (`#index`)**: filterable and sortable list of every engine: layout chips, fuel, induction, era, maker, has-ratings, has-notes. Filters persist in `localStorage` (`aft.index`).
 - **Panel extras**: "at a glance" spec grid, field notes, Copy link / Search the web / Wikipedia / Show in family tree. Vehicle panels get a collapsible "What to check on these engines".
@@ -221,6 +222,7 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - New group: Slate Auto (US EV truck start-up, 181 hp, 205 miles). Landscape bubbles now read "pre-production" instead of "supplier" when a non-supplier has no sales.
   - Source links added for the S2000 2006, Civic Si 2012–22, BRZ, F80 M3 / CS, 6.1L SRT8, i-FORCE MAX hybrids and the 2015–20 Escalade.
   - Flagged: the 2002 Escalade LQ9 (one listing says 5.3L only for 2002) and the S2000 2004–05 240 hp (Honda's later sheets say 237).
+- **84:** "Spot it" identification notes for about 135 engines, plus the vehicle-panel "Which engine is it?" block. Corrected the 22R-TE description: it no longer claims a factory intercooler, which wasn't confirmed.
 - **Still unverified (112 rows; was 133 in v82)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
