@@ -1,6 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-15. The current build is the 80th published version.
+Last updated: 2026-11-18. The current build is the 81st version: the expanded research edition (supplied by the user as an upload) plus a new reference layer.
+
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 49 groups, 115 brands, **695 engines and platforms**, **2,300 ratings** (1,473 checked), 789 vehicles. The file is about 2.1 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -102,6 +104,19 @@ All data is inline JavaScript in the HTML.
 - `#trace-<group>`
 - `#shared`
 - Compare uses `CMP=[...]` with `"group|Brand|Model"` keys.
+
+## 3b. Reference layer (added in v81)
+
+A "FILE MAP" comment at the top of the main `<script>` lists every data constant. The reference layer sits just before the final init line (`renderLandscape();renderSide();buildDeals();renderShared();route();`):
+
+- **`ENGINE_NOTES`**: enthusiast field notes keyed by engine id: `{k: known for, w: watch for, id: how to tell it apart, sw: swap scene}`. Only add widely documented faults (recalls, TSBs, long-running owner reports). About 85 engines have notes so far. Note ids must exist in `EI`.
+- **`SPEC`**: derived per engine: displacement (all "x.xL" in the name, so ranges like 6.8–7.3L work), cubic inches (only when the name states it), layout (from `tag`), induction (parsed from name and code words such as TSI, EcoBoost or Duramax; diesels default to turbo), and from `PW` the rated years, hp range, max torque and vehicle count. If an induction label is wrong, fix the engine's name, or adjust `inductionOf()`.
+- **Engines tab (`#index`)**: filterable and sortable list of every engine: layout chips, fuel, induction, era, maker, has-ratings, has-notes. Filters persist in `localStorage` (`aft.index`).
+- **Panel extras**: "at a glance" spec grid, field notes, Copy link / Search the web / Wikipedia / Show in family tree. Vehicle panels get a collapsible "What to check on these engines".
+- **Search**: engine aliases include layout, induction, fuel and displacement, so "diesel V8 6.6" works. Result rows show output range. Focusing an empty box shows recently viewed items (`aft.recent`). Press `/` or Ctrl/Cmd+K to focus search.
+- **Deep links**: `#engine/<group:id>` and `#vehicle/<group|Brand|Model>` open that item in the family tree.
+- **Landing**: Quick lookup strip (example chips, recents, "Browse all engines"), and stat tiles linking to the Engines and Power tabs.
+- **Known data cleanup to do**: the merged "atlasN" engines duplicate older entries in several groups (for example `ford:atlas5` vs `ford:eb35`, `ford:atlas9` vs `ford:godz`). They show twice in the index and search. Merge them carefully: POWER rows, `ATLAS_MAPPING` and `ENGINE_SOURCES` reference both ids.
 
 ## 4. Proven editing workflow (patch scripts)
 
