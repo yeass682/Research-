@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 81st version: the expanded research edition (supplied by the user as an upload) plus a new reference layer.
+Last updated: 2026-11-18. The current build is the 82nd version (v81 added the reference layer; v82 consolidated duplicates and added Toyota truck history).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 49 groups, 115 brands, **695 engines and platforms**, **2,300 ratings** (1,473 checked), 789 vehicles. The file is about 2.1 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 49 groups, 116 brands, **601 engines and platforms**, **2,332 ratings** (2,199 checked: 1,516 with a source link, the rest from the earlier CHECKED pass), 793 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -116,7 +116,10 @@ A "FILE MAP" comment at the top of the main `<script>` lists every data constant
 - **Search**: engine aliases include layout, induction, fuel and displacement, so "diesel V8 6.6" works. Result rows show output range. Focusing an empty box shows recently viewed items (`aft.recent`). Press `/` or Ctrl/Cmd+K to focus search.
 - **Deep links**: `#engine/<group:id>` and `#vehicle/<group|Brand|Model>` open that item in the family tree.
 - **Landing**: Quick lookup strip (example chips, recents, "Browse all engines"), and stat tiles linking to the Engines and Power tabs.
-- **Known data cleanup to do**: the merged "atlasN" engines duplicate older entries in several groups (for example `ford:atlas5` vs `ford:eb35`, `ford:atlas9` vs `ford:godz`). They show twice in the index and search. Merge them carefully: POWER rows, `ATLAS_MAPPING` and `ENGINE_SOURCES` reference both ids.
+- **Consolidation (v82)**: 103 duplicate "atlasN" engines were merged into their canonical engines, so the total went from 695 to 601. Old ids still resolve through `ENGINE_ALIASES` (used by `#power-…` links). `ATLAS_HISTORY.linkedEngine`, `ATLAS_MAPPING` and `ENGINE_SOURCES` were remapped. The stale `engines` copy inside each `G` group was removed, because it is rebuilt at runtime from `g.e`. The remaining `atlasN` ids are distinct engines, for example `gm:atlas42` (4.2L Atlas I6), `toyota:atlas4` / `atlas6` (i-FORCE MAX hybrids) and the classic Chrysler LA / B / Slant Six entries.
+- **Duplicate ratings**: after `PW` is built, an unsourced row is dropped when a source-linked row has the same engine, vehicle, years and hp. Identical sourced rows are kept once. Dropped rows go to `PW_DUPLICATES_DROPPED`.
+- **Verification tiers**: `chk(r)` (row has `source`) shows a solid ✓ with a link. `r.earlier` (matches a `CHECKED` key, no link) shows a lighter ✓. `verified(r)` is either one, and the counts use it. `CHECKED` had been unused in the expanded edition; it is wired back in v82.
+- **Batch helpers (v82)**, defined just before `const NOW=2026;`: `fixRows`, `dropRows`, `addRows(eid, why, rows)` and `cite(eid, test, sourceKey, extra)`. Source URLs live in `B82SRC`; `b82x(key)` builds a row's `{source, basis, coverage, note}`. Prefer adding source-linked rows this way over adding bare CHECKED keys. Cross-group rows (for example Cummins in Ram) use vehicle strings like `stellantis:Ram|Heavy Duty`, so test with `endsWith`.
 
 ## 4. Proven editing workflow (patch scripts)
 
@@ -203,6 +206,15 @@ open(p,'w',encoding='utf8').write(s); print("ok")
 - **76:** classic Corvettes (Blue Flame six; new Gen I small-block engine; L88/L71 427s), Pontiac (Catalina 421 SD, 1967 Firebird 400, 1969 Grand Prix SJ), vans (Transit, Express), police (Caprice 9C1 and PPV, Charger Pursuit, Police Interceptor Utility).
 - **77:** MINI (new Tritec supercharged and Prince turbo engines, JCW F56 and GP), Mercedes S 550 / S 580 / G 550 years (new M273 and M278 engines), Tahoe PPV, Police Interceptor Sedan, Charger 2006–10 V6s (new Chrysler LH V6 engine), Charger Daytona EV.
 - **Fix (80th version):** removed the duplicate Ford "godz" engine that stopped the Ford tree loading.
+- **81:** Reference layer: Engines index, at-a-glance specs, field notes, search upgrades, deep links.
+- **82:**
+  - Consolidation: 103 duplicate engines merged, 10 duplicate ratings dropped, and the earlier verification pass wired back in.
+  - Misfiled rows moved: 2015–20 Escalade to L86; Tahoe L83 / L84 split; LZ0 rows; Civic IMA; 2009–10 F-150 5.4 three-valve; Wrangler JK 3.8 to a new EGH engine; F80 M3 / M3 CS to a new S55 engine; 2013–20 BRZ / FR-S / 86 to a new FA20 engine.
+  - Corrections: 2018 Ram HD HO is 385 hp / 930 lb-ft, not 400. The F-150 5.8L is split into 1990–91 (210 / 315), 1992–93 (200 / 315) and 1994–96 (210 / 325). The 2027 L4B is confirmed at 350 / 455.
+  - New Toyota engines: 22R-E, 22R-TE, 3VZ-E, 2F, 3F-E, 1FZ-FE.
+  - New Toyota truck ratings: Pickup, T100, 1995–2004 Tacoma, 2000–04 Tundra V6, 2001–09 Sequoia, 2004–09 4Runner, FJ Cruiser 2007–13, Land Cruiser FJ60 / FJ62 / FJ80, Lexus GX 470 and LX 450 / 470. TRD supercharger kits are listed with their kit ratings (Tundra / Sequoia 504 hp, Tacoma 304 hp).
+  - Source links added for Cobra / Terminator / GT500, Viper generations, AMG 55s and Miata NB / Mazdaspeed.
+- **Still unverified (133 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
