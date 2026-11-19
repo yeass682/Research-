@@ -247,6 +247,7 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Family tree "Fit to width", with a minimum of 45%, replaces fit-to-height, which shrank big groups to 20%.
   - Power tab engine list has a sticky filter box.
   - ← / → keys step the vehicle lineup year.
+  - Power timeline rows grow when a vehicle name wraps (`fitTimelineNames`) instead of clipping the second line.
 - **Audit script idea:** check duplicate engine ids, y2 < y1, hp ≤ 0, PW keys missing from VEH, and decimal hp. The v89 audit found no structural errors.
 - **Still unverified (150 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 

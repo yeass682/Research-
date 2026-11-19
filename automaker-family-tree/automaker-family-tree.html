@@ -3654,7 +3654,10 @@ function applyPwFilter(){const list=$('#pwlist');if(!list)return;const q=norm(PW
 renderPower=function(...a){renderPowerBeforeReference(...a);const w=$('#pwpickw');if(w)w.style.display=pwMode==='eng'?'':'none';
  const list=$('#pwlist');if(list&&pwMode==='eng'&&!$('#pwfilterbox')){list.insertAdjacentHTML('afterbegin',`<label id="pwfilterbox" class="pw-filter"><span class="sr">Filter engines</span><input type="search" placeholder="Filter engines (e.g. Hemi, 5.0, Duramax)" value="${esc(PWFILTER)}" autocomplete="off"></label>`);
   const inp=list.querySelector('#pwfilterbox input');inp.addEventListener('input',()=>{PWFILTER=inp.value;applyPwFilter();});}
- applyPwFilter();};
+ applyPwFilter();fitTimelineNames();};
+// Timeline rows have a fixed height; grow a row when its vehicle name wraps so the name is never clipped.
+function fitTimelineNames(root=document){root.querySelectorAll('.tl-name').forEach(n=>{if(n.scrollHeight>n.clientHeight+1){const h=n.scrollHeight+'px';n.style.height=h;const t=n.nextElementSibling;if(t&&t.classList.contains('tl-track'))t.style.height=h;}});}
+addEventListener('resize',()=>{if(currentView()==='power')fitTimelineNames();});
 // Arrow keys step the year in an open vehicle lineup.
 document.addEventListener('keydown',ev=>{if(panel.hidden||(ev.key!=='ArrowLeft'&&ev.key!=='ArrowRight'))return;const tag=(ev.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
  const b=panel.querySelector(`.ly-step[data-step="${ev.key==='ArrowLeft'?-1:1}"]`);if(b){ev.preventDefault();b.click();}});
