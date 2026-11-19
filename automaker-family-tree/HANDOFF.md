@@ -1,6 +1,6 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 89th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life).
+Last updated: 2026-11-18. The current build is the 90th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants).
 
 > **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **648 engines and platforms**, **2,524 ratings** (2,373 checked), 826 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
@@ -249,7 +249,10 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - ← / → keys step the vehicle lineup year.
   - Power timeline rows grow when a vehicle name wraps (`fitTimelineNames`) instead of clipping the second line.
 - **Audit script idea:** check duplicate engine ids, y2 < y1, hp ≤ 0, PW keys missing from VEH, and decimal hp. The v89 audit found no structural errors.
-- **Still unverified (150 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
+- **90:**
+  - New Honda / Acura engines: B18 (Integra LS / GS-R / Type R), K20A2 / K20Z1 (RSX Type-S), K24A2 (TSX), J32 (TL / CL), J37 (TL SH-AWD), ECA1 + IMA (first Insight), E07A (Beat) and S07A turbo (S660).
+  - New ratings: 1994–2001 Integra, 2023-on Integra 1.5T, RSX 2002–06 (incl. the 2006 SAE re-rating), TSX, TL 2002–14, 1993–96 Prelude VTEC, Del Sol VTEC, CR-X Si 1985–91, Element 2007–11, Ridgeline 2007–26, Odyssey 2011-on, first-gen Insight, Beat and S660.
+- **Still unverified (about 160 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
