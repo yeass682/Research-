@@ -1,6 +1,6 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 91st version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive).
+Last updated: 2026-11-18. The current build is the 92nd version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles).
 
 > **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **648 engines and platforms**, **2,524 ratings** (2,373 checked), 826 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
@@ -257,6 +257,12 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Modern packages: Daytona R/T, Daytona / Daytona 392, SRT 392, Super Bee 2008–09 and 2012–14, Scat Pack Widebody, T/A, T/A 392, Shaker, Scat Pack 1320, Super Stock, Jailbreak (both cars), Demon on 91 octane (808 hp), Black Ghost, the Charger Daytona EV R/T / Scat Pack and the 1983–87 Shelby Charger / GLHS. New engines: 3.5L EGJ V6, 361 B, 360 LA and the 2.2L K four.
   - Correction: the Charger SRT Hellcat is split into 707 hp (2015–20) and 717 hp (2021–23). The old 2015–23 row claimed 707 hp throughout.
   - New `NAME_GUIDES`: per-vehicle disambiguation notes shown as a collapsible "names, decoded" block. Charger / Challenger is the first entry; add more for other confusing name families (e.g. Mustang GT / Cobra / Shelby, Silverado SS / Intimidator).
+- **92 (trims vs vehicles):**
+  - `TRIM_CONSOLIDATE` (runs right after `PW` is built) folds package / trim "vehicles" into the real vehicle and prefixes the trim to the row label ("Scat Pack · 3.0L SIXPACK H.O. …"). The original names are kept in `mOrig` / `keyOrig`, and `TRIM_MERGED` maps old keys so deep links and verification still work.
+  - The Charger and Challenger went from 24 vehicle entries to 4 (Charger, Challenger, the 1969 Charger Daytona and Charger 500). The Shelby Charger stays separate. Extend the map to other makes as needed (e.g. Mustang Shelby / Mach 1, F-150 Tremor / Limited).
+  - Vehicle search also matches trims, so "Scat Pack" finds the Charger and Challenger.
+  - The year lineup now shows one line per output level, listing every trim / package that carried it ("Scat Pack / Scat Pack Widebody / Super Bee …"), with engine detail underneath.
+  - 2026 gas Charger: SIXPACK is the engine (Hurricane I6). R/T = S.O. 420 hp, Scat Pack = H.O. 550 hp, and the model year was corrected from 2025 to 2026. The engine was renamed "3.0L Hurricane / SIXPACK twin-turbo I6". Charger Daytona EV rows are now "Daytona R/T (EV)" and "Daytona Scat Pack (EV)" on the Charger.
 - **Still unverified (about 170 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
