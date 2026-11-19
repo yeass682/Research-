@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 92nd version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles).
+Last updated: 2026-11-19. The current build is the 93rd version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **648 engines and platforms**, **2,524 ratings** (2,373 checked), 826 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v93) are: 50 groups, **660 engines and platforms**, **2,598 ratings** (2,429 checked, 199 with "sources differ" notes), 484 rated vehicles (887 vehicle entries in all). The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -263,6 +263,16 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Vehicle search also matches trims, so "Scat Pack" finds the Charger and Challenger.
   - The year lineup now shows one line per output level, listing every trim / package that carried it ("Scat Pack / Scat Pack Widebody / Super Bee …"), with engine detail underneath.
   - 2026 gas Charger: SIXPACK is the engine (Hurricane I6). R/T = S.O. 420 hp, Scat Pack = H.O. 550 hp, and the model year was corrected from 2025 to 2026. The engine was renamed "3.0L Hurricane / SIXPACK twin-turbo I6". Charger Daytona EV rows are now "Daytona R/T (EV)" and "Daytona Scat Pack (EV)" on the Charger.
+- **93 (consolidation for every make):**
+  - `TRIM_CONSOLIDATE` now covers about 430 trim / package / edition / generation keys across every make (generated from the vehicle-key list: a key whose model name is another key's name plus a suffix folds into the base). Rated vehicles went from 825 to 484 and vehicle entries from 1,319 to 887.
+  - Folded into the base: Corvette Z06 / ZR1 / Grand Sport, F-150 Raptor / Raptor R / SVT Raptor / SVT Lightning / Tremor, Ram 1500 TRX / Rebel / RHO, Mustang Shelby / Boss / Mach 1 / SVT Cobra, Camaro SS / ZL1 / Z/28, Civic Si / Type R, WRX STI, Golf GTI / R, GT-R editions, Lexus IS 350 / IS 500 and similar, Range Rover editions, Tesla Plaid / AWD, and many more.
+  - Kept separate (distinct model lines): BMW M models (X3 M, X5 M, Z4 M, 1 Series M), Bronco Sport, Explorer Sport Trac, F-150 Lightning (EV), Mustang Mach-E, Transit Custom, Titan XD, Ram 1500 Classic / REV / 3500 Chassis Cab, Ioniq 5 / 6 / 9, Range Rover Sport, Discovery Sport, Porsche 718 / Macan Electric, Corolla Cross, Charger 500, the 1969 Charger Daytona, the Shelby Charger.
+  - Defender: new key `tata|Defender|Defender (classic)` (1948–2016 cars plus the Works V8 / Classic Defender conversions); everything else is the 2020-on Defender. `LINEUP_APART` keeps the classic out of the new Defender's year view.
+  - Spelling duplicates merged: Leaf → LEAF, IONIQ 5/6/9 → Ioniq 5/6/9, RS3 → RS 3, RS6 → RS 6. A check for vehicles with the same name in two groups found none.
+  - Trims that had no rating rows (vehicle entries only) also fold in. Guide links (`spotterHTML`) follow `TRIM_MERGED`. Redundant `LINEUP_FAMILIES` (Camaro, Raptor, Mustang) removed.
+  - Seven ratings became exact duplicates after the merge and are dropped by `PW_DUPLICATES_DROPPED` (each had a sourced twin).
+  - Lineup: generation tags such as "(C7)" or "(fifth generation)" are hidden in the year view (the year already says it); near-duplicate details are collapsed; the related-models checkbox names the models it adds; "Last year" is now "Last rated year" with a tooltip, because older years are not fully covered.
+  - Data: the 2020–26 LT2 Corvette rows were filed under the 2027 LS6 and moved to the LT2. Added the E-Ray (655 hp combined, 2024–26; GM gives no combined torque), the 1968 Mustang (289 2V, 302 2V, 302 4V, 390 GT) and the 1969 Mustang (302 2V, 351 Windsor 2V / 4V, 390 GT). Corvette C7 labels unified.
 - **Still unverified (about 170 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
