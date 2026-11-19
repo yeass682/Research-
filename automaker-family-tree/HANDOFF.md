@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 87th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro history, older GM trucks, Nissan years).
+Last updated: 2026-11-18. The current build is the 88th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **642 engines and platforms**, **2,468 ratings** (2,332 checked), 814 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **648 engines and platforms**, **2,524 ratings** (2,373 checked), 826 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -236,7 +236,11 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Older GM trucks: 1992 C/K 1500 (KBB 190 hp for the 5.7 TBI, conflicting with the 200 hp span; flagged), and the 1994–2004 S-10 (new 2.2L four, 4.3 LB4 / L35). GMT400 / GMT800 rows moved off the `gm:gen3` catch-all onto L05, L31, LM7 and LR4.
   - Nissan: new VQ30DE, KA24E / DE, SR20DE, VG30DE and L-series engines. Added the Maxima 1995–2023, Altima 2002-on, 240SX, 300ZX non-turbo, Datsun 240Z, Sentra SE-R (B13), Xterra 2000–15, Frontier VQ40 2005–19 and Armada 2004–24. Context-specific engine names were neutralized (VG33E, QR25DE, LH8, 396).
   - Infrastructure: `moveLegacy` now records `movedFrom`, and the earlier-pass ✓ check (placed right after `ENGINE_ALIASES`, which is a `const` defined late in the file) matches moved and merged ids. This restored ✓ on rows moved since v82. Don't reference `ENGINE_ALIASES` above its definition: it throws (TDZ) and stops the whole script.
-- **Still unverified (136 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
+- **88:**
+  - Ford muscle: new Windsor 260 / 289 / 302 (5.0), Boss 302, FE (390 / 427 / 428), Boss 429, 429 CJ and Boss 351 engines. Mustang K-code, Fox 5.0 (1982–95), SN95 4.6, Bullitt, Shelby GT350 / GT500 / KR, Galaxie 427, Fairlane Thunderbolt and Torino Talladega / Cobra.
+  - Mopar: Plymouth added to Stellantis' brands. Road Runner, GTX, 'Cuda / AAR, Challenger R/T / T/A, Super Bee, Charger Daytona, Superbird, Coronet R/T, Duster 340 and Demon 340, using the existing 340 / 383 / 440 / Hemi engines.
+  - Raptor: SVT Raptor 2012–14, Gen 2 2017–20, Gen 3 2021–26, Bronco Raptor 2022–26 and the global Ranger Raptor 2019–22. Lineup families were added for Raptor, Mustang and Torino.
+- **Still unverified (150 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
