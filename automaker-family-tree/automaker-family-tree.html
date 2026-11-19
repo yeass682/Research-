@@ -404,6 +404,33 @@ kbd{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border:1px solid va
 @media(min-width:1101px){body.panel-open #v-index{padding-right:452px}}
 .ok.earlier{opacity:.6}
 .record-provenance.imported-flag.earlier{color:var(--ink-3)}
+.lineup{margin:12px 0 14px;padding:12px 14px;border:1px solid #2c4d62;border-radius:12px;background:#0b1720}
+.ly-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ly-head h4{margin:0;color:var(--accent)}
+.ly-ctl{display:flex;align-items:center;gap:4px}
+.ly-ctl select{min-height:40px;padding:4px 8px;border:1px solid var(--line-2);border-radius:9px;background:var(--bg);color:var(--ink);font:600 16px var(--f-mono)}
+.ly-step{width:40px;height:40px;border:1px solid var(--line-2);border-radius:9px;background:transparent;color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+.ly-step:hover,.ly-step:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.ly-var{display:flex;align-items:center;gap:7px;margin:9px 0 0;font-size:12.5px;color:var(--ink-2);cursor:pointer}
+.ly-var input{width:18px;height:18px;accent-color:var(--accent)}
+.ly-range{margin:6px 0 8px;font:11.5px var(--f-mono);color:var(--ink-3)}
+.ly-eng{padding:9px 0;border-top:1px solid var(--line)}
+.ly-eng header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.ly-eng header .lnk{font-weight:700;text-align:left;padding:0}
+.ly-flag{font:600 10px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;border-radius:5px;padding:2px 6px}
+.ly-flag.new{color:#7fd7a8;border:1px solid #2f5b46}.ly-flag.gone{color:#f0b46a;border:1px solid #5a4325}
+.ly-sum{margin:4px 0 6px;font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ly-sum i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.ly-sum b{color:var(--ink)}
+.ly-trims{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.ly-trims li{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;line-height:1.4;padding:3px 0}
+.ly-trims li span{color:var(--ink-2);min-width:0;overflow-wrap:anywhere}
+.ly-trims li b{font:600 12px var(--f-mono);white-space:nowrap;color:var(--ink)}
+.ly-spot{margin-top:5px}.ly-spot summary{cursor:pointer;font:600 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:#7fc8ff}
+.ly-spot p{margin:5px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.ly-empty,.ly-foot{font-size:12.5px;color:var(--ink-3);line-height:1.6;margin:8px 0 0}
+.ly-foot .lnk{padding:0}
+@media(max-width:420px){.ly-trims li{flex-direction:column;gap:1px}}
 .ix-reset{min-height:32px;padding:0 10px;border:1px solid var(--line-2);border-radius:8px;background:transparent;color:var(--ink-2);font:600 12px inherit;font-family:inherit;cursor:pointer}
 .ix-reset:hover{border-color:var(--accent);color:var(--accent)}
 .field-notes.spot summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;min-height:32px}
@@ -3243,9 +3270,56 @@ function actionsHTML(kind,id,q){return `<div class="p-actions"><button type="but
 const VIN8_TIP={ford:'Ford',gm:'GM',stellantis:'Stellantis (Chrysler, Dodge, Jeep, Ram)'};
 function vehicleSpotHTML(v){const seen=new Set();const ids=v.engines.filter(id=>{const t=ENGINE_NOTES[id]?.pk;if(!t||seen.has(t))return false;seen.add(t);return true;});if(!ids.length)return '';
  const tip=VIN8_TIP[v.gid]?`<p class="fn-tip">On ${VIN8_TIP[v.gid]} vehicles the 8th character of the VIN is the engine code.${v.gid==='gm'?' GM trucks and SUVs also list the engine RPO code (for example L87 or L5P) on the Service Parts ID label in the glovebox.':''}</p>`:'';
- return `<details class="field-notes spot"${ids.length<=4?' open':''}><summary><h4>Which engine is it? · ${ids.length}</h4></summary>${ids.map(id=>`<div class="fn-row p"><b><button class="lnk" data-xe="${esc(id)}">${esc(EI[id].n)}</button></b><p>${esc(ENGINE_NOTES[id].pk)}</p></div>`).join('')}${tip}</details>`;}
+ return `<details class="field-notes spot"${ids.length<=4&&!lineupYears(lineupRows(v,false)).length?' open':''}><summary><h4>Which engine is it? · ${ids.length}</h4></summary>${ids.map(id=>`<div class="fn-row p"><b><button class="lnk" data-xe="${esc(id)}">${esc(EI[id].n)}</button></b><p>${esc(ENGINE_NOTES[id].pk)}</p></div>`).join('')}${tip}</details>`;}
 function vehicleChecksHTML(v){const seen=new Set();const ids=v.engines.filter(id=>{const w=ENGINE_NOTES[id]?.w;if(!w||seen.has(w))return false;seen.add(w);return true;});if(!ids.length)return '';
  return `<details class="field-notes checks"><summary><h4>What to check on these engines · ${ids.length}</h4></summary>${ids.map(id=>`<div class="fn-row w"><b><button class="lnk" data-xe="${esc(id)}">${esc(EI[id].n)}</button></b><p>${esc(ENGINE_NOTES[id].w)}</p></div>`).join('')}</details>`;}
+/* ---------- Vehicle year-by-year lineup (v85) ----------
+   Picks a model year and lists every engine offered that year from the rating rows (PW), grouped by engine,
+   with output range, trims, ✓ status, new / last-year flags and the engine's "Spot it" hint.
+   Variants (e.g. F-150 Raptor, Ram 1500 TRX) are rows whose model name starts with this vehicle's model name. */
+function variantKeys(v){const base=vkey(v);const pre=base+' ';return [...new Set(PW.map(r=>r.key))].filter(k=>k===base||k.startsWith(pre));}
+function lineupRows(v,withVariants){const base=vkey(v);const keys=new Set(withVariants?variantKeys(v):[base]);return PW.filter(r=>keys.has(r.key));}
+function lineupYears(rows){const ys=new Set();rows.forEach(r=>{for(let y=r.y1;y<=r.y2;y++)ys.add(y);});return [...ys].sort((a,b)=>b-a);}
+function engAt(rows,y){return new Set(rows.filter(r=>r.y1<=y&&r.y2>=y).map(r=>r.eid));}
+function lineupYearHTML(v,rows,y){
+ const inYear=rows.filter(r=>r.y1<=y&&r.y2>=y);if(!inYear.length)return '<p class="ly-empty">No ratings recorded for this year.</p>';
+ const prev=engAt(rows,y-1),next=engAt(rows,y+1),years=lineupYears(rows),first=years[years.length-1],last=years[0];
+ const byE=new Map();inYear.forEach(r=>{(byE.get(r.eid)||byE.set(r.eid,[]).get(r.eid)).push(r);});
+ const groups=[...byE.entries()].map(([eid,rs])=>({eid,rs,max:Math.max(...rs.map(r=>r.hp))})).sort((a,b)=>a.max-b.max);
+ return groups.map(({eid,rs})=>{const e=EI[eid];const hp=rs.map(r=>r.hp),tq=rs.map(r=>r.tq).filter(Boolean);
+  const hpT=Math.min(...hp)===Math.max(...hp)?hp[0].toLocaleString():Math.min(...hp).toLocaleString()+'–'+Math.max(...hp).toLocaleString();
+  const tqT=tq.length?(Math.min(...tq)===Math.max(...tq)?tq[0].toLocaleString():Math.min(...tq).toLocaleString()+'–'+Math.max(...tq).toLocaleString())+' lb-ft':'';
+  const seen=new Set();const trims=rs.sort((a,b)=>a.hp-b.hp||(chk(b)-chk(a))||a.t.length-b.t.length).map(r=>{const variant=r.key!==vkey(v)?r.m.replace(v.m,'').trim():'';const t=variant?r.t.split(' · ').filter(x=>!x.includes(variant)&&!variant.includes(x.trim())).join(' · '):r.t;const label=[variant,t].filter(Boolean).join(' · ')||'Rated';const k=variant+'|'+r.hp+'|'+r.tq;if(seen.has(k))return '';seen.add(k);
+   const mark=chk(r)?'<span class="ok" title="Source-linked">✓</span>':r.earlier?'<span class="ok earlier" title="Checked in an earlier pass">✓</span>':'';
+   return `<li><span>${esc(label)}</span><b>${r.hp.toLocaleString()}${esc((r.hpQualifier||'').trim())} hp${r.tq?' · '+r.tq.toLocaleString()+' lb-ft':''}${mark}</b></li>`;}).join('');
+  const isNew=y>first&&!prev.has(eid),isLast=y<last&&!next.has(eid);
+  const pk=ENGINE_NOTES[eid]?.pk;
+  return `<article class="ly-eng"><header><button class="lnk" data-xe="${esc(eid)}">${esc(e.n)}</button>${isNew?'<span class="ly-flag new">New for '+y+'</span>':''}${isLast?'<span class="ly-flag gone">Last year</span>':''}</header>
+  <p class="ly-sum"><i class="f-${e.f}"></i>${esc(SPEC[eid].layout)}${SPEC[eid].disp&&e.f!=='e'?' · '+esc(dispShort(SPEC[eid])):''} · ${esc(SPEC[eid].ind)} · <b>${hpT} hp</b>${tqT?' · '+tqT:''}</p>
+  <ul class="ly-trims">${trims}</ul>${pk?`<details class="ly-spot"><summary>Spot it</summary><p>${esc(pk)}</p></details>`:''}</article>`;}).join('')+
+  (inYear.some(r=>r.key!==vkey(v))?'':'');
+}
+function lineupHTML(v){
+ const hasVariants=variantKeys(v).length>1;const withV=hasVariants&&store.get('lineupVariants',true);
+ const rows=lineupRows(v,withV);const years=lineupYears(rows);if(!years.length)return '';
+ const saved=store.get('lineupYear',null);const def=years.includes(saved)?saved:(years.find(y=>y<=NOW)??years[0]);
+ const unrated=v.engines.filter(id=>!rows.some(r=>r.eid===id));
+ return `<section class="lineup" data-veh="${esc(vkey(v))}" aria-label="Engines by model year">
+  <div class="ly-head"><h4>Year by year</h4><div class="ly-ctl"><button type="button" class="ly-step" data-step="-1" aria-label="Earlier model year">‹</button>
+  <label><span class="sr">Model year</span><select class="ly-sel">${years.map(y=>`<option value="${y}"${y===def?' selected':''}>${y}${y>NOW?' (announced)':''}</option>`).join('')}</select></label>
+  <button type="button" class="ly-step" data-step="1" aria-label="Later model year">›</button></div></div>
+  ${hasVariants?`<label class="ly-var"><input type="checkbox" class="ly-vchk"${withV?' checked':''}> Include variants and special editions (${variantKeys(v).length-1})</label>`:''}
+  <p class="ly-range">${years.length} rated model years · ${years[years.length-1]}–${years[0]}. Engines listed only where a rating exists for that year.</p>
+  <div class="ly-body">${lineupYearHTML(v,rows,def)}</div>
+  ${unrated.length?`<p class="ly-foot">Also linked to this vehicle without year data: ${unrated.map(id=>`<button class="lnk" data-xe="${esc(id)}">${esc(EI[id].n)}</button>`).join(', ')}.</p>`:''}
+ </section>`;}
+function wireLineup(root,v){const box=root.querySelector('.lineup');if(!box)return;
+ const draw=()=>{const withV=box.querySelector('.ly-vchk')?.checked??false;const rows=lineupRows(v,withV);const y=+box.querySelector('.ly-sel').value;box.querySelector('.ly-body').innerHTML=lineupYearHTML(v,rows,y);store.set('lineupYear',y);
+  if(typeof applySpotterYear==='function'){const sel=root.querySelector('select[data-pw]');if(sel&&[...sel.options].some(o=>o.value===String(y))){sel.value=String(y);sel.dispatchEvent(new Event('change',{bubbles:true}));}}};
+ box.querySelector('.ly-sel').addEventListener('change',draw);
+ box.querySelectorAll('.ly-step').forEach(b=>b.onclick=()=>{const sel=box.querySelector('.ly-sel');const i=sel.selectedIndex-(+b.dataset.step);if(i>=0&&i<sel.options.length){sel.selectedIndex=i;draw();}});
+ box.querySelector('.ly-vchk')?.addEventListener('change',e=>{store.set('lineupVariants',e.target.checked);const y=+box.querySelector('.ly-sel').value;const fresh=document.createElement('div');fresh.innerHTML=lineupHTML(v);const nb=fresh.firstElementChild;const sel=nb.querySelector('.ly-sel');if([...sel.options].some(o=>+o.value===y))sel.value=String(y);box.replaceWith(nb);wireLineup(root,v);nb.querySelector('.ly-sel').dispatchEvent(new Event('change'));});}
+
 const panelBeforeReference=showPanel;
 showPanel=function(n){
  panelBeforeReference(n);
@@ -3253,7 +3327,7 @@ showPanel=function(n){
   if(kv){kv.insertAdjacentHTML('afterend',glanceHTML(e));const desc=panel.querySelector('.glance').nextElementSibling;const after=desc&&desc.tagName==='P'?desc:panel.querySelector('.glance');after.insertAdjacentHTML('afterend',notesHTML(e.id)+actionsHTML('engine',e.id,`${e.n} ${e.code&&!e.n.includes(e.code)?e.code:''} engine`.replace(/\s+/g,' ')));}
   pushRecent({t:'e',id:e.id});}
  else if(n.type==='veh'){const v=n.v;const h3=panel.querySelector('h3');
-  if(h3)h3.insertAdjacentHTML('afterend',actionsHTML('vehicle',vkey(v),vname(v))+vehicleSpotHTML(v)+vehicleChecksHTML(v));
+  if(h3){h3.insertAdjacentHTML('afterend',actionsHTML('vehicle',vkey(v),vname(v))+lineupHTML(v)+vehicleSpotHTML(v)+vehicleChecksHTML(v));wireLineup(panel,v);}
   pushRecent({t:'v',id:vkey(v)});}
 };
 function linkFor(path){return location.href.split('#')[0]+'#'+path;}
