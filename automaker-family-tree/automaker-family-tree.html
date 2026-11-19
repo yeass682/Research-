@@ -431,6 +431,9 @@ kbd{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border:1px solid va
 .ly-twin{margin:8px 0;padding:8px 10px;border-left:2px solid #73bcae;background:#101e1d;border-radius:0 8px 8px 0;font-size:12.5px;color:#bbd8ce;line-height:1.5}
 @media(max-width:600px){nav.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;overflow:visible}nav.tabs a{padding:8px 2px;font-size:12.5px;text-align:center;white-space:normal;line-height:1.2;display:flex;align-items:center;justify-content:center}}
 @media(max-width:600px){#ylist .pr{grid-template-columns:minmax(0,1fr) auto!important;row-gap:4px}#ylist .pr .py{grid-column:1;grid-row:1;font-weight:600;color:var(--ink)}#ylist .pr .pq{grid-column:2;grid-row:1}#ylist .pr .pb{grid-column:1 / -1;grid-row:2}}
+.pw-filter{display:block;position:sticky;top:0;z-index:2;padding:0 0 8px;background:inherit}
+.pw-filter input{width:100%;box-sizing:border-box;min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-radius:9px;background:var(--bg);color:var(--ink);font:14px inherit;font-family:inherit}
+.pw-filter input:focus{outline:none;border-color:var(--accent)}
 .ly-empty,.ly-foot{font-size:12.5px;color:var(--ink-3);line-height:1.6;margin:8px 0 0}
 .ly-foot .lnk{padding:0}
 @media(max-width:420px){.ly-trims li{flex-direction:column;gap:1px}}
@@ -494,7 +497,7 @@ kbd{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border:1px solid va
           </div>
           <span class="tip">Hover to follow a line. Click any box for details. Engines marked <span class="hpb">HP</span> have horsepower history. In engine names, "turbo" means one turbocharger and "twin-turbo" means two.</span>
         </div>
-        <div class="hint" style="justify-content:flex-start;margin-top:0"><div class="zoombar" role="group" aria-label="Zoom the tree"><button id="zout" aria-label="Zoom out">−</button><span id="zval">100%</span><button id="zin" aria-label="Zoom in">+</button><button class="txt" id="zfit">Fit whole tree</button><button class="txt" id="z100">Actual size</button></div></div>
+        <div class="hint" style="justify-content:flex-start;margin-top:0"><div class="zoombar" role="group" aria-label="Zoom the tree"><button id="zout" aria-label="Zoom out">−</button><span id="zval">100%</span><button id="zin" aria-label="Zoom in">+</button><button class="txt" id="zfit">Fit to width</button><button class="txt" id="z100">Actual size</button></div></div>
         <div class="mobile-columns" aria-label="Jump to tree column"><button data-col="owner">Parent</button><button data-col="brand">Brands</button><button data-col="eng">Engines</button><button data-col="veh">Vehicles</button><button id="clearPath">Clear path</button></div><div class="flowbox" id="flowbox"><div class="flowsize" id="flowsize"><div class="flow" id="flow"></div></div></div>
       </div>
     </div>
@@ -1853,6 +1856,12 @@ Object.entries(POWER).forEach(([eid,p])=>{const e=EI[eid];if(!e){console.warn("p
   p.rows.forEach(r=>{let s=r[0],gid=e.gid;const i=s.indexOf(":");if(i>0){gid=s.slice(0,i);s=s.slice(i+1);}const [b,m]=s.split("|");
     const x=r[7]||{};PW.push({eid,gid,b,m,key:gid+"|"+b+"|"+m,label:m.startsWith(b)?m:b+" "+m,y1:r[1],y2:r[2]||Math.max(NOW,r[1]),open:!r[2],hp:r[3],tq:r[4],t:r[5]||"",prev:r[6]==="prev",f:e.f,kwh:x.k,mi:x.r,components:x.components,componentsSource:x.componentsSource,hpQualifier:x.hpQualifier,source:x.source,application:x.application,basis:x.basis,note:x.note,coverage:x.coverage,pid:x.pid,movedFrom:x.movedFrom});});});
 
+// Metric conversions (e.g. 297.7 hp) display as whole numbers; the exact figure is kept in hpExact / tqExact.
+PW.forEach(r=>{if(r.hp%1){r.hpExact=r.hp;r.hp=Math.round(r.hp);}if(r.tq%1){r.tqExact=r.tq;r.tq=Math.round(r.tq);}});
+// Vehicles that only appear in rating rows get a vehicle entry and an engine link, so they are searchable and open a panel.
+const VEH_AUTO=[];PW.forEach(r=>{const e=EI[r.eid];if(!e)return;let v=VEH[r.key];
+ if(!v){v=VEH[r.key]={gid:r.gid,b:r.b,m:r.m,engines:[]};VEH_AUTO.push(r.key);if(GI[r.gid]&&!GI[r.gid].br.includes(r.b))GI[r.gid].br.push(r.b);}
+ if(!v.engines.includes(r.eid)&&VEH_AUTO.includes(r.key)){v.engines.push(r.eid);(r.gid===e.gid?e.own:e.ext).push({gid:r.gid,b:r.b,m:r.m});}});
 // De-duplicate: an unsourced row is dropped when a source-linked row has the same engine, vehicle, years and hp;
 // identical source-linked rows (same label and torque) are kept once. Dropped rows are listed in PW_DUPLICATES_DROPPED.
 const PW_DUPLICATES_DROPPED=[];
@@ -2778,7 +2787,8 @@ function chk(r){return !!r.source;}
 // Rows confirmed in earlier verification passes (CHECKED keys) but without a stored link get a lighter ✓.
 // earlier-pass flags are set right after ENGINE_ALIASES is defined (rows moved or merged keep their verification)
 const verified=r=>chk(r)||!!r.earlier;
-function diff(r){for(const [k,v] of Object.entries(DIFFER)){const [e,m,y,h]=k.split("|");if(e===r.eid&&+y===r.y1&&+h===r.hp&&r.m.includes(m))return v;}return "";}
+function rowIds(r){if(r._ids)return r._ids;const ids=new Set([r.eid,...(r.movedFrom||[])]);if(typeof ENGINE_ALIASES==="object")Object.entries(ENGINE_ALIASES).forEach(([a,c])=>{if(ids.has(c))ids.add(a);});return r._ids=ids;}
+function diff(r){for(const [k,v] of Object.entries(DIFFER)){const [e,m,y,h]=k.split("|");if(rowIds(r).has(e)&&+y===r.y1&&Math.round(+h)===r.hp&&r.m.includes(m))return v;}return "";}
 const yrs=r=>r.y1===r.y2&&!r.open?String(r.y1):r.y1+"–"+(r.open?"now":r.y2);
 
 /* ===================== SEARCH ===================== */
@@ -2863,7 +2873,7 @@ function timelineHTML(rows){
 let pwFuel=new Set(["g","d","h","e","c"]);
 let pwMode="eng",pwEng=null,pwYear=2014;
 const ENGINE_ALIASES={"toyota:atlas3": "toyota:t24", "toyota:atlas7": "toyota:g16", "toyota:atlas10": "toyota:2urgse", "mercedes:atlas0": "mercedes:m254", "mercedes:atlas1": "mercedes:m139", "mercedes:atlas2": "mercedes:m256", "mercedes:atlas4": "mercedes:om654", "mercedes:atlas5": "mercedes:om656", "mercedes:om": "mercedes:om654", "ford:atlas0": "ford:eb15", "ford:atlas3": "ford:eb27", "ford:atlas4": "ford:eb27", "ford:atlas5": "ford:eb35", "ford:atlas6": "ford:pb", "ford:atlas9": "ford:godz", "ford:atlas10": "ford:godz", "ford:atlas11": "ford:ps", "ford:atlas12": "ford:hy25", "ford:atlas13": "ford:fev", "stellantis:atlas5": "cummins:c67", "toyota:atlas1": "toyota:m20", "toyota:atlas2": "toyota:a25", "toyota:atlas8": "subaru:fa24", "toyota:atlas9": "toyota:ths2", "toyota:atlas13": "toyota:ths2", "toyota:atlas11": "bmw:b58", "toyota:atlas12": "toyota:bz", "honda:atlas0": "honda:l15", "honda:atlas1": "honda:k20", "honda:atlas2": "honda:k20t", "honda:atlas3": "honda:ehev", "honda:atlas4": "honda:j35", "honda:atlas6": "honda:h0", "nissan:atlas0": "nissan:pr25", "nissan:atlas1": "nissan:vc", "nissan:atlas2": "nissan:vc", "nissan:atlas3": "nissan:vq", "nissan:atlas4": "nissan:vq", "nissan:atlas5": "nissan:vr30", "nissan:atlas7": "nissan:nev", "mitsubishi:atlas2": "mitsubishi:phev", "mazda:atlas0": "mazda:sg20", "mazda:atlas1": "mazda:sg25", "mazda:atlas2": "mazda:sg25", "mazda:atlas3": "mazda:i6", "mazda:atlas4": "mazda:mphev", "mazda:atlas5": "mazda:i6d", "subaru:atlas0": "subaru:fb20", "subaru:atlas1": "subaru:fb25", "subaru:atlas2": "subaru:fa24", "subaru:atlas3": "subaru:fa24t", "hyundai:atlas1": "hyundai:g20", "hyundai:atlas2": "hyundai:g25", "hyundai:atlas3": "hyundai:g25", "hyundai:atlas4": "hyundai:lam", "hyundai:atlas6": "hyundai:th3", "hyundai:atlas7": "hyundai:g16h", "hyundai:atlas8": "hyundai:egmp", "hyundai:atlas9": "hyundai:egmp", "hyundai:atlas10": "hyundai:lam", "vw:atlas0": "vw:ea211", "vw:atlas1": "vw:ea211", "vw:atlas2": "vw:ea888", "vw:atlas3": "vw:r5", "vw:atlas4": "vw:v6", "vw:atlas5": "vw:v8", "vw:atlas6": "vw:tdi", "vw:atlas7": "vw:f6", "vw:atlas8": "vw:f6", "vw:atlas9": "vw:lv12", "vw:atlas10": "vw:meb", "vw:atlas11": "vw:ppe", "bmw:atlas0": "bmw:b38", "bmw:atlas1": "bmw:b48", "bmw:atlas2": "bmw:b58", "bmw:atlas3": "bmw:s58", "bmw:atlas4": "bmw:s68", "bmw:atlas6": "bmw:edrive", "mercedes:atlas7": "mercedes:mev", "renault:atlas0": "renault:tce10", "renault:atlas1": "renault:hr13", "renault:atlas2": "renault:etech", "renault:atlas3": "renault:etech", "renault:atlas4": "renault:ampr", "byd:atlas0": "byd:dmi", "byd:atlas1": "byd:dmi", "byd:atlas2": "byd:dmo", "byd:atlas3": "byd:e30", "byd:atlas4": "byd:e4", "byd:atlas5": "byd:e4", "geely:atlas2": "geely:td15", "geely:atlas4": "geely:vep4", "geely:atlas5": "geely:sea", "tata:atlas0": "tata:ing4", "tata:atlas1": "tata:ing6", "tata:atlas3": "tata:rr44mhev", "tata:atlas5": "tata:jev", "tesla:atlas0": "tesla:tdu", "tesla:atlas1": "tesla:tdu", "tesla:atlas2": "tesla:tdu", "tesla:atlas3": "tesla:tdu", "rivian:atlas0": "rivian:rdu", "rivian:atlas1": "rivian:rdu", "rivian:atlas2": "rivian:rdu", "lucid:atlas0": "lucid:ldu", "lucid:atlas1": "lucid:ldu", "lucid:atlas2": "lucid:ldu", "ferrari:atlas0": "ferrari:f163", "ferrari:atlas2": "ferrari:f140", "aston:atlas0": "mercedes:m177", "aston:atlas2": "aston:valh", "mclaren:atlas2": "mclaren:m840"};
-(function(){const ck=[...CHECKED].map(k=>k.split('|'));const AL=ENGINE_ALIASES;PW.forEach(r=>{const ids=new Set([r.eid,...(r.movedFrom||[])]);Object.entries(AL).forEach(([a,c])=>{if(ids.has(c))ids.add(a);});if(!r.source&&ck.some(([e,m,y,h])=>ids.has(e)&&+y===r.y1&&+h===r.hp&&r.m.includes(m)))r.earlier=true;});})();
+(function(){const ck=[...CHECKED].map(k=>k.split('|'));const AL=ENGINE_ALIASES;PW.forEach(r=>{const ids=new Set([r.eid,...(r.movedFrom||[])]);Object.entries(AL).forEach(([a,c])=>{if(ids.has(c))ids.add(a);});if(!r.source&&ck.some(([e,m,y,h])=>ids.has(e)&&+y===r.y1&&Math.round(+h)===r.hp&&r.m.includes(m)))r.earlier=true;});})();
 function renderPower(arg){
   if(arg){const resolved=ENGINE_ALIASES[arg.replace("-",":")];if(resolved)arg=resolved.replace(":","-");}
   if(arg==="compare"){pwMode="compare";}
@@ -2950,7 +2960,7 @@ let Z=1;
 function applyZoom(){const f=$("#flow"),sz=$("#flowsize");if(!M)return;f.style.transform=`scale(${Z})`;sz.style.width=(W*Z)+"px";sz.style.height=(M.height*Z)+"px";$("#zval").textContent=Math.round(Z*100)+"%";}
 function setZ(z){Z=Math.min(2,Math.max(0.2,z));applyZoom();}
 $("#zin").onclick=()=>setZ(Z*1.2);$("#zout").onclick=()=>setZ(Z/1.2);$("#z100").onclick=()=>setZ(1);
-$("#zfit").onclick=()=>{const box=$("#flowbox");const top=box.getBoundingClientRect().top;const availH=Math.max(260,window.innerHeight-Math.max(top,90)-20);setZ(Math.min(1,(box.clientWidth-4)/W,availH/M.height));box.scrollIntoView({block:"start",behavior:"smooth"});};
+$("#zfit").onclick=()=>{const box=$("#flowbox");const top=box.getBoundingClientRect().top;const availH=Math.max(260,window.innerHeight-Math.max(top,90)-20);setZ(Math.max(0.45,Math.min(1,(box.clientWidth-4)/W)));void availH;box.scrollIntoView({block:"start",behavior:"smooth"});};
 $("#flowbox").addEventListener("wheel",e=>{if(!e.ctrlKey)return;e.preventDefault();setZ(Z*(e.deltaY<0?1.1:1/1.1));},{passive:false});
 
 /* ===================== ROUTING ===================== */
@@ -3521,7 +3531,7 @@ function lineupHTML(v){
   <label><span class="sr">Model year</span><select class="ly-sel">${years.map(y=>`<option value="${y}"${y===def?' selected':''}>${y}${y>NOW?' (announced)':''}${own.has(y)?'':' (via twin)'}</option>`).join('')}</select></label>
   <button type="button" class="ly-step" data-step="1" aria-label="Later model year">›</button></div></div>
   ${hasVariants?`<label class="ly-var"><input type="checkbox" class="ly-vchk"${withV?' checked':''}> Include variants, special editions and related models (${variantKeys(v).length-1})</label>`:''}
-  <p class="ly-range">${own.size} rated model years · ${years[years.length-1]}–${years[0]}. Engines listed only where a rating exists for that year.</p>
+  <p class="ly-range">${own.size} rated model years (← → keys step years) · ${years[years.length-1]}–${years[0]}. Engines listed only where a rating exists for that year.</p>
   <div class="ly-body">${lineupYearHTML(v,rows,def)}</div>
   ${unrated.length?`<p class="ly-foot">Also linked to this vehicle without year data: ${unrated.map(id=>`<button class="lnk" data-xe="${esc(id)}">${esc(EI[id].n)}</button>`).join(', ')}.</p>`:''}
  </section>`;}
@@ -3637,8 +3647,17 @@ function drawIndex(){const list=ixSort(ixFilter());$("#ixcount").textContent=`${
  $("#ixlist").innerHTML=list.length?list.map(ixRow).join(''):'<p class="ix-empty">Nothing matches. Loosen a filter, or try a shorter term like “5.7” or “V8”.</p>';}
 
 /* ---------- Landing stats become links ---------- */
-const renderPowerBeforeReference=renderPower;
-renderPower=function(...a){renderPowerBeforeReference(...a);const w=$('#pwpickw');if(w)w.style.display=pwMode==='eng'?'':'none';};
+const renderPowerBeforeReference=renderPower;let PWFILTER='';
+function applyPwFilter(){const list=$('#pwlist');if(!list)return;const q=norm(PWFILTER.trim());let head=null,shown=0;
+ [...list.children].forEach(el=>{if(el.id==='pwfilterbox')return;if(el.tagName==='H3'){if(head)head.hidden=!shown;head=el;shown=0;return;}
+  const hit=!q||norm(el.textContent+' '+(el.dataset.pe||'')).includes(q)||searchCompact(el.textContent).includes(searchCompact(q));el.hidden=!hit;if(hit)shown++;});if(head)head.hidden=!shown;}
+renderPower=function(...a){renderPowerBeforeReference(...a);const w=$('#pwpickw');if(w)w.style.display=pwMode==='eng'?'':'none';
+ const list=$('#pwlist');if(list&&pwMode==='eng'&&!$('#pwfilterbox')){list.insertAdjacentHTML('afterbegin',`<label id="pwfilterbox" class="pw-filter"><span class="sr">Filter engines</span><input type="search" placeholder="Filter engines (e.g. Hemi, 5.0, Duramax)" value="${esc(PWFILTER)}" autocomplete="off"></label>`);
+  const inp=list.querySelector('#pwfilterbox input');inp.addEventListener('input',()=>{PWFILTER=inp.value;applyPwFilter();});}
+ applyPwFilter();};
+// Arrow keys step the year in an open vehicle lineup.
+document.addEventListener('keydown',ev=>{if(panel.hidden||(ev.key!=='ArrowLeft'&&ev.key!=='ArrowRight'))return;const tag=(ev.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
+ const b=panel.querySelector(`.ly-step[data-step="${ev.key==='ArrowLeft'?-1:1}"]`);if(b){ev.preventDefault();b.click();}});
 const renderLandscapeBeforeReference=renderLandscape;
 renderLandscape=function(){renderLandscapeBeforeReference();const st=$("#stats");
  st.innerHTML=`<div><b>${G.filter(g=>g.cat!=="supply").length}</b><span>parent companies</span></div><div><b>${G.reduce((a,g)=>a+g.br.length,0)}</b><span>brands</span></div><a href="#index"><b>${ENG.length}</b><span>engines &amp; platforms →</span></a><a href="#power"><b>${PW.length.toLocaleString()}</b><span>power ratings →</span></a>`;

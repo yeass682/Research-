@@ -1,6 +1,6 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-18. The current build is the 88th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years).
+Last updated: 2026-11-18. The current build is the 89th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life).
 
 > **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers are: 50 groups, 118 brands, **648 engines and platforms**, **2,524 ratings** (2,373 checked), 826 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
@@ -240,6 +240,14 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Ford muscle: new Windsor 260 / 289 / 302 (5.0), Boss 302, FE (390 / 427 / 428), Boss 429, 429 CJ and Boss 351 engines. Mustang K-code, Fox 5.0 (1982–95), SN95 4.6, Bullitt, Shelby GT350 / GT500 / KR, Galaxie 427, Fairlane Thunderbolt and Torino Talladega / Cobra.
   - Mopar: Plymouth added to Stellantis' brands. Road Runner, GTX, 'Cuda / AAR, Challenger R/T / T/A, Super Bee, Charger Daytona, Superbird, Coronet R/T, Duster 340 and Demon 340, using the existing 340 / 383 / 440 / Hemi engines.
   - Raptor: SVT Raptor 2012–14, Gen 2 2017–20, Gen 3 2021–26, Bronco Raptor 2022–26 and the global Ranger Raptor 2019–22. Lineup families were added for Raptor, Mustang and Torino.
+- **89 (fixes / QoL):**
+  - Metric-converted ratings are rounded for display (`hpExact` / `tqExact` keep the decimals).
+  - 22 vehicles that existed only in rating rows are auto-linked (`VEH_AUTO`), so they're searchable and get panels and lineups.
+  - "Sources differ" notes and earlier-pass ✓ now follow moved or merged rows (`rowIds()`), and match on rounded hp.
+  - Family tree "Fit to width", with a minimum of 45%, replaces fit-to-height, which shrank big groups to 20%.
+  - Power tab engine list has a sticky filter box.
+  - ← / → keys step the vehicle lineup year.
+- **Audit script idea:** check duplicate engine ids, y2 < y1, hp ≤ 0, PW keys missing from VEH, and decimal hp. The v89 audit found no structural errors.
 - **Still unverified (150 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
