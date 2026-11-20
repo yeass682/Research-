@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-20. The current build is the 94th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up).
+Last updated: 2026-11-20. The current build is the 95th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v94) are: 50 groups, **661 engines and platforms**, **2,606 ratings** (2,438 checked, 202 with "sources differ" notes), 884 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v95) are: 50 groups, **661 engines and platforms**, **2,626 ratings** (2,465 checked, 208 with "sources differ" notes), 882 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -281,7 +281,14 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Consolidated: Fiesta Sedan / SE EcoBoost Sedan / ST → Fiesta; Focus ST / RS / SVT → Focus; Contour SVT → Contour; Crown Victoria Police Interceptor → Crown Victoria.
   - Data: Edge (2015–24, new vehicle), 2011–19 Explorer (3.5 V6, 2.0 / 2.3 EcoBoost, 3.5 EcoBoost Sport / Platinum), 2025-on Expedition trims, Escape closed at 2026 (production ended December 17, 2025), Maverick hybrid wording fixed (optional for 2024 only).
   - New notes: known issues for the Cyclone (internal water pump), Cologne 4.0 (timing chains), SHO V8 (cam sprockets), 2.7L (composite oil pan), Focus RS 2.3L (head gasket), 3-valve 4.6L (two-piece plugs); "Spot it" text for most Ford engines that had none.
-- **Still unverified (about 170 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
+- **95 (rare / high-output trucks and the packages that carried each engine):**
+  - Added: Silverado SS 2004–07, SSR 2004 and 2005 (LS2 rows moved off the Gen IV catch-all onto `gm:ls2`), Typhoon 1992–93, Silverado HD ZR2 / ZR2 Bison (2024-on, gas and Duramax), 1994 SVT Lightning (fills the 1993–95 gap), Harley-Davidson F-150 2000–01 (5.4L) and 2002 (supercharged), F-150 Tremor 2021–23, Super Duty Tremor 2020–22, Power Wagon 2005–08 / 2010–13 / 2014–24, Li'l Red Express (new vehicle), Shelby Dakota 1989, Tacoma X-Runner 2005 and 2006–13, Titan XD Cummins 2017–19.
+  - Corrected: the Colorado's base 237-hp 2.7L ends after 2024 (every 2025-on Colorado has the TurboMax); 2023 Colorado trim / engine pairings named. Sources cited for the previously unverified Silverado / Sierra HD L96, L8T and LML spans.
+  - Folded in: Silverado SS and Intimidator SS → Silverado 1500; 454 SS → C/K 1500; Ram SRT-10 (and SRT-10 Quad Cab) → Dodge Ram 1500. `TRIM_CONSOLIDATE` now resolves chains (a trim of a trim) to the final vehicle.
+  - Lineup: rows from a same-truck family member (C/K 1500 under Silverado, "Heavy Duty" under Ram 2500) no longer show that name as a trim.
+  - About cards for Syclone, Typhoon, Li'l Red Express and SSR.
+  - Left out on purpose: GMC Sierra C3 / early Sierra Denali (sources give 300, 325 and 345 hp for the 6.0L); 2009 Power Wagon (unclear whether it had the 345-hp or 383-hp 5.7L); Sierra HD AT4X (no source found); 2024-on F-150 Tremor engine choices.
+- **Still unverified (about 160 rows)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
