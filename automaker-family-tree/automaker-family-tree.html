@@ -18,7 +18,7 @@
  .panel .record-provenance,.panel .research-source{overflow-wrap:anywhere}
 }
 .v-about{margin:10px 0 14px;padding:12px 14px;border:1px solid #2c4d62;border-radius:12px;background:#0b1720;font-size:13px}.v-about p{margin:0 0 8px;line-height:1.5}.v-about .va-note{font-size:.92em;color:var(--ink-2)}.v-about .va-id{margin:8px 0 0;font-size:.92em}.v-about .va-gens{margin:8px 0 0;padding:8px 10px;background:transparent}.v-about ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}.v-about li{display:grid;grid-template-columns:7.5em 1fr;gap:10px;font-size:.92em;line-height:1.45}.v-about li>b{font-variant-numeric:tabular-nums;white-space:nowrap}.v-about li i{display:block;font-style:normal;font-weight:600}.panel .v-about li span{text-align:left;display:block;color:var(--ink-2);font-size:12.5px}.panel .v-about li{display:grid}.v-about summary{cursor:pointer}.v-about summary h4{display:inline;margin:0}@media(max-width:420px){.v-about li{grid-template-columns:1fr;gap:2px}}
-</style></head><body>
+</style><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"></head><body>
 <title>Automaker Family Tree</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 
@@ -458,6 +458,125 @@ kbd{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border:1px solid va
 .field-notes.checks[open] summary::after{content:"−"}
 .field-notes.checks summary h4{margin:0;color:#f0b46a}
 .field-notes.checks[open] summary{margin-bottom:6px}
+</style>
+<style id="v98-design">
+/* ===================== v98 DESIGN LAYER =====================
+   Darker surfaces, a real type stack (Archivo / Instrument Sans / JetBrains Mono), a docked inspector on wide
+   screens, the engine × year coverage grid and horsepower bars in the year view. Loaded last so it wins. */
+:root,:root[data-theme="dark"]{color-scheme:dark;
+ --bg:#05070a;--surface:#0a0e13;--surface-2:#0e131a;--surface-3:#151c25;--line:#18212b;--line-2:#243140;
+ --ink:#e9eef3;--ink-2:#aab5c1;--ink-3:#76828f;--accent:#8fdcff;--accent-soft:#0e2433;
+ --gas:#3987e5;--diesel:#d95926;--hybrid:#199e70;--ev:#9085e9;--other:#6b7685;
+ --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#9085e9;
+ --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;--f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+ --pw:clamp(520px,38vw,660px);--hdr:73px}
+body{background:var(--bg);font-family:var(--f-body);font-feature-settings:"ss01","cv11"}
+header.top{background:#05070ae6;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.num,.ly-trims b,.glance dd,.cov-tick{font-variant-numeric:tabular-nums}
+
+/* ---------- Inspector panel ---------- */
+.panel{background:var(--surface);border-color:var(--line-2);font-size:14px;color:var(--ink-2)}
+.panel .p-head{position:sticky;top:0;z-index:3;margin:0 -22px 12px;padding:16px 64px 12px 22px;background:linear-gradient(var(--surface) 82%,#0a0e1300);}
+.panel .p-head .close{position:absolute;top:12px;right:16px}
+.panel .eyebrow{font:500 10.5px/1.4 var(--f-mono);letter-spacing:.12em;color:var(--ink-3);margin:0 0 4px}
+.panel h3{font:800 26px/1.12 var(--f-display);letter-spacing:-.015em;color:var(--ink);margin:0;padding:0}
+.panel .p-head .kv{margin:8px 0 0}
+.panel h4{font:600 10.5px/1.3 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.panel>p{line-height:1.6;color:var(--ink-2)}
+.panel .p-actions{margin:0 0 12px;gap:6px}
+.panel .pa{min-height:30px;padding:0 10px;border-radius:7px;font:500 12px var(--f-body);border-color:var(--line-2);color:var(--ink-2);background:var(--surface-2)}
+.panel .pa:hover{color:var(--ink);border-color:var(--accent)}
+.glance{background:var(--line);border-color:var(--line);border-radius:10px}
+.glance>div{background:var(--surface-2)}
+.glance dt{font:500 10px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.glance dd{font:600 14px var(--f-body);color:var(--ink)}
+.field-notes,.v-about,.lineup{background:var(--surface-2);border:1px solid var(--line);border-radius:12px}
+.v-about{padding:14px 16px}.v-about .va-sum{font-size:14px;color:var(--ink);line-height:1.55}
+.v-about .va-gens{border:0;background:transparent;padding:0;margin-top:6px}
+.panel .v-about li{grid-template-columns:5.6em 1fr;padding:6px 0;border-top:1px solid var(--line)}
+.panel .v-about li>b{font:600 12px var(--f-mono);color:var(--ink)}
+.v-about .va-id{border-top:1px solid var(--line);padding-top:8px;color:var(--ink-2)}
+.research-block,.coverage-note{opacity:.92}
+
+/* ---------- Year view ---------- */
+.lineup{padding:14px 16px}
+.ly-head h4{margin:0}
+.ly-sel{font:600 20px var(--f-mono);background:var(--surface-3);border:1px solid var(--line-2);color:var(--ink);border-radius:8px;padding:2px 8px}
+.ly-step{background:var(--surface-3);border-color:var(--line-2)}
+.panel .lineup .ly-range{font:400 11.5px/1.5 var(--f-body);color:var(--ink-3);margin:6px 0 2px}
+.ly-range b{color:var(--ink-2)}
+.ly-eng{border-top:1px solid var(--line);padding:12px 0 10px;margin:0}
+.ly-eng header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.ly-eng header .lnk{font:700 15px/1.25 var(--f-display);color:var(--ink);text-decoration:none;text-align:left}
+.ly-eng header .lnk:hover{color:var(--accent)}
+.ly-flag{font:600 9.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.panel .lineup .ly-sum{font:500 11.5px/1.4 var(--f-mono);color:var(--ink-3);margin:4px 0 8px}
+.ly-sum b{color:var(--ink);font-weight:600}
+.ly-trims{margin:0;padding:0;display:grid;gap:2px}
+.panel .ly-trims li.lyx{display:grid;grid-template-columns:minmax(0,1fr) minmax(64px,26%) auto;align-items:center;gap:4px 12px;padding:6px 8px;margin:0;border-radius:6px;background:var(--surface)}
+.panel .ly-trims li.lyx>span{text-align:left;color:var(--ink);font-size:13px;min-width:0}
+.panel .ly-trims li.lyx>span .ly-trim{font:600 13px/1.3 var(--f-body);white-space:normal}
+.panel .ly-trims li.lyx>span small{display:block;font:400 11.5px/1.35 var(--f-body);color:var(--ink-3);margin-top:1px}
+.panel .ly-trims li.lyx>b{font:500 12px var(--f-mono);color:var(--ink-2);white-space:nowrap;text-align:right}
+.panel .ly-trims li.lyx>b span,.panel .ly-trims li.lyx>b .ok{display:inline}
+.panel .ly-trims li.lyx>b .ok{margin-left:6px;color:var(--hybrid);font-weight:700}.panel .ly-trims li.lyx>b .ok.earlier{color:var(--ink-3);opacity:1}
+.panel .ly-trims li.lyx>b .hpn{color:var(--ink);font-weight:700;font-size:13px}
+.ly-bar{display:block;height:6px;border-radius:3px;background:var(--surface-3);overflow:hidden}
+.ly-bar>i{display:block;height:100%;width:var(--w);background:var(--c,var(--accent));border-radius:3px}
+.ly-eng{--c:var(--accent)}.ly-eng.fx-g{--c:var(--gas)}.ly-eng.fx-d{--c:var(--diesel)}.ly-eng.fx-h{--c:var(--hybrid)}.ly-eng.fx-e{--c:var(--ev)}
+.ly-spot summary,.ly-foot{font-size:11.5px}
+@media(max-width:560px){.panel .ly-trims li.lyx{grid-template-columns:minmax(0,1fr) auto}.panel .ly-trims li.lyx .ly-bar{grid-column:1/-1;grid-row:2}}
+
+/* ---------- Coverage grid (rows × model years) ---------- */
+.cov{margin:12px 0 6px;position:relative}
+.cov-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px;margin-bottom:6px}
+.cov-h h5{margin:0;font:600 10.5px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.cov-key{display:flex;flex-wrap:wrap;gap:4px 12px;font:500 11px var(--f-body);color:var(--ink-3)}
+.cov-key span{display:inline-flex;align-items:center;gap:5px}
+.cov-key i{width:9px;height:9px;border-radius:2px;background:var(--c)}
+.cov-key i.ns{background:repeating-linear-gradient(135deg,#ffffff30 0 2px,transparent 2px 4px);border:1px solid var(--line-2)}
+.cov-scroll{overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:2px}
+.cov-grid{display:grid;grid-template-columns:var(--lab,9.5rem) repeat(var(--n),minmax(5px,1fr));gap:2px;min-width:calc(var(--lab,9.5rem) + var(--n) * 7px);align-items:center}
+.cov-lab{all:unset;box-sizing:border-box;font:500 11.5px/14px var(--f-body);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;cursor:pointer}
+.cov-lab:hover,.cov-lab:focus-visible{color:var(--accent)}
+.cov-lab,.cov-corner{position:sticky;left:0;z-index:2;background:var(--surface-2);box-shadow:6px 0 6px -4px #000c}
+.cov-corner{height:14px}
+.cov-c{height:14px;border-radius:2px;background:var(--surface-3);cursor:default}
+.cov-c.on{background:var(--c);cursor:pointer}
+.cov-c.ns{background:repeating-linear-gradient(135deg,#ffffff22 0 2px,transparent 2px 4px)}
+.cov-c.sel{box-shadow:inset 0 0 0 1px #ffffffb3}
+.cov-c.sel:not(.on){background:#ffffff1a;box-shadow:none}
+.cov-tick{font:500 9.5px/14px var(--f-mono);color:var(--ink-3);white-space:nowrap;overflow:visible;height:14px;cursor:pointer}
+.cov-tick.sel{color:var(--ink)}
+.cov-tick span{position:relative;z-index:1}
+.cov-c.f-g,.cov-key .f-g{--c:var(--gas)}.cov-c.f-d,.cov-key .f-d{--c:var(--diesel)}.cov-c.f-h,.cov-key .f-h{--c:var(--hybrid)}.cov-c.f-e,.cov-key .f-e{--c:var(--ev)}.cov-c.f-c,.cov-c.f-x,.cov-key .f-x{--c:var(--other)}
+.cov-tip{position:fixed;z-index:90;pointer-events:none;background:#0f151cf5;border:1px solid var(--line-2);border-radius:8px;padding:7px 9px;font:500 12px/1.35 var(--f-body);color:var(--ink);box-shadow:0 8px 24px #000a;max-width:280px}
+.cov-tip b{font-family:var(--f-mono);font-weight:600}
+.cov-tip small{display:block;color:var(--ink-3);font-size:11px}
+@media(max-width:560px){.cov-grid{--lab:7.2rem}}
+
+/* ---------- Docked inspector on wide screens ---------- */
+@media(min-width:1180px){
+ .panel{top:var(--hdr);bottom:0;right:0;left:auto;width:var(--pw);max-height:none;border-radius:0;border:0;border-left:1px solid var(--line-2);box-shadow:-30px 0 60px #00000080;background:var(--surface);backdrop-filter:none;padding:0 22px 48px}
+ body.panel-open main.wrap,body.panel-open footer.wrap{padding-right:calc(var(--pw) + 24px)}
+ body.panel-open #v-index{padding-right:0}
+ .panel .glance{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:1179px){.panel .p-head{margin-top:-18px;padding-top:18px}}
+
+/* ---------- Panel top on small screens: the sticky header covers the padding edge ---------- */
+@media(max-width:1179px){.panel{padding-top:0}.panel .p-head{margin:0 -18px 12px;padding:18px 60px 12px 18px}.panel .p-head .close{top:14px;right:12px}}
+/* ---------- Engine index: a dense table instead of tall cards ---------- */
+.ix-list{gap:0!important;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.ix-row{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;padding:9px 14px!important;min-height:0!important}
+.ix-row:hover,.ix-row:focus-visible{background:var(--surface-2)!important}
+.ix-row .ix-name b{font:600 14px var(--f-body);color:var(--ink)}
+.ix-row .ix-meta{font-size:12px;color:var(--ink-3)}
+.ix-row .ix-num b{font:600 13px var(--f-mono)}
+.ix-row .ix-num small,.ix-row .dim{font:500 11px var(--f-mono);color:var(--ink-3)}
+@media(min-width:900px){.ix-row{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 8.5rem!important;grid-template-areas:"name meta num"!important;align-items:center;gap:12px!important}.ix-row .ix-num{text-align:right}}
+/* ---------- Power timeline bars: a little more fill so ranges read as blocks ---------- */
+#v-power .tl-b:not(.prev):not(:hover):not(.hit),.panel .tl-b:not(.prev):not(:hover):not(.hit){background:color-mix(in srgb,var(--c) 34%,var(--surface))}
 </style>
 <header class="top">
   <div class="wrap topbar">
@@ -4182,6 +4301,70 @@ const setHdr=()=>{const h=document.querySelector('header.top');if(h)document.doc
 new MutationObserver(()=>document.body.classList.toggle('panel-open',!panel.hidden)).observe(panel,{attributes:true,attributeFilter:['hidden']});
 
 renderLandscape();renderSide();buildDeals();renderShared();route();
+
+/* ===================== v98 DESIGN LAYER: coverage grid, horsepower bars, sticky panel header =====================
+   Coverage grid: one row per engine (vehicle panel) or per vehicle (engine panel), one column per model year;
+   a filled cell means a rating exists for that year, coloured by fuel type (key above the grid). Cells hover for the
+   output and click to jump the year view. Horsepower bars: each trim row in the year view gets a bar scaled to the
+   most powerful rating that year, so the lineup reads at a glance. */
+(function(){
+ const hdr=document.querySelector('header.top');const setHdr=()=>{if(hdr)document.documentElement.style.setProperty('--hdr',hdr.offsetHeight+'px');};setHdr();addEventListener('resize',setHdr);
+ const FUELS=[['g','Gasoline'],['d','Diesel'],['h','Hybrid'],['e','Electric']];
+ const fcls=f=>['g','d','h','e'].includes(f)?f:'x';
+ const hpRange=a=>{const lo=Math.min(...a),hi=Math.max(...a);return lo===hi?lo.toLocaleString():lo.toLocaleString()+'–'+hi.toLocaleString();};
+ // lanes: [{label, title, attr, f, cells: Map(year -> [hp...])}]
+ window.covHTML=function(lanes,opts){if(!lanes.length)return '';const ys=[];lanes.forEach(l=>l.cells.forEach((_,y)=>ys.push(y)));
+  const y0=Math.min(...ys),y1=Math.max(...ys);const cols=[];for(let y=y0;y<=y1;y++)cols.push(y);
+  const ns=new Set(opts.notSold||[]);const sel=opts.sel;const fuels=[...new Set(lanes.map(l=>fcls(l.f)))];
+  const key=FUELS.filter(([f])=>fuels.includes(f)).map(([f,n])=>`<span><i class="f-${f}"></i>${n}</span>`).join('')+(fuels.includes('x')?'<span><i class="f-x"></i>Other</span>':'')+(ns.size?'<span><i class="ns"></i>Not sold (US)</span>':'');
+  const tick=y=>`<span class="cov-tick${y===sel?' sel':''}" data-y="${y}">${y%5===0&&y1-y>=3?`<span>${y}</span>`:''}</span>`;
+  const rows=lanes.map(l=>`<button type="button" class="cov-lab" ${l.attr} title="${esc(l.title||l.label)}">${esc(l.label)}</button>`+cols.map(y=>{const c=l.cells.get(y);
+    if(c)return `<span class="cov-c on f-${fcls(l.f)}${y===sel?' sel':''}" data-y="${y}" data-tip="${esc(y+'|'+(l.title||l.label)+'|'+hpRange(c))}"></span>`;
+    return `<span class="cov-c${ns.has(y)?' ns':''}${y===sel?' sel':''}" data-y="${y}"></span>`;}).join('')).join('');
+  return `<div class="cov" data-cov="${opts.kind}"><div class="cov-h"><h5>${esc(opts.title)} · ${y0}–${y1}</h5><div class="cov-key">${key}</div></div>
+   <div class="cov-scroll"><div class="cov-grid" style="--n:${cols.length}"><span class="cov-corner"></span>${cols.map(tick).join('')}${rows}</div></div></div>`;};
+ const laneOrder=(a,b)=>Math.min(...a.cells.keys())-Math.min(...b.cells.keys())||Math.max(...b.cells.keys())-Math.max(...a.cells.keys());
+ function vehicleLanes(v,rows){const by=new Map();rows.forEach(r=>{const e=EI[r.eid];if(!e)return;if(LINEUP_GENERIC.has(r.eid)&&rows.some(x=>!LINEUP_GENERIC.has(x.eid)&&x.hp===r.hp&&x.y1<=r.y2&&x.y2>=r.y1))return;
+   let l=by.get(r.eid);if(!l){l={label:e.n,attr:`data-xe="${esc(e.id)}"`,f:e.f,cells:new Map()};by.set(r.eid,l);}for(let y=r.y1;y<=r.y2;y++){(l.cells.get(y)||l.cells.set(y,[]).get(y)).push(r.hp);}});
+  return [...by.values()].sort(laneOrder);}
+ function engineLanes(e){const by=new Map();PW.filter(r=>r.eid===e.id).forEach(r=>{const v=VEH[r.key];let l=by.get(r.key);
+   if(!l){const name=v?vname(v):r.label;l={label:name,attr:v?`data-tree="vehicle/${esc(r.key)}"`:'',f:e.f,cells:new Map()};by.set(r.key,l);}for(let y=r.y1;y<=r.y2;y++){(l.cells.get(y)||l.cells.set(y,[]).get(y)).push(r.hp);}});
+  return [...by.values()].sort(laneOrder);}
+ // Year view: insert the grid above the year's engines
+ const lineupBase=lineupHTML;
+ lineupHTML=function(v){const html=lineupBase(v);if(!html)return html;const hasV=variantKeys(v).length>1;const withV=hasV&&store.get('lineupVariants',true);
+  const rows=lineupRows(v,withV);const lanes=vehicleLanes(v,rows);if(lanes.length<1)return html;const m=html.match(/<option value="(\d+)" selected/);
+  const grid=covHTML(lanes,{kind:'veh',title:'Engines by model year',sel:m?+m[1]:null,notSold:(LINEUP_NOT_SOLD[vkey(v)]||[[]])[0]});
+  return html.replace('<div class="ly-body">',grid+'<div class="ly-body">');};
+ function enhanceYear(box){const body=box.querySelector('.ly-body');if(!body)return;const y=+box.querySelector('.ly-sel')?.value;
+  box.querySelectorAll('.cov [data-y]').forEach(c=>c.classList.toggle('sel',+c.dataset.y===y));const toSel=()=>{const sc=box.querySelector('.cov-scroll');const tk=box.querySelector('.cov-tick.sel');if(sc&&tk&&sc.scrollWidth>sc.clientWidth){sc.scrollLeft=Math.max(0,tk.offsetLeft-sc.clientWidth*0.7);return true;}return !!(sc&&sc.clientWidth);};requestAnimationFrame(()=>{if(!toSel())setTimeout(toSel,300);});
+  body.querySelectorAll('.ly-eng').forEach(a=>{const i=a.querySelector('.ly-sum i[class^="f-"]');if(i)a.classList.add('fx-'+i.className.slice(2));});
+  const lis=[...body.querySelectorAll('.ly-trims li')];const hp=li=>{const m=(li.querySelector(':scope>b')?.textContent||'').match(/([\d,]+)\D{0,3}hp/);return m?+m[1].replace(/,/g,''):0;};
+  const max=Math.max(1,...lis.map(hp));
+  lis.forEach(li=>{if(li.classList.contains('lyx'))return;const b=li.querySelector(':scope>b');if(!b)return;const h=hp(li);li.classList.add('lyx');
+   b.innerHTML=b.innerHTML.replace(/^([\d,]+)/,'<span class="hpn">$1</span>');
+   b.insertAdjacentHTML('beforebegin',`<i class="ly-bar" aria-hidden="true"><i style="--w:${Math.max(3,Math.round(h/max*100))}%"></i></i>`);});}
+ const wireBase=wireLineup;
+ wireLineup=function(root,v){wireBase(root,v);const box=root.querySelector('.lineup');if(!box)return;enhanceYear(box);
+  const body=box.querySelector('.ly-body');if(body)new MutationObserver(()=>enhanceYear(box)).observe(body,{childList:true});
+  box.querySelector('.cov')?.addEventListener('click',ev=>{const c=ev.target.closest('[data-y]');if(!c)return;const sel=box.querySelector('.ly-sel');
+   if([...sel.options].some(o=>o.value===c.dataset.y)){sel.value=c.dataset.y;sel.dispatchEvent(new Event('change'));}});};
+ // Shared hover tooltip for grid cells
+ const tip=document.createElement('div');tip.className='cov-tip';tip.hidden=true;document.body.appendChild(tip);
+ document.addEventListener('pointerover',ev=>{const c=ev.target.closest?.('.cov-c.on');if(!c){tip.hidden=true;return;}const [y,name,hp]=c.dataset.tip.split('|');
+  tip.innerHTML=`<b>${esc(y)}</b> · ${esc(hp)} hp<small>${esc(name)}</small>`;tip.hidden=false;const r=c.getBoundingClientRect();
+  const x=Math.min(innerWidth-tip.offsetWidth-8,Math.max(8,r.left+r.width/2-tip.offsetWidth/2));const top=r.top-tip.offsetHeight-8;tip.style.left=x+'px';tip.style.top=(top<8?r.bottom+8:top)+'px';});
+ document.addEventListener('scroll',()=>{tip.hidden=true;},true);
+ // Sticky panel header; engine panels get their own vehicles-by-year grid
+ const panelBeforeDesign=showPanel;
+ showPanel=function(n){panelBeforeDesign(n);if(panel.hidden)return;const eb=panel.querySelector(':scope>.eyebrow'),h3=panel.querySelector(':scope>h3'),close=panel.querySelector(':scope>.close');
+  if(eb&&h3&&!panel.querySelector('.p-head')){const head=document.createElement('div');head.className='p-head';eb.before(head);if(close)head.append(close);head.append(eb,h3);
+   if(n.type==='eng'){const kv=panel.querySelector(':scope>.kv');if(kv)head.append(kv);}}
+  if(n.type==='eng'){const lanes=engineLanes(n.e);const g=panel.querySelector('.glance');if(lanes.length&&g)g.insertAdjacentHTML('afterend',covHTML(lanes,{kind:'eng',title:'Vehicles by model year'}));}};
+ // A deep link opens its panel before this layer loads: re-open it so it gets the same treatment.
+ if(!panel.hidden&&typeof RECENT!=='undefined'&&RECENT[0]){const r=RECENT[0];const st=panel.scrollTop;try{showPanel(r.t==='e'?{type:'eng',e:EI[r.id]}:{type:'veh',v:VEH[r.id]});panel.scrollTop=st;}catch(err){console.warn('panel refresh',err);}}
+})();
 </script>
+
 
 </body></html>
