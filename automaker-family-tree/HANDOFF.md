@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-20. The current build is the 99th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra).
+Last updated: 2026-11-21. The current build is the 101st version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra; v100 Chevrolet SUVs and cars, Ford Transit / Expedition / Super Duty / Taurus; v101 Chevrolet / Toyota / Nissan gap fill).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v99) are: 50 groups, **675 engines and platforms**, **2,805 ratings** (2,629 checked, 227 with "sources differ" notes), 873 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v101) are: 50 groups, **692 engines and platforms**, **2,966 ratings** (2,769 checked, 253 with "sources differ" notes), 498 rated vehicles. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -23,7 +23,7 @@ It has four tabs:
 **Where the file lives:**
 - **GitHub (canonical):** repository `yeass682/Research-`, `main` branch, folder `automaker-family-tree/`. The folder holds `automaker-family-tree.html` (the copy to edit) and this note, `HANDOFF.md`. Bring updated versions back into `main`.
 - **Google Drive:** an older copy of this note is in the "Automaker Family Tree" folder. It is not kept up to date.
-- **claude.ai:** a private artifact at https://claude.ai/artifact/FBEbuoQXZwNf68dFjW4EkH. Only the owner can open that link.
+- **claude.ai:** the current build (v101) is published at https://claude.ai/artifact/7X4st1BkEi87ea775MRc5R. Republish that one for later versions. Who can open it depends on the owner's Share setting. The older artifact https://claude.ai/artifact/FBEbuoQXZwNf68dFjW4EkH still holds an earlier, smaller build (about 420 KB). That build has the 1953–69 Corvette (Blue Flame six, Gen I small-block) and Chevelle big-block entries that this lineage lost; use it as a reference when re-adding them.
 - **If copies disagree:** use the one with the most ratings. The `#pwcount` line on the Power tab shows the count.
 
 ## 2. How the user works with the AI, and what they want
@@ -315,7 +315,23 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Tundra: SR's 348-hp tune (2022–23), i-FORCE / i-FORCE MAX by trim, Capstone (2022-on) and TRD Pro (2023-on) hybrid-only, TRD Pro 2015–17 and 2019–21 (none for 2018), 2000–04 V8 cited.
   - About cards: GT-R, Z, Titan, Frontier, Tundra.
   - Not added (unconfirmed): 2018–24 Kicks 1.6L, 2013–19 Sentra 1.8L by year, Rogue Hybrid, Patrol NISMO, Tundra TRD supercharger 2010–14, SR 348-hp tune after 2023.
-- **Still unverified (about 180 rows; the new GMT400 / GMT800 Silverado gap-fillers are among them)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
+- **100 (Chevrolet SUVs and cars; Ford Transit, Expedition, Super Duty, Taurus):**
+  - Chevrolet: Tahoe 2000–14 (GMT800 / GMT900), Suburban 2015–26 incl. Duramax, Traverse 2009–26 (incl. the 2018–19 RS 2.0T and the 2024-on 2.5L turbo), Equinox 2010–20 (new engines `gm:laf` 2.4L DI and `gm:lf1` 3.0L V6), Blazer 2019–22, Trax 2015–26, Malibu 2008–25 (new vehicle), Impala SS 2007–09 and 2014–20.
+  - Tahoe fixes: the 2015–20 6.2L rows moved from L87 to L86 (as on the Silverado); the first-generation 3.0L Duramax (LM2) runs to 2024 and the 305-hp LZ0 starts in 2025 (was 2023), per GM's 2025 Tahoe / Suburban release.
+  - Ford: Transit 2015–26 (3.7L, 3.5L EcoBoost, 3.5L PFDi; the 3.2L diesel's US rating was never certified, so it is not listed), Expedition 2007–14, F-250 / F-350 Super Duty 2005–10 spans (6.0L Power Stroke 325 / 570, V10 362 / 457, 5.4L 300 / 365), Taurus 2008–18 (3.5L and SHO).
+  - Not-sold notes: Colorado 2013–14, Trax 2023.
+  - Many spans are a source-linked first year plus an unchecked carry-over row (`u100`); the next verification pass should confirm those year by year.
+  - Not added (unconfirmed): Fusion 2006–16 and Escape 2001–19 outputs, Equinox diesel, Express van, Tahoe 6.2L 2009–14, 2.0L EcoBoost Taurus.
+- **101 (Chevrolet, Toyota, Nissan gap fill):**
+  - Chevrolet: Corvette 1973–96 year by year (C3 L48 / L82 / LS4 454 / L81 / L83 from Corvette Action Center's powertrain table; C4 L83, L98 TPI incl. the 3.07-axle automatic coupe ratings, LT1, ZR-1 1990–92 and 1995), Chevelle SS 454 1970–71 (LS5, LS6), Bolt EV 2017–23 / Bolt EUV 2022–23 / 2027 Bolt, Volt 2011–19, Avalanche 2003 and 2007–13 (plus the 2500's 8.1L), 2021 Trailblazer crossover (1.2T / 1.3T). New engines `gm:l48`, `gm:l82c3`, `gm:ls4bb`, `gm:l81`, `gm:crossfire57` (5.7L L83 Cross-Fire), `gm:ls6bb` (454 LS6), `gm:bev2`, `gm:voltec`. The `gm:ls5c3` name no longer says "(C3)".
+  - Toyota: Camry 1997–2006 (5S-FE, 1MZ-FE, 2AZ-FE, SE 3.3L), RAV4 1996–2025 gasoline (3S-FE, 1AZ-FE, 2AZ-FE, 2GR V6 2006–12, 2AR-FE, A25A), Highlander 2001–10, Sienna 1998–2000 and 2007–20, Avalon 1995–2017 (the 2005 280 → 2006 268 hp SAE re-rating), Corolla XRS 2005–06 and 2009, Corolla 1.8L 2009–19 incl. LE Eco, Venza 2009–14. New engines `toyota:1mzfe`, `toyota:3mzfe`, `toyota:3sfe`, `toyota:1azfe`.
+  - Nissan: Versa 2007–26 (new `nissan:mr18de`, `nissan:hr16de`), Quest 1993–2017 (new `nissan:vg30e`), Sentra 2013–16, 2018–19 and 2021–26.
+  - Fix: the 1994–95 Impala SS row sat on the 2014-on Gen V LT1 and now sits on the Gen II LT1 (`gm:lt1gen2`).
+  - Not-sold notes: Corvette 1983, Trailblazer 2010–20, Bolt 2024–26, Quest 2003 and 2010. About cards: Chevelle, Bolt, Volt, Avalanche, Sienna.
+  - 13 rows are unchecked carry-overs (`u101`), e.g. Corolla 2015–19, Versa 2013–19 / 2021–26, Bolt EV 2020–23, Avalon 2013–17.
+  - **Found:** this build lineage has no 1953–69 Corvette rows and no 1964–69 Chevelle / SS 396 rows, although the batch log says batches 64 and 76 added them. They were probably lost when the 80th build was replaced. Re-add them with sources.
+  - Not added (unconfirmed): Corolla 2003–08 1.8L (130 vs 132 hp; 126 hp after 2006), Sienna 3.3L 2004–06 (230 vs 233 hp), Highlander 2.7L 2009–16, Bolt EUV range, Camaro 1974–81.
+- **Still unverified (about 195 rows; the new GMT400 / GMT800 Silverado gap-fillers are among them)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
@@ -331,6 +347,8 @@ open(p,'w',encoding='utf8').write(s); print("ok")
 
 ## 8. Ideas queued for next rounds
 
+- Re-add the 1953–69 Corvette (Blue Flame six, 265 / 283 / 327 / 427) and 1964–69 Chevelle SS 396 with sources (see the v101 note).
+- Toyota: Supra Mk3 1986½–92 by year, Celica 1986–2004, Previa (supercharged), Echo / Yaris, Solara. Nissan: D21 Hardbody, Infiniti G35 / FX / QX56 / M45 / Q45. Chevrolet: Camaro 1974–81, Cavalier, Cobalt, Spark, Express.
 - Older Silverado/Sierra HD gas engines (6.0L Vortec).
 - 1980s–90s Ford F-250/F-350: 7.5L 460, 6.9/7.3 IDI diesels.
 - Toyota T100, Chevy S-10 and Colorado history, GMC Sierra Denali generations.
