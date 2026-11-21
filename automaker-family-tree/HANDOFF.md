@@ -23,7 +23,7 @@ It has four tabs:
 **Where the file lives:**
 - **GitHub (canonical):** repository `yeass682/Research-`, `main` branch, folder `automaker-family-tree/`. The folder holds `automaker-family-tree.html` (the copy to edit) and this note, `HANDOFF.md`. Bring updated versions back into `main`.
 - **Google Drive:** an older copy of this note is in the "Automaker Family Tree" folder. It is not kept up to date.
-- **claude.ai:** a private artifact at https://claude.ai/artifact/FBEbuoQXZwNf68dFjW4EkH. Only the owner can open that link.
+- **claude.ai:** the current build (v101) is published at https://claude.ai/artifact/7X4st1BkEi87ea775MRc5R. Republish that one for later versions. Who can open it depends on the owner's Share setting. The older artifact https://claude.ai/artifact/FBEbuoQXZwNf68dFjW4EkH still holds an earlier, smaller build (about 420 KB). That build has the 1953–69 Corvette (Blue Flame six, Gen I small-block) and Chevelle big-block entries that this lineage lost; use it as a reference when re-adding them.
 - **If copies disagree:** use the one with the most ratings. The `#pwcount` line on the Power tab shows the count.
 
 ## 2. How the user works with the AI, and what they want
