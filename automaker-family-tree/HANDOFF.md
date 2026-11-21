@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-20. The current build is the 99th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra).
+Last updated: 2026-11-20. The current build is the 100th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra; v100 Chevrolet SUVs and cars, Ford Transit / Expedition / Super Duty / Taurus).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v99) are: 50 groups, **675 engines and platforms**, **2,805 ratings** (2,629 checked, 227 with "sources differ" notes), 873 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v100) are: 50 groups, **677 engines and platforms**, **2,861 ratings** (2,677 checked, 235 with "sources differ" notes), 874 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -315,6 +315,13 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Tundra: SR's 348-hp tune (2022–23), i-FORCE / i-FORCE MAX by trim, Capstone (2022-on) and TRD Pro (2023-on) hybrid-only, TRD Pro 2015–17 and 2019–21 (none for 2018), 2000–04 V8 cited.
   - About cards: GT-R, Z, Titan, Frontier, Tundra.
   - Not added (unconfirmed): 2018–24 Kicks 1.6L, 2013–19 Sentra 1.8L by year, Rogue Hybrid, Patrol NISMO, Tundra TRD supercharger 2010–14, SR 348-hp tune after 2023.
+- **100 (Chevrolet SUVs and cars; Ford Transit, Expedition, Super Duty, Taurus):**
+  - Chevrolet: Tahoe 2000–14 (GMT800 / GMT900), Suburban 2015–26 incl. Duramax, Traverse 2009–26 (incl. the 2018–19 RS 2.0T and the 2024-on 2.5L turbo), Equinox 2010–20 (new engines `gm:laf` 2.4L DI and `gm:lf1` 3.0L V6), Blazer 2019–22, Trax 2015–26, Malibu 2008–25 (new vehicle), Impala SS 2007–09 and 2014–20.
+  - Tahoe fixes: the 2015–20 6.2L rows moved from L87 to L86 (as on the Silverado); the first-generation 3.0L Duramax (LM2) runs to 2024 and the 305-hp LZ0 starts in 2025 (was 2023), per GM's 2025 Tahoe / Suburban release.
+  - Ford: Transit 2015–26 (3.7L, 3.5L EcoBoost, 3.5L PFDi; the 3.2L diesel's US rating was never certified, so it is not listed), Expedition 2007–14, F-250 / F-350 Super Duty 2005–10 spans (6.0L Power Stroke 325 / 570, V10 362 / 457, 5.4L 300 / 365), Taurus 2008–18 (3.5L and SHO).
+  - Not-sold notes: Colorado 2013–14, Trax 2023.
+  - Many spans are a source-linked first year plus an unchecked carry-over row (`u100`); the next verification pass should confirm those year by year.
+  - Not added (unconfirmed): Fusion 2006–16 and Escape 2001–19 outputs, Equinox diesel, Express van, Tahoe 6.2L 2009–14, 2.0L EcoBoost Taurus.
 - **Still unverified (about 180 rows; the new GMT400 / GMT800 Silverado gap-fillers are among them)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
