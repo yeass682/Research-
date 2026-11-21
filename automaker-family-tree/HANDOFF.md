@@ -1,6 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-15. The current build is the 80th published version.
+Last updated: 2026-11-20. The current build is the 99th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra).
+
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v99) are: 50 groups, **675 engines and platforms**, **2,805 ratings** (2,629 checked, 227 with "sources differ" notes), 873 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -103,6 +105,25 @@ All data is inline JavaScript in the HTML.
 - `#shared`
 - Compare uses `CMP=[...]` with `"group|Brand|Model"` keys.
 
+## 3b. Reference layer (added in v81)
+
+A "FILE MAP" comment at the top of the main `<script>` lists every data constant. The reference layer sits just before the final init line (`renderLandscape();renderSide();buildDeals();renderShared();route();`):
+
+- **`ENGINE_NOTES`**: enthusiast field notes keyed by engine id: `{k: known for, w: watch for, id: how to tell it apart, sw: swap scene}`. Only add widely documented faults (recalls, TSBs, long-running owner reports). About 85 engines have notes so far. Note ids must exist in `EI`.
+- **`ENGINE_SPOT`** ("Spot it", v84) sits right after `ENGINE_NOTES`. Keyed by engine id, it holds the trims, packages, badges, VIN characters and telltale hardware that identify an engine on a vehicle. It is merged into `ENGINE_NOTES[id].pk` at load. Vehicle panels gather the `pk` text of every engine into a "Which engine is it?" block (open when there are 4 or fewer engines), with a VIN-position-8 tip for Ford, GM and Stellantis and the glovebox SPID / RPO tip for GM. The engine index text search also covers `pk`, so filtering for "Tremor" or "TRX" finds the right engines. VIN characters are listed only where widely documented (Duramax: LB7 1, LLY 2, LBZ D, LMM 6, LML 8, L5P Y; Power Stroke: 7.3 F, 6.0 P, 6.4 R, 6.7 T; 426 Hemi J / R). About 135 engines have Spot it text: all major US truck engines, Toyota trucks and about 55 performance-car engines.
+- **Year-by-year lineup** (v85, `lineupHTML` / `wireLineup`, just before `panelBeforeReference`): the first block in every vehicle panel that has ratings. A year select with ‹ / › steppers lists each engine offered that model year from `PW`, grouped by engine. It shows output range, one line per variant / output (duplicate labels merged), ✓ status, "New for YYYY" / "Last year" flags, and the engine's Spot it text. "Include variants and special editions" adds rows whose model name starts with the vehicle's name (F-150 → Raptor, Lightning, Tremor…; Ram 1500 → TRX, Classic…), with the choice stored in `aft.lineupVariants`. The chosen year is remembered across vehicles (`aft.lineupYear`) and also moves the panel's horsepower year selector. An engine appears for a year only if a rating row covers that year, so gaps in the data show up as missing engines; engines linked without any year data are listed at the bottom.
+- **Lineup families and twins (v86)**: `LINEUP_FAMILIES` merges model names that are one truck line in the data (Super Duty / F-250 Super Duty / F-350 Super Duty; Silverado HD / 2500HD / 3500HD; Sierra HD; Ram Heavy Duty / 2500 / 3500; Boxster / Cayman). `LINEUP_TWINS` fills a year with the mechanical twin's lineup (Sierra ↔ Silverado, Canyon ↔ Colorado, Yukon ↔ Tahoe) when the vehicle has no ratings of its own that year, and labels it. `LINEUP_GENERIC` hides legacy catch-all engines (ford:cyclone, ford:mod54, gm:gen3, gm:gen4, stellantis:magnum, nissan:vq, vw:f6) when a specific engine row has the same vehicle and hp.
+- **`SPEC`**: derived per engine: displacement (all "x.xL" in the name, so ranges like 6.8–7.3L work), cubic inches (only when the name states it), layout (from `tag`), induction (parsed from name and code words such as TSI, EcoBoost or Duramax; diesels default to turbo), and from `PW` the rated years, hp range, max torque and vehicle count. If an induction label is wrong, fix the engine's name, or adjust `inductionOf()`.
+- **Engines tab (`#index`)**: filterable and sortable list of every engine: layout chips, fuel, induction, era, maker, has-ratings, has-notes. Filters persist in `localStorage` (`aft.index`).
+- **Panel extras**: "at a glance" spec grid, field notes, Copy link / Search the web / Wikipedia / Show in family tree. Vehicle panels get a collapsible "What to check on these engines".
+- **Search**: engine aliases include layout, induction, fuel and displacement, so "diesel V8 6.6" works. Result rows show output range. Focusing an empty box shows recently viewed items (`aft.recent`). Press `/` or Ctrl/Cmd+K to focus search.
+- **Deep links**: `#engine/<group:id>` and `#vehicle/<group|Brand|Model>` open that item in the family tree.
+- **Landing**: Quick lookup strip (example chips, recents, "Browse all engines"), and stat tiles linking to the Engines and Power tabs.
+- **Consolidation (v82)**: 103 duplicate "atlasN" engines were merged into their canonical engines, so the total went from 695 to 601. Old ids still resolve through `ENGINE_ALIASES` (used by `#power-…` links). `ATLAS_HISTORY.linkedEngine`, `ATLAS_MAPPING` and `ENGINE_SOURCES` were remapped. The stale `engines` copy inside each `G` group was removed, because it is rebuilt at runtime from `g.e`. The remaining `atlasN` ids are distinct engines, for example `gm:atlas42` (4.2L Atlas I6), `toyota:atlas4` / `atlas6` (i-FORCE MAX hybrids) and the classic Chrysler LA / B / Slant Six entries.
+- **Duplicate ratings**: after `PW` is built, an unsourced row is dropped when a source-linked row has the same engine, vehicle, years and hp. Identical sourced rows are kept once. Dropped rows go to `PW_DUPLICATES_DROPPED`.
+- **Verification tiers**: `chk(r)` (row has `source`) shows a solid ✓ with a link. `r.earlier` (matches a `CHECKED` key, no link) shows a lighter ✓. `verified(r)` is either one, and the counts use it. `CHECKED` had been unused in the expanded edition; it is wired back in v82.
+- **Batch helpers (v82)**, defined just before `const NOW=2026;`: `fixRows`, `dropRows`, `addRows(eid, why, rows)` and `cite(eid, test, sourceKey, extra)`. Source URLs live in `B82SRC`; `b82x(key)` builds a row's `{source, basis, coverage, note}`. Prefer adding source-linked rows this way over adding bare CHECKED keys. Cross-group rows (for example Cummins in Ram) use vehicle strings like `stellantis:Ram|Heavy Duty`, so test with `endsWith`.
+
 ## 4. Proven editing workflow (patch scripts)
 
 1. Back up the HTML first: `cp automaker-family-tree.html vNN-backup.html`.
@@ -188,6 +209,113 @@ open(p,'w',encoding='utf8').write(s); print("ok")
 - **76:** classic Corvettes (Blue Flame six; new Gen I small-block engine; L88/L71 427s), Pontiac (Catalina 421 SD, 1967 Firebird 400, 1969 Grand Prix SJ), vans (Transit, Express), police (Caprice 9C1 and PPV, Charger Pursuit, Police Interceptor Utility).
 - **77:** MINI (new Tritec supercharged and Prince turbo engines, JCW F56 and GP), Mercedes S 550 / S 580 / G 550 years (new M273 and M278 engines), Tahoe PPV, Police Interceptor Sedan, Charger 2006–10 V6s (new Chrysler LH V6 engine), Charger Daytona EV.
 - **Fix (80th version):** removed the duplicate Ford "godz" engine that stopped the Ford tree loading.
+- **81:** Reference layer: Engines index, at-a-glance specs, field notes, search upgrades, deep links.
+- **82:**
+  - Consolidation: 103 duplicate engines merged, 10 duplicate ratings dropped, and the earlier verification pass wired back in.
+  - Misfiled rows moved: 2015–20 Escalade to L86; Tahoe L83 / L84 split; LZ0 rows; Civic IMA; 2009–10 F-150 5.4 three-valve; Wrangler JK 3.8 to a new EGH engine; F80 M3 / M3 CS to a new S55 engine; 2013–20 BRZ / FR-S / 86 to a new FA20 engine.
+  - Corrections: 2018 Ram HD HO is 385 hp / 930 lb-ft, not 400. The F-150 5.8L is split into 1990–91 (210 / 315), 1992–93 (200 / 315) and 1994–96 (210 / 325). The 2027 L4B is confirmed at 350 / 455.
+  - New Toyota engines: 22R-E, 22R-TE, 3VZ-E, 2F, 3F-E, 1FZ-FE.
+  - New Toyota truck ratings: Pickup, T100, 1995–2004 Tacoma, 2000–04 Tundra V6, 2001–09 Sequoia, 2004–09 4Runner, FJ Cruiser 2007–13, Land Cruiser FJ60 / FJ62 / FJ80, Lexus GX 470 and LX 450 / 470. TRD supercharger kits are listed with their kit ratings (Tundra / Sequoia 504 hp, Tacoma 304 hp).
+  - Source links added for Cobra / Terminator / GT500, Viper generations, AMG 55s and Miata NB / Mazdaspeed.
+- **83:**
+  - GM midsize: new 2.5L LCV engine. 2015–22 Colorado / Canyon with the LCV, LFX / LGZ and LWN diesel. The GMC Canyon had no ratings before. 2027 Colorado / Canyon L4B at 350 hp / 455 lb-ft. 2024 Sierra EV Denali Edition 1.
+  - Ford: Maverick hybrid torque fixed (155 lb-ft). New Maverick Lobo. 2021–23 F-150 3.3 V6 cited. New global Ranger PHEV engine. The F-150 Lightning BEV ended in December 2025 with an EREV successor (added to the field notes).
+  - Stellantis: Gladiator EcoDiesel 2021–23. New range-extended Ram 1500 REV (Ramcharger) engine, listed with its announced 663 hp / 615 lb-ft.
+  - New group: Slate Auto (US EV truck start-up, 181 hp, 205 miles). Landscape bubbles now read "pre-production" instead of "supplier" when a non-supplier has no sales.
+  - Source links added for the S2000 2006, Civic Si 2012–22, BRZ, F80 M3 / CS, 6.1L SRT8, i-FORCE MAX hybrids and the 2015–20 Escalade.
+  - Flagged: the 2002 Escalade LQ9 (one listing says 5.3L only for 2002) and the S2000 2004–05 240 hp (Honda's later sheets say 237).
+- **84:** "Spot it" identification notes for about 135 engines, plus the vehicle-panel "Which engine is it?" block. Corrected the 22R-TE description: it no longer claims a factory intercooler, which wasn't confirmed.
+- **85:** Vehicle year-by-year lineup (year picker in vehicle panels).
+- **86:**
+  - Porsche: the umbrella `vw:f6` was split into M96, Mezger, M97, 9A1, 9A2, GT3 4.0, 992 Turbo, T-Hybrid, 718 turbo four, 718 4.0, Carrera GT V10 and 918 V8. The 911 rows moved onto them, and new rows were added for the 997 Turbo, GT2 RS, 992 Turbo / S, 992.2 Turbo S, 718s, Carrera GT and 918.
+  - BMW: new S14, S52 (E36 US), S54, S65, S62, S85, N55, N52, N20, N63, M54, M62 and N62. The S54 / S65 M3 rows moved off the S58, the X5 M rows moved to the S63, and the old X5 V8s moved off the S68.
+  - Year gaps: F-150 1997–98 (4.2 / 4.6 / 5.4), 2006–08 5.4 three-valve, 2019 / 2021 diesel and the 3.3; Colorado / Canyon 2007–12 (new LLV, LLR, LH8); Super Duty gas 2015–24 and 2026; Silverado / Sierra HD gas L96 / L8T.
+  - Fixes: the Power → By year list on phones (fixed-width columns squeezed the rating), a mobile tab bar that hid the Power tab, the engine picker showing in non-engine Power modes, and Datsun added to Nissan's brands (removes the console warning).
+- **87:**
+  - Camaro 1967–2002 with new engines DZ 302, L72 / ZL1 427, LU5 Cross-Fire, TPI (LB9 / L98) and LTG 2.0T. The Camaro LT1 trim was added. The Camaro family now merges the fifth-gen SS / ZL1 / Z28 model names.
+  - Older GM trucks: 1992 C/K 1500 (KBB 190 hp for the 5.7 TBI, conflicting with the 200 hp span; flagged), and the 1994–2004 S-10 (new 2.2L four, 4.3 LB4 / L35). GMT400 / GMT800 rows moved off the `gm:gen3` catch-all onto L05, L31, LM7 and LR4.
+  - Nissan: new VQ30DE, KA24E / DE, SR20DE, VG30DE and L-series engines. Added the Maxima 1995–2023, Altima 2002-on, 240SX, 300ZX non-turbo, Datsun 240Z, Sentra SE-R (B13), Xterra 2000–15, Frontier VQ40 2005–19 and Armada 2004–24. Context-specific engine names were neutralized (VG33E, QR25DE, LH8, 396).
+  - Infrastructure: `moveLegacy` now records `movedFrom`, and the earlier-pass ✓ check (placed right after `ENGINE_ALIASES`, which is a `const` defined late in the file) matches moved and merged ids. This restored ✓ on rows moved since v82. Don't reference `ENGINE_ALIASES` above its definition: it throws (TDZ) and stops the whole script.
+- **88:**
+  - Ford muscle: new Windsor 260 / 289 / 302 (5.0), Boss 302, FE (390 / 427 / 428), Boss 429, 429 CJ and Boss 351 engines. Mustang K-code, Fox 5.0 (1982–95), SN95 4.6, Bullitt, Shelby GT350 / GT500 / KR, Galaxie 427, Fairlane Thunderbolt and Torino Talladega / Cobra.
+  - Mopar: Plymouth added to Stellantis' brands. Road Runner, GTX, 'Cuda / AAR, Challenger R/T / T/A, Super Bee, Charger Daytona, Superbird, Coronet R/T, Duster 340 and Demon 340, using the existing 340 / 383 / 440 / Hemi engines.
+  - Raptor: SVT Raptor 2012–14, Gen 2 2017–20, Gen 3 2021–26, Bronco Raptor 2022–26 and the global Ranger Raptor 2019–22. Lineup families were added for Raptor, Mustang and Torino.
+- **89 (fixes / QoL):**
+  - Metric-converted ratings are rounded for display (`hpExact` / `tqExact` keep the decimals).
+  - 22 vehicles that existed only in rating rows are auto-linked (`VEH_AUTO`), so they're searchable and get panels and lineups.
+  - "Sources differ" notes and earlier-pass ✓ now follow moved or merged rows (`rowIds()`), and match on rounded hp.
+  - Family tree "Fit to width", with a minimum of 45%, replaces fit-to-height, which shrank big groups to 20%.
+  - Power tab engine list has a sticky filter box.
+  - ← / → keys step the vehicle lineup year.
+  - Power timeline rows grow when a vehicle name wraps (`fitTimelineNames`) instead of clipping the second line.
+- **Audit script idea:** check duplicate engine ids, y2 < y1, hp ≤ 0, PW keys missing from VEH, and decimal hp. The v89 audit found no structural errors.
+- **90:**
+  - New Honda / Acura engines: B18 (Integra LS / GS-R / Type R), K20A2 / K20Z1 (RSX Type-S), K24A2 (TSX), J32 (TL / CL), J37 (TL SH-AWD), ECA1 + IMA (first Insight), E07A (Beat) and S07A turbo (S660).
+  - New ratings: 1994–2001 Integra, 2023-on Integra 1.5T, RSX 2002–06 (incl. the 2006 SAE re-rating), TSX, TL 2002–14, 1993–96 Prelude VTEC, Del Sol VTEC, CR-X Si 1985–91, Element 2007–11, Ridgeline 2007–26, Odyssey 2011-on, first-gen Insight, Beat and S660.
+- **91:**
+  - Charger and Challenger across every generation. Classic Charger 1966–71 (318 / 361 / 383 / 440 / Six Pack / Hemi, Charger 500) and Challenger 1971–74 (gross to net, 340 to 360).
+  - Modern packages: Daytona R/T, Daytona / Daytona 392, SRT 392, Super Bee 2008–09 and 2012–14, Scat Pack Widebody, T/A, T/A 392, Shaker, Scat Pack 1320, Super Stock, Jailbreak (both cars), Demon on 91 octane (808 hp), Black Ghost, the Charger Daytona EV R/T / Scat Pack and the 1983–87 Shelby Charger / GLHS. New engines: 3.5L EGJ V6, 361 B, 360 LA and the 2.2L K four.
+  - Correction: the Charger SRT Hellcat is split into 707 hp (2015–20) and 717 hp (2021–23). The old 2015–23 row claimed 707 hp throughout.
+  - New `NAME_GUIDES`: per-vehicle disambiguation notes shown as a collapsible "names, decoded" block. Charger / Challenger is the first entry; add more for other confusing name families (e.g. Mustang GT / Cobra / Shelby, Silverado SS / Intimidator).
+- **92 (trims vs vehicles):**
+  - `TRIM_CONSOLIDATE` (runs right after `PW` is built) folds package / trim "vehicles" into the real vehicle and prefixes the trim to the row label ("Scat Pack · 3.0L SIXPACK H.O. …"). The original names are kept in `mOrig` / `keyOrig`, and `TRIM_MERGED` maps old keys so deep links and verification still work.
+  - The Charger and Challenger went from 24 vehicle entries to 4 (Charger, Challenger, the 1969 Charger Daytona and Charger 500). The Shelby Charger stays separate. Extend the map to other makes as needed (e.g. Mustang Shelby / Mach 1, F-150 Tremor / Limited).
+  - Vehicle search also matches trims, so "Scat Pack" finds the Charger and Challenger.
+  - The year lineup now shows one line per output level, listing every trim / package that carried it ("Scat Pack / Scat Pack Widebody / Super Bee …"), with engine detail underneath.
+  - 2026 gas Charger: SIXPACK is the engine (Hurricane I6). R/T = S.O. 420 hp, Scat Pack = H.O. 550 hp, and the model year was corrected from 2025 to 2026. The engine was renamed "3.0L Hurricane / SIXPACK twin-turbo I6". Charger Daytona EV rows are now "Daytona R/T (EV)" and "Daytona Scat Pack (EV)" on the Charger.
+- **93 (consolidation for every make):**
+  - `TRIM_CONSOLIDATE` now covers about 430 trim / package / edition / generation keys across every make (generated from the vehicle-key list: a key whose model name is another key's name plus a suffix folds into the base). Rated vehicles went from 825 to 484 and vehicle entries from 1,319 to 887.
+  - Folded into the base: Corvette Z06 / ZR1 / Grand Sport, F-150 Raptor / Raptor R / SVT Raptor / SVT Lightning / Tremor, Ram 1500 TRX / Rebel / RHO, Mustang Shelby / Boss / Mach 1 / SVT Cobra, Camaro SS / ZL1 / Z/28, Civic Si / Type R, WRX STI, Golf GTI / R, GT-R editions, Lexus IS 350 / IS 500 and similar, Range Rover editions, Tesla Plaid / AWD, and many more.
+  - Kept separate (distinct model lines): BMW M models (X3 M, X5 M, Z4 M, 1 Series M), Bronco Sport, Explorer Sport Trac, F-150 Lightning (EV), Mustang Mach-E, Transit Custom, Titan XD, Ram 1500 Classic / REV / 3500 Chassis Cab, Ioniq 5 / 6 / 9, Range Rover Sport, Discovery Sport, Porsche 718 / Macan Electric, Corolla Cross, Charger 500, the 1969 Charger Daytona, the Shelby Charger.
+  - Defender: new key `tata|Defender|Defender (classic)` (1948–2016 cars plus the Works V8 / Classic Defender conversions); everything else is the 2020-on Defender. `LINEUP_APART` keeps the classic out of the new Defender's year view.
+  - Spelling duplicates merged: Leaf → LEAF, IONIQ 5/6/9 → Ioniq 5/6/9, RS3 → RS 3, RS6 → RS 6. A check for vehicles with the same name in two groups found none.
+  - Trims that had no rating rows (vehicle entries only) also fold in. Guide links (`spotterHTML`) follow `TRIM_MERGED`. Redundant `LINEUP_FAMILIES` (Camaro, Raptor, Mustang) removed.
+  - Seven ratings became exact duplicates after the merge and are dropped by `PW_DUPLICATES_DROPPED` (each had a sourced twin).
+  - Lineup: generation tags such as "(C7)" or "(fifth generation)" are hidden in the year view (the year already says it); near-duplicate details are collapsed; the related-models checkbox names the models it adds; "Last year" is now "Last rated year" with a tooltip, because older years are not fully covered.
+  - Data: the 2020–26 LT2 Corvette rows were filed under the 2027 LS6 and moved to the LT2. Added the E-Ray (655 hp combined, 2024–26; GM gives no combined torque), the 1968 Mustang (289 2V, 302 2V, 302 4V, 390 GT) and the 1969 Mustang (302 2V, 351 Windsor 2V / 4V, 390 GT). Corvette C7 labels unified.
+- **94 (Ford review):**
+  - New `VEH_ABOUT` (defined just before `NAME_GUIDES`): an About card at the top of each vehicle panel with a summary, a collapsible generation list (`g: [[years, generation, what changed]]`), an optional `note` and an `id` (identify-it tip). All 50 Ford / Lincoln / Mercury vehicles have one; Super Duty and chassis-cab keys share text. **Next: GM, then Stellantis, then the other makes.**
+  - Ford engine descriptions rewritten as real context. Earlier text was internal data notes ("no interchangeability is inferred", "retained as a year-specific snapshot"); other makes still have some of these and should get the same treatment.
+  - The catch-all engines `ford:mod54` (Modular truck V8s) and `ford:cyclone` (non-turbo V6s) are gone: every row moved to the exact engine (Windsor 5.0, Triton 4.6 / 5.4 two- and three-valve, 4.6 three-valve truck, Cyclone 3.3 / 3.5 / 3.7, Cologne 4.0). `ENGINE_ALIASES` sends old links to `ford:triton543v` / `ford:cyclone33`; `resolveDeepLink` now honors aliases.
+  - New engines: `ford:i6300` (4.9L / 300 six), `ford:hy20` (2.0L hybrid: Fusion and C-Max had been filed under the 2.5L), `ford:puma32` (3.2L Duratorq five-cylinder: the global Ranger 3.2 had been filed under EcoBlue). The 2013–14 GT500 row moved from the 5.2L Predator to the 5.8L Trinity.
+  - Consolidated: Fiesta Sedan / SE EcoBoost Sedan / ST → Fiesta; Focus ST / RS / SVT → Focus; Contour SVT → Contour; Crown Victoria Police Interceptor → Crown Victoria.
+  - Data: Edge (2015–24, new vehicle), 2011–19 Explorer (3.5 V6, 2.0 / 2.3 EcoBoost, 3.5 EcoBoost Sport / Platinum), 2025-on Expedition trims, Escape closed at 2026 (production ended December 17, 2025), Maverick hybrid wording fixed (optional for 2024 only).
+  - New notes: known issues for the Cyclone (internal water pump), Cologne 4.0 (timing chains), SHO V8 (cam sprockets), 2.7L (composite oil pan), Focus RS 2.3L (head gasket), 3-valve 4.6L (two-piece plugs); "Spot it" text for most Ford engines that had none.
+- **95 (rare / high-output trucks and the packages that carried each engine):**
+  - Added: Silverado SS 2004–07, SSR 2004 and 2005 (LS2 rows moved off the Gen IV catch-all onto `gm:ls2`), Typhoon 1992–93, Silverado HD ZR2 / ZR2 Bison (2024-on, gas and Duramax), 1994 SVT Lightning (fills the 1993–95 gap), Harley-Davidson F-150 2000–01 (5.4L) and 2002 (supercharged), F-150 Tremor 2021–23, Super Duty Tremor 2020–22, Power Wagon 2005–08 / 2010–13 / 2014–24, Li'l Red Express (new vehicle), Shelby Dakota 1989, Tacoma X-Runner 2005 and 2006–13, Titan XD Cummins 2017–19.
+  - Corrected: the Colorado's base 237-hp 2.7L ends after 2024 (every 2025-on Colorado has the TurboMax); 2023 Colorado trim / engine pairings named. Sources cited for the previously unverified Silverado / Sierra HD L96, L8T and LML spans.
+  - Folded in: Silverado SS and Intimidator SS → Silverado 1500; 454 SS → C/K 1500; Ram SRT-10 (and SRT-10 Quad Cab) → Dodge Ram 1500. `TRIM_CONSOLIDATE` now resolves chains (a trim of a trim) to the final vehicle.
+  - Lineup: rows from a same-truck family member (C/K 1500 under Silverado, "Heavy Duty" under Ram 2500) no longer show that name as a trim.
+  - About cards for Syclone, Typhoon, Li'l Red Express and SSR.
+  - Left out on purpose: GMC Sierra C3 / early Sierra Denali (sources give 300, 325 and 345 hp for the 6.0L); 2009 Power Wagon (unclear whether it had the 345-hp or 383-hp 5.7L); Sierra HD AT4X (no source found); 2024-on F-150 Tremor engine choices.
+- **96 (Silverado years; Lexus, Hyundai, Mercedes):**
+  - Silverado / C/K half-ton now has a lineup for every model year 1988–2026. GMT900 (2007–13) rows moved off the Gen IV catch-all onto LY2 / Gen IV 5.3 / L92 and are cited to the generation engine table; added the 4.3 V6, VortecMAX 6.0 L76 and the two-mode Hybrid (new engine `gm:lfa60hybrid`). The 2014–18 6.2L rows were filed under the L87 and now sit on the L86. GMT400 and GMT800 gap years were added **unchecked** (from a Wikipedia table summary; they match neighbouring source-linked years). Silverado 2500HD gained Duramax LB7 / LLY (new engine `gm:lly`) / LBZ / LMM spans (cited) and unchecked 6.0L / 8.1L gas spans. About cards for Silverado 1500 and Silverado HD.
+  - Lexus: IS 300, IS 250 (new engine `toyota:4grfse`), 2006–13 IS 350, GS 300 / 400 / 430 / 350 / 460, SC 300 / 400 / 430 (2002–05), ES 350 2007–18.
+  - Hyundai: Genesis sedan 2009–16 (3.8 MPI / GDI, 4.6 and 5.0 Tau), Equus 2011–16, Sonata 2.0T 2011–14, Veloster Turbo 2013–17. Veloster N folded into Veloster; Genesis Coupe kept apart from the Genesis sedan in the year view (`LINEUP_APART`).
+  - Mercedes: badge entries folded into their classes (C 300 / C 250 / C 350 / C 220 d / C 450 AMG → C-Class; E 350 / E 450 / E 550 / E 220 d → E-Class; S 500 / S 350 d / S 400 d / S 450 d → S-Class; G 400 d → G-Class; Mercedes-AMG "AMG GT" → GT). Added C 300 2015–21 (new engine `mercedes:m264` for 2019–21), S 550 / S 560 / S 580 / S 500, C 63 / C 63 S 2015–21, E 63 S 2018–23, AMG GT / GT S (2016) / GT C / GT R, CLA 250 (new `mercedes:m270`), CLA 45 (new `mercedes:m133`, then M139).
+  - Not added (unconfirmed): E 450 hp, G 550, 2013–18 G 63, RX 350 by year, GS 300 1993–97, SC 430 2006–09, 2017-on AMG GT / GT S figures, GMC Sierra C3.
+- **97 (gap audit: Hyundai, Lexus, Audi):**
+  - Hyundai: Ioniq Plug-in and Ioniq Electric (new engine `hyundai:ioniqev`, 118 → 134 hp), Ioniq 5 2022–24 Standard Range and AWD, Sonata 2015–19 (2.4 / 2.0T / 1.6T Eco), Santa Fe 2013–20 (Sport 2.4 / 2.0T and 3.3 V6), Tucson 2016–21, Elantra base and N Line, Kona 2019–21. New engines `hyundai:theta24`, `hyundai:nu20`. The Palisade 3.8L was double-filed under the 2.5L turbo hybrid (dropped).
+  - Lexus: LX 570 2008–21, GX 460 2011–23, LS 460 2013–17, LS 600h L, GS 350 / 200t / 300 / 450h 2013–20, RX 300 / 330 / 350 1999–2022, NX 200t / 300, RZ 300e / 350e / 450e / 550e.
+  - Audi: S4 rows moved to the right engines (new `vw:a27tt`, `vw:v842` 4.2 V8, `vw:ea837` 3.0 supercharged V6; the RS 4 / 2013–15 RS 5 4.2 V8 moved off the 4.0 TFSI). S3 rows moved from the A3 key and the RS 5 row from the S5 key (a PW-level relabel before `TRIM_MERGED`, keeping `mOrig`). Added A4 2021–25, Q7 2017–25, SQ7, SQ5 2018–24, S5 2008–17 and 2025, R8 (new `vw:v10fsi`), TT RS, RS 3 2017–20, RS e-tron GT. Audi S / RS models stay separate vehicles (like BMW M).
+  - New `LINEUP_NOT_SOLD`: years a model was not sold in the US are named in the year view (Audi S4, TT RS, RS 5, S3, RS 3, R8; Veloster 2018; GS 2012; SC 2001).
+  - Not added (unconfirmed): e-tron GT base output, Q5 2.0T (252 vs 261 hp), SQ5 2014–17, A4 B8 / 2017–20, Ioniq 5 N torque, SC 430 2006–09.
+- **98 (design pass, no data changes):**
+  - `<style id="v98-design">` sits right after the last existing style block and **before the first script** (it must load before the scripts run, and after the older style layers so it wins). Google Fonts link in `<head>` loads Archivo / Instrument Sans / JetBrains Mono (system fallbacks if offline).
+  - Darker tokens (`--bg #05070a`, `--surface #0a0e13`, `--surface-2/-3`). Fuel colours changed to the validated dark steps (gas `#3987e5`, diesel `#d95926`, hybrid `#199e70`, electric `#9085e9`): the old pastel set failed the lightness, chroma and normal-vision checks of the dataviz validator.
+  - Wide screens (≥1180px): the detail panel docks to the right at full height (`--pw`, `--hdr` set from the header height), and main content pads to make room. Sticky panel header (`.p-head`) holds eyebrow, title, close and engine tags.
+  - New coverage grid (`covHTML`): vehicle panels show engines × model years above the year view, engine panels show vehicles × years under the spec grid. Cells are coloured by fuel, hover for year / output, click to jump the year view; not-sold years are hatched; the label column is sticky; on phones the grid scrolls to the selected year.
+  - Year view trim rows get a horsepower bar scaled to the strongest rating that year (`enhanceYear`, DOM post-processing driven by a MutationObserver on `.ly-body`).
+  - Engine index is a dense one-line table on wide screens; Power bars have more fill.
+  - The design script re-opens a panel opened by a deep link (it opens before the layer loads) so it gets the same treatment.
+- **99 (Nissan, NISMO, Tundra):**
+  - NISMO: Juke NISMO 2013–14 (197 hp) and 2015–17 (188 hp), Juke NISMO RS 2014–17 (215 hp manual FWD / 211 hp CVT AWD), 370Z NISMO 2009–14, Sentra NISMO through 2019 and SR Turbo, Sentra SE-R / Spec V 2002–06 and 2008–12, Frontier NISMO 2005–08 (first NISMO-badged Nissan in North America; PRO-4X replaced it for 2009), Armada NISMO 2026 (460 hp), Ariya NISMO (Japan / Europe only). There was no Xterra NISMO trim (only NISMO parts).
+  - Nissan histories: Rogue 2008–26, Murano 2003–26, Pathfinder 1996–2012 (incl. the 2008–12 V8), Kicks 2025–26, LEAF 2011–25 and PLUS, Ariya 2023, Maxima 2007–08, Titan XD gas 2017–19, Infiniti Q50 3.7 2014–15 and Q50 Hybrid (new engine `nissan:vq35hev`). Armada and Frontier spans now cited.
+  - Fixes: the v95 Titan XD Cummins row was keyed to the Cummins group (duplicate vehicle) and now uses `nissan:Nissan|Titan XD`. 370Z, G35 / G37 and 2013–16 Pathfinder rows moved off the generic `nissan:vq` onto VQ37VHR / VQ35HR / VQ35DE. Not-sold notes: Z 1997–2002, Armada 2016, Q60 2016.
+  - Tundra: SR's 348-hp tune (2022–23), i-FORCE / i-FORCE MAX by trim, Capstone (2022-on) and TRD Pro (2023-on) hybrid-only, TRD Pro 2015–17 and 2019–21 (none for 2018), 2000–04 V8 cited.
+  - About cards: GT-R, Z, Titan, Frontier, Tundra.
+  - Not added (unconfirmed): 2018–24 Kicks 1.6L, 2013–19 Sentra 1.8L by year, Rogue Hybrid, Patrol NISMO, Tundra TRD supercharger 2010–14, SR 348-hp tune after 2023.
+- **Still unverified (about 180 rows; the new GMT400 / GMT800 Silverado gap-fillers are among them)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
 
