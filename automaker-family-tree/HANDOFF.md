@@ -1,8 +1,8 @@
 # Automaker Family Tree: handoff notes for the next AI model
 
-Last updated: 2026-11-20. The current build is the 98th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass).
+Last updated: 2026-11-20. The current build is the 99th version (v81 reference layer; v82 consolidation and Toyota trucks; v83 2020s American trucks; v84 'Spot it' notes; v85 year-by-year lineup; v86 Porsche / BMW families; v87 Camaro, older GM trucks, Nissan; v88 Ford / Mopar muscle and Raptor years; v89 bug fixes and quality-of-life; v90 Honda / Acura rare variants; v91 Charger / Challenger deep dive; v92 trims consolidated into vehicles; v93 trim consolidation for every make; v94 Ford descriptions, About cards and engine clean-up; v95 rare and high-output trucks; v96 Silverado years, Lexus / Hyundai / Mercedes; v97 Hyundai / Lexus / Audi gap audit; v98 design pass; v99 Nissan / NISMO / Tundra).
 
-> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v97) are: 50 groups, **674 engines and platforms**, **2,760 ratings** (2,577 checked, 219 with "sources differ" notes), 874 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
+> **This file replaced the older 80th build in GitHub.** Sizes below in section 1 describe the older build; the current numbers (v99) are: 50 groups, **675 engines and platforms**, **2,805 ratings** (2,629 checked, 227 with "sources differ" notes), 873 vehicle entries. The file is about 1.95 MB and ~2,700 lines, because large data constants (`G`, `ATLAS_HISTORY`, `ENGINE_SOURCES`, …) each sit on one very long line. Use `grep -n -o` and line/offset reads, not whole-file reads.
 
 ## 1. What this project is
 
@@ -308,6 +308,13 @@ open(p,'w',encoding='utf8').write(s); print("ok")
   - Year view trim rows get a horsepower bar scaled to the strongest rating that year (`enhanceYear`, DOM post-processing driven by a MutationObserver on `.ly-body`).
   - Engine index is a dense one-line table on wide screens; Power bars have more fill.
   - The design script re-opens a panel opened by a deep link (it opens before the layer loads) so it gets the same treatment.
+- **99 (Nissan, NISMO, Tundra):**
+  - NISMO: Juke NISMO 2013–14 (197 hp) and 2015–17 (188 hp), Juke NISMO RS 2014–17 (215 hp manual FWD / 211 hp CVT AWD), 370Z NISMO 2009–14, Sentra NISMO through 2019 and SR Turbo, Sentra SE-R / Spec V 2002–06 and 2008–12, Frontier NISMO 2005–08 (first NISMO-badged Nissan in North America; PRO-4X replaced it for 2009), Armada NISMO 2026 (460 hp), Ariya NISMO (Japan / Europe only). There was no Xterra NISMO trim (only NISMO parts).
+  - Nissan histories: Rogue 2008–26, Murano 2003–26, Pathfinder 1996–2012 (incl. the 2008–12 V8), Kicks 2025–26, LEAF 2011–25 and PLUS, Ariya 2023, Maxima 2007–08, Titan XD gas 2017–19, Infiniti Q50 3.7 2014–15 and Q50 Hybrid (new engine `nissan:vq35hev`). Armada and Frontier spans now cited.
+  - Fixes: the v95 Titan XD Cummins row was keyed to the Cummins group (duplicate vehicle) and now uses `nissan:Nissan|Titan XD`. 370Z, G35 / G37 and 2013–16 Pathfinder rows moved off the generic `nissan:vq` onto VQ37VHR / VQ35HR / VQ35DE. Not-sold notes: Z 1997–2002, Armada 2016, Q60 2016.
+  - Tundra: SR's 348-hp tune (2022–23), i-FORCE / i-FORCE MAX by trim, Capstone (2022-on) and TRD Pro (2023-on) hybrid-only, TRD Pro 2015–17 and 2019–21 (none for 2018), 2000–04 V8 cited.
+  - About cards: GT-R, Z, Titan, Frontier, Tundra.
+  - Not added (unconfirmed): 2018–24 Kicks 1.6L, 2013–19 Sentra 1.8L by year, Rogue Hybrid, Patrol NISMO, Tundra TRD supercharger 2010–14, SR 348-hp tune after 2023.
 - **Still unverified (about 180 rows; the new GMT400 / GMT800 Silverado gap-fillers are among them)**: view them with `PW.filter(r=>!verified(r))`. Left unverified on purpose: Tacoma 2RZ / 3RZ spans, 1996–2002 4Runner 5VZ 183 hp, 2005 Sequoia 282 hp, LX 470 2003–05, 2007–09 Tundra 4.0, FJ60 2F, the 22R-E (no rating listed because sources range from 105 to 116 hp), and the 1992–93 F-150 5.8.
 
 ## 7. Checked and left out (don't re-add without new evidence)
