@@ -2851,7 +2851,7 @@ addRows('ford:triton542v','',[["Ford|Expedition",1999,2002,260,350,"XLT / Eddie 
 addRows('ford:intech54','',[["Lincoln|Navigator",1999,2002,300,0,"Navigator · from mid-1999 · 5.4L InTech DOHC V8",'',b106x('navw')],
  ["Lincoln|Navigator",2003,2004,300,355,"Navigator · 5.4L InTech DOHC V8",'',b106x('navw')]]);
 addRows('ford:triton543v','',[["Lincoln|Navigator",2005,2006,300,365,"Navigator / Ultimate · Elite package from 2006 · 5.4L three-valve V8",'',b106x('navw')]]);
-addRows('stellantis:c67','',[["Ram|3500",2021,2024,420,1075,"Limited / Limited Longhorn · 3500 Limited trims came only with the Cummins · 6.7L high output",'',b106x('ramhd')]]);
+addRows('cummins:c67','',[["stellantis:Ram|3500",2021,2024,420,1075,"Limited / Limited Longhorn · 3500 Limited trims came only with the Cummins · 6.7L high output",'',b106x('ramhd')]]);
 /* ---- Batch 107 (v107): Silverado 1500 / C/K 1500 audit — missing engines, overlapping spans, 2027 lineup ---- */
 Object.assign(B82SRC,{"gm27": "https://news.gm.com/home.detail.html/Pages/news/us/en/2026/jun/0516-chevrolet-next-generation-2027-silverado.html", "drive27": "https://www.thedrive.com/news/2027-chevy-silverado-enters-the-fight-with-new-small-block-v8s-fresh-looks", "cr27": "https://www.consumerreports.org/cars/chevrolet/silverado-1500/2027/road-test-report/"});
 const b107x=(k,extra)=>b82x(k,Object.assign({note:'Verified November 2026 (v107).'},extra||{}));
@@ -5000,4 +5000,69 @@ renderLandscape();renderSide();buildDeals();renderShared();route();
 </script>
 
 
+<style id="v108-merged-ratings">
+.lineup .ly-mode{margin:8px 0 6px}
+.lineup .ly-mode button{font-size:13px;padding:5px 12px}
+.lineup .ly-all[hidden],.lineup .ly-yearpane[hidden]{display:none!important}
+.ly-src{margin:8px 0 2px;border-top:1px dashed var(--line);padding-top:6px}
+.ly-src>summary{cursor:pointer;font-size:12.5px;color:var(--accent);list-style:none}
+.ly-src>summary::-webkit-details-marker{display:none}
+.ly-src>summary::before{content:"▸";display:inline-block;margin-right:6px;transition:transform .15s}
+.ly-src[open]>summary::before{transform:rotate(90deg)}
+.ly-src .pr{grid-template-columns:76px minmax(0,1fr) 74px}
+.ly-all .ly-allrow.cur .pr{background:color-mix(in srgb,var(--accent) 10%,transparent);border-radius:6px;box-shadow:inset 3px 0 0 var(--accent)}
+.ly-all .pw-g{margin-top:14px}
+.ly-all-note{font-size:12.5px;color:var(--ink-3);margin:4px 0 8px}
+</style>
+<script id="v108-merged-ratings-js">
+/* v108: one "Engines & ratings" section in vehicle panels. The year view and the old "Horsepower & torque" list showed the
+   same ratings twice; the list is now folded into the year view: each engine card has a "Details & sources" drop-down for the
+   selected year, and an "All years" toggle lists every rating grouped by engine with the selected year highlighted. */
+(function(){
+ const MODE_KEY='lineupMode';
+ const rowsFor=(v,box)=>lineupRows(v,box.querySelector('.ly-vchk')?.checked??false);
+ const covers=(r,y)=>r.y1<=y&&(r.y2||NOW)>=y;
+ function yearSources(v,box){const y=+box.querySelector('.ly-sel').value;const rows=rowsFor(v,box).filter(r=>covers(r,y));const max=Math.max(1,...rows.map(r=>r.hp));
+  box.querySelectorAll('.ly-body .ly-eng').forEach(a=>{if(a.querySelector(':scope>.ly-src'))return;const id=a.querySelector('[data-xe]')?.dataset.xe;if(!id)return;
+   const rs=rows.filter(r=>r.eid===id).sort((p,q)=>p.hp-q.hp||p.y1-q.y1);if(!rs.length)return;
+   const d=document.createElement('details');d.className='ly-src';d.innerHTML=`<summary>Details &amp; sources · ${rs.length} rating${rs.length>1?'s':''} for ${y}</summary>`+rs.map(r=>prHTML(r,max)).join('');
+   const spot=a.querySelector(':scope>.ly-spot');spot?spot.before(d):a.append(d);});}
+ function allYears(v,box){const pane=box.querySelector('.ly-all');if(!pane)return;const y=+box.querySelector('.ly-sel').value;const rows=rowsFor(v,box);if(!rows.length){pane.innerHTML='';return;}
+  const max=Math.max(...rows.map(r=>r.hp));const by=new Map();rows.forEach(r=>{(by.get(r.eid)||by.set(r.eid,[]).get(r.eid)).push(r);});
+  const groups=[...by.entries()].sort((p,q)=>Math.min(...p[1].map(r=>r.y1))-Math.min(...q[1].map(r=>r.y1)));
+  const gross=rows.some(r=>/SAE gross/i.test(r.basis||''));
+  pane.innerHTML=`<p class="ly-all-note">Every rating recorded for this vehicle, grouped by engine. Rows covering ${y} are highlighted.</p>`+
+   (gross?'<div class="coverage-note"><b>Rating method matters</b><br>This vehicle includes SAE gross horsepower. Compare the rating basis, year and configuration before comparing it with SAE net or hybrid-system output.</div>':'')+
+   groups.map(([id,arr])=>{const e=EI[id];arr.sort((p,q)=>p.y1-q.y1||p.hp-q.hp);
+    return `<div class="pw-g">${esc(e?e.n:id)}<span>${esc(e?e.code:'')}${e&&GI[e.gid]?' · '+esc(GI[e.gid].n):''}</span></div>`+arr.map(r=>`<div class="ly-allrow${covers(r,y)?' cur':''}">${prHTML(r,max)}</div>`).join('');}).join('')+
+   `<p><button class="lnk" data-jp="${esc(groups[0][0])}">Open the full timeline in the Power tab →</button></p>`;
+  pane.querySelectorAll('[data-jp]').forEach(b=>b.onclick=()=>go('power-'+b.dataset.jp.replace(':','-')));}
+ function setMode(box,mode){box.querySelectorAll('.ly-mode button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  box.querySelector('.ly-yearpane').hidden=mode!=='year';box.querySelector('.ly-all').hidden=mode!=='all';store.set(MODE_KEY,mode);}
+ function upgrade(v){const box=panel.querySelector('.lineup');if(!box||box.dataset.merged)return;const old=panel.querySelector('.panel-power');
+  box.dataset.merged='1';const h4=box.querySelector('.ly-head h4');if(h4)h4.textContent='Engines & ratings';
+  const body=box.querySelector('.ly-body');const pane=document.createElement('div');pane.className='ly-yearpane';body.before(pane);pane.append(body);
+  const foot=box.querySelector(':scope>.ly-foot');if(foot)pane.append(foot);
+  const all=document.createElement('div');all.className='ly-all';pane.after(all);
+  const seg=document.createElement('div');seg.className='seg ly-mode';seg.setAttribute('role','group');seg.setAttribute('aria-label','Ratings view');
+  seg.innerHTML='<button type="button" data-mode="year">Selected year</button><button type="button" data-mode="all">All years</button>';
+  (box.querySelector('.cov')||pane).before(seg);
+  seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{setMode(box,b.dataset.mode);if(b.dataset.mode==='all')allYears(v,box);});
+  if(old)old.remove();
+  const refresh=()=>{yearSources(v,box);if(!all.hidden)allYears(v,box);
+   const y=box.querySelector('.ly-sel').value;panel.querySelectorAll('[data-spot-year]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.spotYear===y)));};
+  new MutationObserver(refresh).observe(body,{childList:true});
+  box.querySelector('.ly-sel').addEventListener('change',refresh);
+  const mode=store.get(MODE_KEY,'year')==='all'?'all':'year';setMode(box,mode);refresh();
+  // The related-models checkbox rebuilds the whole section: upgrade the new one too.
+  box.querySelector('.ly-vchk')?.addEventListener('change',()=>setTimeout(()=>upgrade(v),0));}
+ // Spotter year buttons used to drive the old list's year select; point them at the year view instead.
+ if(typeof applySpotterYear==='function'){const base=applySpotterYear;
+  applySpotterYear=function(root,year){if(root.querySelector('select[data-pw]'))return base(root,year);const sel=root.querySelector('.lineup .ly-sel');
+   if(!sel||![...sel.options].some(o=>o.value===String(year)))return false;sel.value=String(year);sel.dispatchEvent(new Event('change'));return true;};}
+ const before=showPanel;
+ showPanel=function(n){before(n);if(n.type==='veh'&&!panel.hidden){try{upgrade(n.v);}catch(err){console.warn('merged ratings',err);}}};
+ if(!panel.hidden&&typeof RECENT!=='undefined'&&RECENT[0]&&RECENT[0].t==='v'){const st=panel.scrollTop;try{showPanel({type:'veh',v:VEH[RECENT[0].id]});panel.scrollTop=st;}catch(err){console.warn('merged ratings refresh',err);}}
+})();
+</script>
 </body></html>
