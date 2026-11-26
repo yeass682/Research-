@@ -5648,4 +5648,59 @@ renderLandscape();renderSide();buildDeals();renderShared();route();
  if(!panel.hidden&&typeof RECENT!=='undefined'&&RECENT[0]&&RECENT[0].t==='v'){const st=panel.scrollTop;try{showPanel({type:'veh',v:VEH[RECENT[0].id]});panel.scrollTop=st;}catch(err){console.warn('merged ratings refresh',err);}}
 })();
 </script>
+<style id="v114-trim-info">
+.ly-trim .ti{cursor:pointer;text-decoration:underline dotted color-mix(in srgb,var(--accent) 70%,transparent);text-underline-offset:3px}
+.ly-trim .ti:hover,.ly-trim .ti:focus-visible{color:var(--accent);outline:none}
+.ly-explain{margin:6px 0 10px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.ly-explain>summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);list-style:none}
+.ly-explain>summary::-webkit-details-marker{display:none}
+.ly-explain>summary::before{content:"▸";display:inline-block;margin-right:6px;transition:transform .15s}
+.ly-explain[open]>summary::before{transform:rotate(90deg)}
+.ly-explain dl{margin:8px 0 2px;display:grid;gap:8px}
+.ly-explain dt{font-weight:600;font-size:13.5px;color:var(--ink)}
+.ly-explain dt small{font-weight:400;color:var(--ink-3);margin-left:6px}
+.ly-explain dd{margin:2px 0 0;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.ly-explain dd a{font-size:12px;margin-left:4px}
+.ly-explain dt.hl{animation:tiflash 1.4s ease}
+@keyframes tiflash{0%{background:color-mix(in srgb,var(--accent) 25%,transparent)}100%{background:transparent}}
+.ly-explain-note{font-size:12px;color:var(--ink-3);margin:6px 0 0}
+</style>
+<script id="v114-trim-info-js">
+/* v114: "What the trims include". TRIM_INFO[vehicleKey] = [{t:'Trim name', y:[from,to], d:'what it included', s:'B82SRC key'}].
+   In the year view every trim name that has an entry is underlined; tapping it opens a per-year panel listing what each
+   trim / package included. Matching: the trim text equals the entry name or starts with it (longest name wins), and the
+   selected year falls inside the entry's years. */
+(function(){
+ if(typeof TRIM_INFO==='undefined')return;
+ const norm=x=>(x||'').toLowerCase().replace(/[’']/g,"'").replace(/\s+/g,' ').trim();
+ function find(vk,trim,y){const L=TRIM_INFO[vk];if(!L)return null;const t=norm(trim);let best=null;
+  for(const e of L){if(e.y&&(y<e.y[0]||y>e.y[1]))continue;const k=norm(e.t);
+   if(t===k||t.startsWith(k+' ')||t.startsWith(k+'(')||t.startsWith(k+',')||t.startsWith(k+';')){if(!best||k.length>norm(best.t).length)best=e;}}
+  return best;}
+ const slug=x=>norm(x).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+ function apply(v,box){const vk=vkey(v);const pane=box.querySelector('.ly-yearpane')||box;const body=box.querySelector('.ly-body');if(!body)return;
+  pane.querySelectorAll(':scope>.ly-explain').forEach(x=>x.remove());
+  if(!TRIM_INFO[vk])return;const y=+box.querySelector('.ly-sel').value;const used=new Map();
+  body.querySelectorAll('b.ly-trim').forEach(b=>{if(b.dataset.ti==='1')return;const parts=b.textContent.split(' / ');
+   b.innerHTML=parts.map(p=>{const e=find(vk,p,y);if(!e)return esc(p);used.set(e,(used.get(e)||0)+1);return `<span class="ti" tabindex="0" role="button" data-ti="${esc(slug(e.t))}" title="What ${esc(e.t)} included">${esc(p)}</span>`;}).join(' / ');
+   b.dataset.ti='1';});
+  if(!used.size)return;
+  const list=[...used.keys()].sort((a,b)=>L_ORDER(vk,a)-L_ORDER(vk,b));
+  const d=document.createElement('details');d.className='ly-explain';
+  d.innerHTML=`<summary>What these trims and packages include · ${y} (${list.length})</summary><dl>`+list.map(e=>{const src=e.s&&B82SRC[e.s];
+   return `<dt id="ti-${esc(slug(e.t))}">${esc(e.t)}${e.y?`<small>${e.y[0]===e.y[1]?e.y[0]:e.y[0]+'–'+e.y[1]}</small>`:''}</dt><dd>${esc(e.d)}${src?` <a href="${esc(src)}" target="_blank" rel="noopener">source</a>`:''}</dd>`;}).join('')+
+   `</dl><p class="ly-explain-note">Underlined trim names in the cards below link here. Descriptions summarise the main equipment; options varied by year and body style.</p>`;
+  body.before(d);
+  body.querySelectorAll('.ti').forEach(sp=>{const go=()=>{d.open=true;const dt=d.querySelector('#ti-'+CSS.escape(sp.dataset.ti));if(dt){dt.classList.remove('hl');void dt.offsetWidth;dt.classList.add('hl');dt.scrollIntoView({block:'nearest',behavior:'smooth'});}};
+   sp.addEventListener('click',go);sp.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();go();}});});}
+ function L_ORDER(vk,e){return TRIM_INFO[vk].indexOf(e);}
+ function hook(v){const box=panel.querySelector('.lineup');if(!box||box.dataset.tiHooked)return;box.dataset.tiHooked='1';const body=box.querySelector('.ly-body');if(!body)return;
+  const run=()=>{try{apply(v,box);}catch(err){console.warn('trim info',err);}};
+  new MutationObserver(run).observe(body,{childList:true});box.querySelector('.ly-sel')?.addEventListener('change',()=>setTimeout(run,0));
+  box.querySelector('.ly-vchk')?.addEventListener('change',()=>setTimeout(()=>hook(v),0));run();}
+ const before=showPanel;
+ showPanel=function(n){before(n);if(n.type==='veh'&&!panel.hidden){try{hook(n.v);}catch(err){console.warn('trim info',err);}}};
+ if(!panel.hidden&&typeof RECENT!=='undefined'&&RECENT[0]&&RECENT[0].t==='v'){try{const box=panel.querySelector('.lineup');if(box)hook(VEH[RECENT[0].id]);}catch(err){}}
+})();
+</script>
 </body></html>
